@@ -15,7 +15,14 @@
 using namespace std;
 
 double pricerOption::pricer::zero() {
-	return 0.0;
+	return 0.0; 
+	
+}
+
+void main() {
+	pricerOption::pricer * price = new pricerOption::pricer();
+	cout << "on rentre ici " << price->price() << endl;
+	cout << "lol" << endl;
 }
 
   DLLEXP double pricerOption::pricer::price()
@@ -24,12 +31,21 @@ double pricerOption::pricer::zero() {
     Utilities u;
     //Check the number and the value of the parameters, and return the input file with the option description
     //Parse the input file
-    double T=8, r=0.1, strike=100.0, rho=0.1, fdStep=0.01;
+    /*double T=8, r=0.1, strike=100.0, rho=0.1, fdStep=0.01;
 	int size = 5, timestep = 100;
     PnlVect *spot=pnl_vect_create_from_double(size,100), *sigma= pnl_vect_create_from_double(size, 1.0/5), *divid= pnl_vect_create_from_double(size, 1.0 / 5), *lambdas= pnl_vect_create_from_double(size, 1.0 / 5), *trend= pnl_vect_create_from_double(size, 1.0 / 5);
+<<<<<<< HEAD
 	string optionType = "basket";
     
     size_t n_samples=5;
+=======
+	string optionType = "eurostral";*/
+	double T = 1, r = 0.04879, strike = 100.0, rho = 0, fdStep = 0.01;
+	int size = 1, timestep = 1;
+	PnlVect *spot = pnl_vect_create_from_double(size, 100), *sigma = pnl_vect_create_from_double(size, 0.2), *divid = pnl_vect_create_from_double(size, 1.0 / 5), *lambdas = pnl_vect_create_from_double(size, 1.0/size), *trend = pnl_vect_create_from_double(size, 0.04879);
+	string optionType = "basket";
+    size_t n_samples=50000;
+>>>>>>> f7909033c6841f2c9e516eb161cb19f381e3a584
 
 
     //trend = pnl_vect_create(5) ;
@@ -89,6 +105,8 @@ double pricerOption::pricer::zero() {
       if (optionType=="quanto" || optionType=="basket"){
           cout << "\nPrice at t=0 with formule fermé: " << opt->exactPrice0(&bsModel) << endl;
       }
+	  cout << initialPrice << endl;
+
 
       return initialPrice;
       //cout << "\nPrice at t=0: " << initialPrice << endl;
