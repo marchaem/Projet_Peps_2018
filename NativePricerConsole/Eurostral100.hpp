@@ -10,7 +10,7 @@ class Eurostral100 : public Option
   public:
 
     /**
-    *Constructeur de l'option basket
+    *Constructeur de l'Eurostral
     */
     Eurostral100(double strike, double T1,int nbTimeSteps1,int size1,PnlVect *lambdas1);
 

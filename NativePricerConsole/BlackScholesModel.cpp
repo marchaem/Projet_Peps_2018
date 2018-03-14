@@ -227,3 +227,13 @@ void BlackScholesModel::set(size_t size, double r, double rho, PnlVect * sigma, 
 	spot_ = spot;
 	trends_ = trend;
 }
+//todo : à optimiser car Varhis est symétrique 
+void BlackScholesModel::getVol(PnlVect* vol, PnlMat* VarHis) {
+	for (int i = 0; i < vol->size; i++) {
+		double voli = pnl_mat_get(VarHis, i, 0);
+		for (int j = 1; j < vol->size; j++) {
+			voli += pnl_mat_get(VarHis, i, j);
+		}
+		pnl_vect_set(vol, i, sqrt(voli));
+	}
+}

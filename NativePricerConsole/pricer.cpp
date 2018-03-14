@@ -15,7 +15,8 @@
 using namespace std;
 
 double pricerOption::pricer::zero() {
-	return 0.0;
+	return 0.0; 
+	
 }
 
 void main() {
