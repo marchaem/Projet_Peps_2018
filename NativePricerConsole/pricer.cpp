@@ -10,7 +10,7 @@
 #include "MonteCarlo.hpp"
 #include "BlackScholesModel.hpp"
 #include "Utilities.hpp"
-#include "Eurostral100.hpp"
+#include "Eurostral100.hpp  "
 #include "pricer.hpp"
 using namespace std;
 
@@ -18,7 +18,7 @@ double pricerOption::pricer::zero() {
 	return 0.0;
 }
 
-  double pricerOption::pricer::price()
+  DLLEXP double pricerOption::pricer::price()
 {
   try {
     Utilities u;
@@ -27,7 +27,7 @@ double pricerOption::pricer::zero() {
     double T=8, r=0.1, strike=100.0, rho=0.1, fdStep=0.01;
 	int size = 5, timestep = 100;
     PnlVect *spot=pnl_vect_create_from_double(size,100), *sigma= pnl_vect_create_from_double(size, 1.0/5), *divid= pnl_vect_create_from_double(size, 1.0 / 5), *lambdas= pnl_vect_create_from_double(size, 1.0 / 5), *trend= pnl_vect_create_from_double(size, 1.0 / 5);
-	string optionType = "eurostral";
+	string optionType = "basket";
     
     size_t n_samples=5;
 

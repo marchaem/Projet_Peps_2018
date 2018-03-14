@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Web._Default" %>
 
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
+
 <%@ Register Assembly="BewiseFlashControl" Namespace="Bewise.Web.UI.WebControls" TagPrefix="Bewise" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -10,14 +12,45 @@
         <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
     </div>
 
+                    <div style="float: left; margin-left: 30px;">
+                    <select id="ddl_one">
+                        <option value="1">Moto G</option>
+                        <option value="2">IPhone 5</option>
+                        <option value="3">Samsung S5</option>
+                    </select>
+                    <select id="ddl_two">
+                        <option value="1">Moto G</option>
+                        <option value="2">IPhone 5</option>
+                        <option value="3">Samsung S5</option>
+                    </select>
+                    <select id="ddlYear">
+                        <option>2013</option>
+                        <option>2014</option>
+                        <option>2015</option>
+                    </select>
+                    <input id="btn_line_chart" type="button" value="Show" /></div>
+                </div>
+                <br />
+                <div>
+                <canvas id="myChart"> </canvas>
+                </div>
+
+
     <div class="row">
+        <script>
+            let myChart = document.getElementById('myChart').getContext('2d');
+            let dataChart = new Chart(myChart, {
+                type: 'line',
+                data: {
+                     
+                },
+            })
+        </script>
         <div class="col-md-4">
             <h2>Getting started</h2>
             <p>
                 <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
                 <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" />
-                ASP.NET Web Forms lets you build dynamic websites using a familiar drag-and-drop, event-driven model.
-            A design surface and hundreds of controls and components let you rapidly build sophisticated, powerful UI-driven sites with data access.
             </p>
             <p>
                 <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301948">Learn more &raquo;</a>
@@ -25,9 +58,7 @@
         </div>
         <div class="col-md-4">
             <h2>Get more libraries</h2>
-            <p>
-                NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.
-            </p>
+           
             <p>
                 <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
             </p>

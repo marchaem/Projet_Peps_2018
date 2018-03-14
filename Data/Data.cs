@@ -7,6 +7,7 @@ using APIFiMag;
 using APIFiMag.Datas;
 using APIFiMag.Importer;
 using APIFiMag.Exporter;
+using System.Xml.Linq;
 
 namespace Data
 {
@@ -14,7 +15,7 @@ namespace Data
     // on commence par construire un DataFXTop
     public class DataPricer
     {
-        public void Export_Taux_de_change(DateTime debut, DateTime fin)
+        static public void Export_Taux_de_change(DateTime debut, DateTime fin)
         {
             List<Currency> curr = new List<Currency>();
             curr.Add(Currency.USD);
@@ -30,15 +31,16 @@ namespace Data
             // On récupère les données, on les parse et on remplit xchange
 
             xchange.ImportData(new ParserFXTop());
+            
 
             // On exporte les données récupérées, dans le format de notre choix, ici CSV
 
-            xchange.Export(new ExportCSV("recupFxTop.csv"));
+            xchange.Export(new ExportXML("recupTauxChange.xml"));
 
         }
 
         //taux euribor entre debut et fin
-        public void Export_Taux_EURIBOR(DateTime debut, DateTime fin)
+        public static void Export_Taux_EURIBOR(DateTime debut, DateTime fin)
         {
             DataIRate IRate = new DataIRate(InterestRate.EURIBOR, debut,fin);
             IRate.ImportData(new ImportEBF());
@@ -46,13 +48,32 @@ namespace Data
         }
 
         //taux USEuribor entre debut et fin
-        public void Export_Taux_USDEURIBOR(DateTime debut, DateTime fin)
+        public static void Export_Taux_USDEURIBOR(DateTime debut, DateTime fin)
         {
             DataIRate IRate = new DataIRate(InterestRate.USDEURIBOR, debut, fin);
             IRate.ImportData(new ImportEBF());
             IRate.Export(new ExportCSV("recupIRateUSEuribor.csv"));
         }
-        
+
+        static void Main()
+        {
+            Console.WriteLine("on entre dans le Main");
+            Export_Taux_de_change(new DateTime(2012, 6, 9), DateTime.Now);
+            var xml = XDocument.Load(@"C:\contacts.xml");
+            var query = from c in xml.Root.Descendants("contact")
+                        where (int)c.Attribute("id") < 4
+                        select c.Element("firstName").Value + " " +
+                               c.Element("lastName").Value;
+
+
+            foreach (string name in query)
+            {
+                Console.WriteLine("Contact's Full Name: {0}", name);
+            }
+        }
+
     }
+
+    
     
 }
