@@ -1,0 +1,52 @@
+﻿  Utilities.cpp
+c:\users\manu\documents\visual studio 2015\projects\pricer\pricer\utilities.cpp(14): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\manu\documents\visual studio 2015\projects\pricer\pricer\utilities.cpp(19): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\manu\documents\visual studio 2015\projects\pricer\pricer\utilities.cpp(36): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\manu\documents\visual studio 2015\projects\pricer\pricer\utilities.cpp(40): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\manu\documents\visual studio 2015\projects\pricer\pricer\utilities.cpp(46): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  QuantoOption.cpp
+  pricer.cpp
+  PerformanceOption.cpp
+  Option.cpp
+  MonteCarlo.cpp
+  Eurostral100.cpp
+  BlackScholesModel.cpp
+  BasketOption.cpp
+  AsianOption.cpp
+QuantoOption.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+QuantoOption.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+QuantoOption.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+QuantoOption.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+pricer.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+pricer.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+pricer.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+pricer.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+PerformanceOption.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+PerformanceOption.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+PerformanceOption.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+PerformanceOption.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+Option.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+Option.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+Option.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+Option.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+MonteCarlo.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+MonteCarlo.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+MonteCarlo.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+MonteCarlo.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+Eurostral100.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+Eurostral100.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+Eurostral100.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+Eurostral100.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+BlackScholesModel.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+BlackScholesModel.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+BlackScholesModel.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+BlackScholesModel.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+BasketOption.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+BasketOption.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+BasketOption.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+BasketOption.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+AsianOption.obj : warning LNK4006: "public: __cdecl Utilities::Utilities(void)" (??0Utilities@@QEAA@XZ) already defined in Utilities.obj; second definition ignored
+AsianOption.obj : warning LNK4006: "public: struct _PnlMat * __cdecl Utilities::getConstatationDates(struct _PnlMat const *,class Option *,double)" (?getConstatationDates@Utilities@@QEAAPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+AsianOption.obj : warning LNK4006: "public: void __cdecl Utilities::getConstatationDatesFromZero(struct _PnlMat *,struct _PnlMat const *,class Option *,double)" (?getConstatationDatesFromZero@Utilities@@QEAAXPEAU_PnlMat@@PEBU2@PEAVOption@@N@Z) already defined in Utilities.obj; second definition ignored
+AsianOption.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+  Pricer.vcxproj -> C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\x64\Debug\Pricer.lib
