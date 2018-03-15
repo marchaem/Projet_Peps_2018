@@ -64,9 +64,14 @@ namespace Web
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            WrapperClass wc = new WrapperClass();
-            Label1.Text = wc.getPrice().ToString();
-            Console.WriteLine("appuie sur le bouton");
+            //WrapperClass wc = new WrapperClass();
+            //Label1.Text = wc.getPrice().ToString();
+            //Console.WriteLine("appuie sur le bouton");
+            //Label1.Text = DateTime.Parse(from_date.Text).ToString();
+            Label1.Text = Convert.ToDateTime(from_date.Text).ToString();
+            Label2.Text = Convert.ToDateTime(from_date2.Text).ToString();
         }
+
+        
     }
 }

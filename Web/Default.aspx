@@ -49,6 +49,8 @@
         <div class="col-md-4">
             <h2>Getting started</h2>
             <p>
+                
+                <asp:TextBox ID="from_date" runat="server" placeholder="From" type="date" ></asp:TextBox>
                 <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
                 <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" />
             </p>
@@ -60,6 +62,8 @@
             <h2>Get more libraries</h2>
            
             <p>
+                <asp:TextBox ID="from_date2" runat="server" placeholder="From" type="date" ></asp:TextBox>
+                <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
                 <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
             </p>
         </div>
