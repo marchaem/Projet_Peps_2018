@@ -21,11 +21,11 @@ double Pricer::zero() {
 	
 }
 
-void main() {
-	/*Pricer * price = new Pricer();
+/*void main() {
+	pricerOption::pricer * price = new pricerOption::pricer();
 	cout << "on rentre ici " << price->price() << endl;
-	cout << "lol" << endl;*/
-}
+	cout << "lol" << endl;
+}*/
 
   double Pricer::price()
 {

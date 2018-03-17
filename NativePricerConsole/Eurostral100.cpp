@@ -22,35 +22,30 @@ Eurostral100::~Eurostral100()
 {}
 
 double Eurostral100::payoff(const PnlMat *path){
-  //Path Contient La trajectoire des trois indices et deux taux de changes et seuls les indices interviennent dans le payoff
   PnlVect*  indice1 = pnl_vect_create(path->m);
   PnlVect* indice2 = pnl_vect_create(path->m);
   PnlVect* indice3 = pnl_vect_create(path->m);
-  // On récupère ainsi les 3 indices
   pnl_mat_get_col(indice1,path,0);
   pnl_mat_get_col(indice2,path,1);
   pnl_mat_get_col(indice3,path,2);
-  double payoff = 0.0 , init1, init2, init3, rent1, rent2, rent3, ma, mi, entre;
-  // La performance à chaque semestre est comparé aux valeurs initiales : 
+  double payoff = 0.0 , init1, init2, init3, cour1, cour2, cour3, ma, mi, entre;
   init1 = pnl_vect_get(indice1,0);
-  init2 = pnl_vect_get(indice2,0);
-  init3 = pnl_vect_get(indice3,0);
-  for ( int i = 0 ; i < (path->m -1) ; i++ ) {
-    // calcul des rentabilités au semestre i pour chaque indice
-    rent1 = (pnl_vect_get(indice1,i+1)-init1)/init1;
-    rent2 = (pnl_vect_get(indice2,i+1)-init2)/init2;
-    rent3 = (pnl_vect_get(indice3,i+1)-init3)/init3;
-	// Tri TODO Meilleur tri ?
-    ma = max(max(rent1,rent2),rent3);
-    mi = min(min(rent1,rent2),rent3);
-    if ( rent1 != ma && rent1 != mi ) {
-      entre = rent1;
-    } else if ( rent2 != ma && rent2 != mi ) {
-      entre = rent2;
+  init2 = pnl_vect_get(indice2,1);
+  init3 = pnl_vect_get(indice3,2);
+  for ( int i = 0 ; i < 16 ; i++ ) {
+    cour1 = (pnl_vect_get(indice1,i+1)-init1)/init1;
+    cour2 = (pnl_vect_get(indice2,i+1)-init2)/init2;
+    cour3 = (pnl_vect_get(indice3,i+1)-init3)/init3;
+
+    ma = max(max(cour1,cour2),cour3);
+    mi = min(min(cour1,cour2),cour3);
+    if ( cour1 != ma && cour1 != mi ) {
+      entre = cour1;
+    } else if ( cour2 != ma && cour2 != mi ) {
+      entre = cour2;
     } else {
-      entre = rent3;
+      entre = cour3;
     }
-	//Application des coefficients du produits
     payoff += 0.5*ma + 0.3*entre + 0.2*mi;
   }
   payoff /= 16 ;
