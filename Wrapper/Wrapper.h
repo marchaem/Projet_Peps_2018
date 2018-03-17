@@ -1,16 +1,15 @@
 // Wrapper.h
 
 #pragma once
-#include "pricer.hpp"
+#include "Pricer.hpp"
 
 using namespace System;
-using namespace pricerOption;
 
 namespace Wrapper {
 
 	public ref class WrapperClass
 	{
-		pricerOption::pricer * pricer;
+		Pricer * pricer1;
 	public:
 		WrapperClass::WrapperClass();
 		double getPrice();
