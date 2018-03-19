@@ -1,0 +1,10 @@
+﻿  Stdafx.cpp
+  AssemblyInfo.cpp
+  Wrapper.cpp
+  Generating Code...
+  .NETFramework,Version=v4.5.2.AssemblyAttributes.cpp
+  AssemblyInfo.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+LINK : warning LNK4199: /DELAYLOAD:Pricer.dll ignored; no imports found from Pricer.dll
+Wrapper.obj : error LNK2028: unresolved token (0A000006) "public: double __cdecl pricerOption::pricer::price(void)" (?price@pricer@pricerOption@@$$FQEAANXZ) referenced in function "public: double __clrcall Wrapper::WrapperClass::getPrice(void)" (?getPrice@WrapperClass@Wrapper@@$$FQE$AAMNXZ)
+Wrapper.obj : error LNK2019: unresolved external symbol "public: double __cdecl pricerOption::pricer::price(void)" (?price@pricer@pricerOption@@$$FQEAANXZ) referenced in function "public: double __clrcall Wrapper::WrapperClass::getPrice(void)" (?getPrice@WrapperClass@Wrapper@@$$FQE$AAMNXZ)
+C:\Users\Manu\documents\visual studio 2015\Projects\Pricer\x64\Debug\Wrapper.dll : fatal error LNK1120: 2 unresolved externals

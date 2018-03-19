@@ -1,11 +1,9 @@
 #pragma once
 #define DLLEXP __declspec(dllexport)
-namespace pricerOption {
-	DLLEXP class pricer{
+	class Pricer{
 	public:
-
+		DLLEXP Pricer();
 		DLLEXP double price();
 		DLLEXP double zero();
 	};
 		 
-}
