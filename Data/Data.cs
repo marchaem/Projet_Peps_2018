@@ -34,7 +34,7 @@ namespace Data
 
         static void Main()
         {
-            DateTime dateDebut = new DateTime(2010,3,1);
+            DateTime dateDebut = new DateTime(2010,1,1);
             DateTime dateFin = DateTime.Today;
             RecupData data = new RecupData(dateDebut, dateFin);
             data.RecupCSV(4);

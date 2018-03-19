@@ -89,8 +89,22 @@ namespace Data
         public void RecupCSV(int time)
         {
             GetYahooCSV();
-            System.Threading.Thread.Sleep(time*1000);
+            while(!DownloadFinished())
+            {
+                System.Threading.Thread.Sleep(25);
+            }
             return;
+        }
+
+        public bool DownloadFinished()
+        {
+            bool res = true;
+            for (int i=0; i<Files.Count; i++)
+            {
+                string file = Files[i];
+                res = res && File.Exists(file);
+            }
+            return res;
         }
 
         async Task GetYahooCSV()

@@ -66,7 +66,7 @@ namespace Data
             {
                 for (int j=0; j<data.Count; j++)
                 {
-                    matrix[i, j] = Cor(data[i],data[j]);
+                    matrix[i, j] = Math.Round(Cor(data[i],data[j]),2);
                 }
             }
             return matrix;
