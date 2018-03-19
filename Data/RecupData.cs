@@ -70,6 +70,22 @@ namespace Data
             return donnees;
         }
 
+        public List<List<double>> ParseAll()
+        {
+            List<List<double>> res = new List<List<double>>();
+            for (int i=0; i<Symbols.Count; i++)
+            {
+                res.Add(ParseCSV(Files[i]));
+            }
+            return res;
+        }
+
+        public double[,] exportPastToWrapper()
+        {
+            //TODO
+            return null;
+        }
+
         public void RecupCSV(int time)
         {
             GetYahooCSV();

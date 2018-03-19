@@ -20,7 +20,24 @@ namespace Data
             return ret;
         }
 
-        public static double vol(List<double> data)
+        public static List<double> logRendement(List<double> data)
+        {
+            List<double> ret = new List<double>();
+            double diff = 0;
+            for (int i=1; i<data.Count; i++)
+            {
+                diff = data[i] / data[i - 1];
+                ret.Add(Math.Log(diff));
+            }
+            return ret;
+        }
+
+        public static double volStd(List<double> data)
+        {
+            return std(logRendement(data));
+        }
+
+        public static double volHisto(List<double> data)
         {
             if (data.Count == 0)
             {

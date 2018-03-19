@@ -37,8 +37,14 @@ namespace Data
             DateTime dateDebut = new DateTime(2010,3,1);
             DateTime dateFin = DateTime.Today;
             RecupData data = new RecupData(dateDebut, dateFin);
-            Console.WriteLine(Stats.vol(test));
-            Console.WriteLine();
+            List<List<double>> test = data.ParseAll();
+            List<double> cour;
+            for (int i=0; i<data.Files.Count; i++)
+            {
+                cour = test[i];
+                Console.WriteLine("Vol histo = " + Stats.volHisto(cour));
+                Console.WriteLine("Vol std log = " + Stats.volStd(cour));
+            }
             Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
             data.deleteFiles();
