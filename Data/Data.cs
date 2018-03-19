@@ -37,7 +37,16 @@ namespace Data
             DateTime dateDebut = new DateTime(2015,6,1);
             DateTime dateFin = DateTime.Today;
             RecupData data = new RecupData(dateDebut, dateFin);
-            data.RecupCSV(5);
+            data.RecupCSV(4);
+            List<double> test = data.ParseCSV(data.Files[0]);
+            foreach(double d in test)
+            {
+                Console.Write(d);
+                Console.Write("-");
+            }
+            Console.WriteLine("Fin du programme ...");
+            Console.ReadLine();
+            data.deleteFiles();
         }
 
     }

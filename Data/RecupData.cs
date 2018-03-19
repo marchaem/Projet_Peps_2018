@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YahooFinanceAPI;
+using Microsoft.VisualBasic.FileIO;
+using System.Globalization;
 
 namespace Data
 {
@@ -12,10 +14,9 @@ namespace Data
     {
 
         List<string> Symbols; //Liste des symboles à récupérer sur Yahoo
-        List<string> Files; //Liste des noms de fichiers CSV
+        public List<string> Files; //Liste des noms de fichiers CSV
         DateTime dateDebut;
         DateTime dateFin;
-        String file;
 
         public RecupData(DateTime dateDebut, DateTime dateFin)
         {
@@ -35,6 +36,45 @@ namespace Data
 
             this.dateDebut = dateDebut;
             this.dateFin = dateFin;
+        }
+
+        public List<double> ParseCSV(string file)
+        {
+            List<double> donnees = new List<double>();
+            List<string> AllDonnees = new List<string>();
+            List<string> donneesString = new List<string>();
+            using (TextFieldParser parser = new TextFieldParser(file))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(";");
+                while (!parser.EndOfData)
+                {
+                    //Process row
+                    string[] fields = parser.ReadFields();
+                    foreach (string field in fields)
+                    {
+                        // On teste si c'est un nombre et non une date ou autre chose (null ...)
+                        if (field.Any(char.IsDigit) && !(field.Contains("/")) && !(field.Contains("-")))
+                        {
+                            AllDonnees.Add(field);
+                        }
+                    }
+                }
+            }
+
+            // On ne garde que les cours de cloture
+            for (int i = 3; i < AllDonnees.Count; i = i + 6)
+            {
+                donneesString.Add(AllDonnees[i]);
+            }
+
+            //On change ensuite les données de string en double 
+            for (int i=0; i<donneesString.Count; i++)
+            {
+                Console.WriteLine(donneesString[i]);
+                donnees.Add(double.Parse(donneesString[i],CultureInfo.InvariantCulture));
+            }
+            return donnees;
         }
 
         public void RecupCSV(int time)
