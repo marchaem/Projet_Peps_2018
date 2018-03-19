@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using YahooFinanceAPI;
 using Microsoft.VisualBasic.FileIO;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Data
 {
@@ -70,11 +71,45 @@ namespace Data
             return donnees;
         }
 
+        public List<List<double>> ParseAll()
+        {
+            List<List<double>> res = new List<List<double>>();
+            for (int i=0; i<Symbols.Count; i++)
+            {
+                res.Add(ParseCSV(Files[i]));
+            }
+            return res;
+        }
+
+        public double[,] exportPastToWrapper()
+        {
+            //TODO
+            return null;
+        }
+
         public void RecupCSV(int time)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             GetYahooCSV();
-            System.Threading.Thread.Sleep(time*1000);
+            while (!DownloadFinished())
+            {
+                System.Threading.Thread.Sleep(25);
+            }
+            sw.Stop();
+            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Milliseconds/1000.0 + " secondes");
             return;
+        }
+
+        public bool DownloadFinished()
+        {
+            bool res = true;
+            for (int i=0; i<Files.Count; i++)
+            {
+                string file = Files[i];
+                res = res && File.Exists(file);
+            }
+            return res;
         }
 
         async Task GetYahooCSV()
