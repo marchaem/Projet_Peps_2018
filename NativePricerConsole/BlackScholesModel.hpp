@@ -26,7 +26,10 @@ public:
     *Constructeur
     */
     BlackScholesModel(int size, double r, double rho, PnlVect *sigma, PnlVect *spot);
-
+	/**
+	*Constructeur
+	*/
+	BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend);
     /**
     *Destructeur
     */
@@ -124,11 +127,5 @@ public:
     void shiftAsset(PnlMat *shift_path, const PnlMat *path, int d, double h, double t, double timestep);
 	
 	void set(size_t size, double r, double rho, PnlVect * sigma, PnlVect * spot, PnlVect* trend);
-	/**
-	* Transforme les matrices de covariances historiques en un vecteur des volatilités du modèle
-	*
-	*@param[in] Matrices de covariances historiques
-	*@param[out] Vecteur des volatilités
-	*/
-	void getVol(PnlVect * Vol, PnlMat * VarHis);
+	
 };

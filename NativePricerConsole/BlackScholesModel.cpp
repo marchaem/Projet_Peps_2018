@@ -23,6 +23,47 @@ BlackScholesModel::BlackScholesModel(int size,double r, double rho, PnlVect *sig
     pnl_mat_chol(corr);
     g = pnl_vect_new();
 }
+BlackScholesModel::BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend) {
+	size_ = size;
+	r_ = r;
+	g = pnl_vect_new();
+	spot_ = spot;
+	trends_ = trend;
+	rho_ = 0.0;
+	PnlVect * sigma = pnl_vect_create(size);
+	PnlMat* cor = pnl_mat_create_from_scalar(size, size, 0.0);
+	for (int i = 0; i < size; i++) {
+		double voli = pnl_mat_get(VarHis, i, 0);
+		for (int j = 1; j < sigma->size; j++) {
+			voli += pnl_mat_get(VarHis, i, j);
+		}
+		pnl_vect_set(sigma, i, sqrt(voli));
+	}
+	sigma_ = sigma;
+	double corij;
+	for (int i = 0; i < size; i++) {
+
+		for (int j = 0; j < i; j++) {
+			corij = 0;
+			for (int k = 0; k < size; k++) {
+				corij += pnl_mat_get(VarHis, i, k)*pnl_mat_get(VarHis, k, j) / pnl_vect_get(sigma, i);
+			}
+			corij /= pnl_vect_get(sigma, j);
+			pnl_mat_set(cor, i, j, corij);
+		}
+
+
+	}
+	
+	PnlMat * Transp = pnl_mat_transpose(cor);
+	PnlVect * Un = pnl_vect_create_from_scalar(size, 1.0);
+	PnlMat * id = pnl_mat_create_diag(Un);
+
+	pnl_mat_plus_mat(cor, Transp);
+	pnl_mat_plus_mat(cor, id);
+	corr = cor;
+
+}
 
 
 BlackScholesModel::BlackScholesModel(){
@@ -227,13 +268,4 @@ void BlackScholesModel::set(size_t size, double r, double rho, PnlVect * sigma, 
 	spot_ = spot;
 	trends_ = trend;
 }
-//todo : à optimiser car Varhis est symétrique 
-void BlackScholesModel::getVol(PnlVect* vol, PnlMat* VarHis) {
-	for (int i = 0; i < vol->size; i++) {
-		double voli = pnl_mat_get(VarHis, i, 0);
-		for (int j = 1; j < vol->size; j++) {
-			voli += pnl_mat_get(VarHis, i, j);
-		}
-		pnl_vect_set(vol, i, sqrt(voli));
-	}
-}
+

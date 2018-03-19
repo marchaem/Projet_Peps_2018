@@ -30,9 +30,9 @@ double Eurostral100::payoff(const PnlMat *path){
   pnl_mat_get_col(indice3,path,2);
   double payoff = 0.0 , init1, init2, init3, cour1, cour2, cour3, ma, mi, entre;
   init1 = pnl_vect_get(indice1,0);
-  init2 = pnl_vect_get(indice2,1);
-  init3 = pnl_vect_get(indice3,2);
-  for ( int i = 0 ; i < 16 ; i++ ) {
+  init2 = pnl_vect_get(indice2,0);
+  init3 = pnl_vect_get(indice3,0);
+  for ( int i = 0 ; i < path->m -1 ; i++ ) {
     cour1 = (pnl_vect_get(indice1,i+1)-init1)/init1;
     cour2 = (pnl_vect_get(indice2,i+1)-init2)/init2;
     cour3 = (pnl_vect_get(indice3,i+1)-init3)/init3;
