@@ -10,7 +10,10 @@ Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e0
 Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
 	hash=None, flags=None
 Class Wrapper.WrapperClass: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(Int32, Double, Double[], Double[], Double[], Double, Int32, Double, Double, Int32, Double[]): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Methods:
-    getPrice(): PrivateScope, Public, HideBySig
+    getPrice(Int32, Double, Double[], Double[], Double[], Double, Int32, Double, Double, Int32, Double[]): PrivateScope, Public, HideBySig
     getZero(): PrivateScope, Public, HideBySig
+    convertArrayPointer(Double[]): PrivateScope, Public, HideBySig
+    convertMatrixPointer(Double[,]): PrivateScope, Public, HideBySig

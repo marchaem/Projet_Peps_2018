@@ -45,6 +45,9 @@
     <ClInclude Include="PerformanceOption.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Lien.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utilities.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QuantoOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lien.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

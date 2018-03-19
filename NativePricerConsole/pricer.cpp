@@ -49,6 +49,7 @@ double Pricer::zero() {
 
 
 
+
     //trend = pnl_vect_create(5) ;
     /*trend = pnl_vect_create(5);
     pnl_vect_set(trend,0,r);
