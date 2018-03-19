@@ -20,6 +20,32 @@ namespace Data
             return ret;
         }
 
+        public static double Cov(List<double> v1, List<double> v2)
+        {
+            int size = 0;
+            if (v1.Count != v2.Count)
+            {
+                size = Math.Min(v1.Count, v2.Count);
+            }
+            else
+            {
+                size = v1.Count;
+            }
+            List<double> aux = new List<double>();
+            double mean1 = v1.Average();
+            double mean2 = v2.Average();
+            for (int i=0; i<size; i++)
+            {
+                aux.Add((v1[i] - mean1) * (v2[i] - mean2));
+            }
+            return aux.Average();                        
+        }
+
+        public static double Cor(List<double> v1, List<double> v2)
+        {
+            return Cov(v1, v2) / (std(v1) * std(v2));
+        }
+
         public static List<double> logRendement(List<double> data)
         {
             List<double> ret = new List<double>();
@@ -30,6 +56,34 @@ namespace Data
                 ret.Add(Math.Log(diff));
             }
             return ret;
+        }
+
+        public static double[,] CorMatrix(List<List<double>> data)
+        {
+            double[,] matrix = new double[data.Count, data.Count];
+            //Amélioration possible : On peut faire que la moitié des calculs, la matrice est symétrique ...
+            for (int i=0; i<data.Count; i++)
+            {
+                for (int j=0; j<data.Count; j++)
+                {
+                    matrix[i, j] = Cor(data[i],data[j]);
+                }
+            }
+            return matrix;
+        }
+
+        public static double[,] CovMatrix(List<List<double>> data)
+        {
+            double[,] matrix = new double[data.Count, data.Count];
+            //Amélioration possible : On peut faire que la moitié des calculs, la matrice est symétrique ...
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < data.Count; j++)
+                {
+                    matrix[i, j] = Cov(data[i], data[j]);
+                }
+            }
+            return matrix;
         }
 
         public static double volStd(List<double> data)
@@ -53,9 +107,5 @@ namespace Data
             return sum;
         }
 
-        public static double[,] cov()
-        {
-            return null;
-        }
     }
 }

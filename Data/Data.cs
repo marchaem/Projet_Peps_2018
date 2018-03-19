@@ -37,6 +37,7 @@ namespace Data
             DateTime dateDebut = new DateTime(2010,3,1);
             DateTime dateFin = DateTime.Today;
             RecupData data = new RecupData(dateDebut, dateFin);
+            data.RecupCSV(4);
             List<List<double>> test = data.ParseAll();
             List<double> cour;
             for (int i=0; i<data.Files.Count; i++)
@@ -44,6 +45,16 @@ namespace Data
                 cour = test[i];
                 Console.WriteLine("Vol histo = " + Stats.volHisto(cour));
                 Console.WriteLine("Vol std log = " + Stats.volStd(cour));
+            }
+
+            double[,] corMatrix = Stats.CorMatrix(test);
+            for (int i = 0; i<5; i++)
+            {
+                for (int j=0; j<5; j++)
+                {
+                    Console.Write(corMatrix[i, j]+ "  ");
+                }
+                Console.WriteLine();
             }
             Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
