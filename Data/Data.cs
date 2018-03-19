@@ -34,16 +34,9 @@ namespace Data
 
         static void Main()
         {
-            DateTime dateDebut = new DateTime(2017,3,1);
+            DateTime dateDebut = new DateTime(2010,3,1);
             DateTime dateFin = DateTime.Today;
             RecupData data = new RecupData(dateDebut, dateFin);
-            data.RecupCSV(4);
-            List<double> test = data.ParseCSV(data.Files[4]);
-            foreach(double d in test)
-            {
-                Console.Write(d);
-                Console.Write("-");
-            }
             Console.WriteLine(Stats.vol(test));
             Console.WriteLine();
             Console.WriteLine("Fin du programme ...");

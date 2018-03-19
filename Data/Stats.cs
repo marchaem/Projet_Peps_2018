@@ -26,12 +26,12 @@ namespace Data
             {
                 throw new Exception("Donées vide en entrée du calcul de la vol (Taille = 0)");
             }
-            double sum = 0;
+            double sum = 0.0;
             for (int i=1; i<data.Count; i++)
             {
-                sum += Math.Pow(Math.Log(data[i] / data[i - 1]),2);
+                sum += Math.Pow(Math.Log(data[i] /data[i - 1]),2);
             }
-            sum = sum * (252 / data.Count);
+            sum = sum * (252.0 / data.Count);
             sum = Math.Sqrt(sum);
             return sum;
         }
