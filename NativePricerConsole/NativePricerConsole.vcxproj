@@ -153,6 +153,7 @@
     <ClInclude Include="BasketOption.hpp" />
     <ClInclude Include="BlackScholesModel.hpp" />
     <ClInclude Include="Eurostral100.hpp" />
+    <ClInclude Include="Lien.hpp" />
     <ClInclude Include="MonteCarlo.hpp" />
     <ClInclude Include="Option.hpp" />
     <ClInclude Include="PerformanceOption.hpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="BasketOption.cpp" />
     <ClCompile Include="BlackScholesModel.cpp" />
     <ClCompile Include="Eurostral100.cpp" />
+    <ClCompile Include="Lien.cpp" />
     <ClCompile Include="MonteCarlo.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="PerformanceOption.cpp" />
