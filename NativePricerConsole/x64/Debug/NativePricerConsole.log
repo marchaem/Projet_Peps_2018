@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  Utilities.cpp
 c:\users\ensimag\desktop\peps\projet_peps_2018\nativepricerconsole\utilities.cpp(14): warning C4244: 'argument' : conversion de 'double' en 'int', perte possible de données
 c:\users\ensimag\desktop\peps\projet_peps_2018\nativepricerconsole\utilities.cpp(19): warning C4244: 'argument' : conversion de 'double' en 'int', perte possible de données
@@ -39,3 +40,6 @@ c:\users\ensimag\desktop\peps\projet_peps_2018\nativepricerconsole\pricer.cpp(19
           1 fichier(s) copié(s).
           1 fichier(s) copié(s).
           1 fichier(s) copié(s).
+=======
+﻿
+>>>>>>> 37c0adee92dc023b3a6b149a649fa77b22ba26f4

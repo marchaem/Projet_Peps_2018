@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pricer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="QuantoOption.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +42,12 @@
     <ClInclude Include="PerformanceOption.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Pricer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> 37c0adee92dc023b3a6b149a649fa77b22ba26f4
     <ClInclude Include="Lien.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -74,10 +77,13 @@
     <ClCompile Include="PerformanceOption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pricer.cpp">
+    <ClCompile Include="QuantoOption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuantoOption.cpp">
+    <ClCompile Include="Pricer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lien.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Lien.cpp">

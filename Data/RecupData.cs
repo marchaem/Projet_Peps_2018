@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using YahooFinanceAPI;
 using Microsoft.VisualBasic.FileIO;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Data
 {
@@ -53,35 +54,62 @@ namespace Data
                     string[] fields = parser.ReadFields();
                     foreach (string field in fields)
                     {
-                        // On teste si c'est un nombre et non une date ou autre chose (null ...)
-                        if (field.Any(char.IsDigit) && !(field.Contains("/")) && !(field.Contains("-")))
-                        {
-                            AllDonnees.Add(field);
-                        }
+                        AllDonnees.Add(field);
                     }
                 }
             }
 
             // On ne garde que les cours de cloture
-            for (int i = 3; i < AllDonnees.Count; i = i + 6)
+            for (int i = 11; i < AllDonnees.Count; i = i + 7)
             {
-                donneesString.Add(AllDonnees[i]);
+                if (AllDonnees[i] != "null")
+                {
+                    donneesString.Add(AllDonnees[i]);
+                }
             }
-
-            //On change ensuite les données de string en double 
-            for (int i=0; i<donneesString.Count; i++)
-            {
-                Console.WriteLine(donneesString[i]);
-                donnees.Add(double.Parse(donneesString[i],CultureInfo.InvariantCulture));
-            }
+            donnees = donneesString.ConvertAll(item => double.Parse(item, CultureInfo.InvariantCulture));
             return donnees;
+        }
+
+        public List<List<double>> ParseAll()
+        {
+            List<List<double>> res = new List<List<double>>();
+            for (int i=0; i<Symbols.Count; i++)
+            {
+                res.Add(ParseCSV(Files[i]));
+            }
+            return res;
+        }
+
+        public double[,] exportPastToWrapper()
+        {
+            //TODO
+            return null;
         }
 
         public void RecupCSV(int time)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             GetYahooCSV();
-            System.Threading.Thread.Sleep(time*1000);
+            while (!DownloadFinished())
+            {
+                System.Threading.Thread.Sleep(25);
+            }
+            sw.Stop();
+            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Milliseconds/1000.0 + " secondes");
             return;
+        }
+
+        public bool DownloadFinished()
+        {
+            bool res = true;
+            for (int i=0; i<Files.Count; i++)
+            {
+                string file = Files[i];
+                res = res && File.Exists(file);
+            }
+            return res;
         }
 
         async Task GetYahooCSV()

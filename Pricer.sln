@@ -89,8 +89,13 @@ Global
 		{23176EF2-7664-4121-882A-AA740029260E}.Debug|x86.Build.0 = Debug|Any CPU
 		{23176EF2-7664-4121-882A-AA740029260E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23176EF2-7664-4121-882A-AA740029260E}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{23176EF2-7664-4121-882A-AA740029260E}.Release|x64.ActiveCfg = Release|x64
 		{23176EF2-7664-4121-882A-AA740029260E}.Release|x64.Build.0 = Release|x64
+=======
+		{23176EF2-7664-4121-882A-AA740029260E}.Release|x64.ActiveCfg = Release|Any CPU
+		{23176EF2-7664-4121-882A-AA740029260E}.Release|x64.Build.0 = Release|Any CPU
+>>>>>>> 37c0adee92dc023b3a6b149a649fa77b22ba26f4
 		{23176EF2-7664-4121-882A-AA740029260E}.Release|x86.ActiveCfg = Release|Any CPU
 		{23176EF2-7664-4121-882A-AA740029260E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
