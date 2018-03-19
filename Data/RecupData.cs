@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using YahooFinanceAPI;
 using Microsoft.VisualBasic.FileIO;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Data
 {
@@ -88,11 +89,15 @@ namespace Data
 
         public void RecupCSV(int time)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             GetYahooCSV();
-            while(!DownloadFinished())
+            while (!DownloadFinished())
             {
                 System.Threading.Thread.Sleep(25);
             }
+            sw.Stop();
+            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Milliseconds/1000.0 + " secondes");
             return;
         }
 
