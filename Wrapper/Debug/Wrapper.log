@@ -1,0 +1,6 @@
+﻿  Stdafx.cpp
+  AssemblyInfo.cpp
+  Wrapper.cpp
+  Génération de code en cours...
+  .NETFramework,Version=v4.5.2.AssemblyAttributes.cpp
+LINK : fatal error LNK1104: impossible d'ouvrir le fichier 'C:\Users\ensimag\Desktop\PEPS\Projet_Peps_2018\Debug\NativePricerConsole.lib'
