@@ -4,6 +4,7 @@
 #include "Pricer.hpp"
 
 using namespace System;
+using namespace cli;
 
 namespace Wrapper {
 
@@ -14,5 +15,7 @@ namespace Wrapper {
 		WrapperClass::WrapperClass();
 		double getPrice();
 		double getZero();
+		double* convertArrayPointer(array<double> ^ arr);
+		double* convertMatrixPointer(array<double,2> ^ mat);
 	};
 }
