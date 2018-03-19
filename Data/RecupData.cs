@@ -53,27 +53,20 @@ namespace Data
                     string[] fields = parser.ReadFields();
                     foreach (string field in fields)
                     {
-                        // On teste si c'est un nombre et non une date ou autre chose (null ...)
-                        if (field.Any(char.IsDigit) && !(field.Contains("/")) && !(field.Contains("-")))
-                        {
-                            AllDonnees.Add(field);
-                        }
+                        AllDonnees.Add(field);
                     }
                 }
             }
 
             // On ne garde que les cours de cloture
-            for (int i = 3; i < AllDonnees.Count; i = i + 6)
+            for (int i = 11; i < AllDonnees.Count; i = i + 7)
             {
-                donneesString.Add(AllDonnees[i]);
+                if (AllDonnees[i] != "null")
+                {
+                    donneesString.Add(AllDonnees[i]);
+                }
             }
-
-            //On change ensuite les données de string en double 
-            for (int i=0; i<donneesString.Count; i++)
-            {
-                Console.WriteLine(donneesString[i]);
-                donnees.Add(double.Parse(donneesString[i],CultureInfo.InvariantCulture));
-            }
+            donnees = donneesString.ConvertAll(item => double.Parse(item, CultureInfo.InvariantCulture));
             return donnees;
         }
 
