@@ -14,3 +14,5 @@ Class Wrapper.WrapperClass: AutoLayout, AnsiClass, Class, Public, BeforeFieldIni
   Methods:
     getPrice(): PrivateScope, Public, HideBySig
     getZero(): PrivateScope, Public, HideBySig
+    convertArrayPointer(Double[]): PrivateScope, Public, HideBySig
+    convertMatrixPointer(Double[,]): PrivateScope, Public, HideBySig

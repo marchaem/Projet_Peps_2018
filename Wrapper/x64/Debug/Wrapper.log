@@ -1,9 +1,1 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Stdafx.cpp
-  AssemblyInfo.cpp
-  Wrapper.cpp
-  Génération de code en cours...
-  .NETFramework,Version=v4.5.2.AssemblyAttributes.cpp
-  AssemblyInfo.obj : /DEBUG:FASTLINK n'est pas pris en charge en présence de code managé ; redémarrage de l'édition des liens avec /DEBUG:FULL
-  Wrapper.vcxproj -> C:\Users\ensimag\Desktop\PEPS\Projet_Peps_2018\Wrapper\..\WebApplication\bin\Wrapper.dll
-  Wrapper.vcxproj -> ..\WebApplication\bin\Wrapper.pdb (Partial PDB)
+﻿

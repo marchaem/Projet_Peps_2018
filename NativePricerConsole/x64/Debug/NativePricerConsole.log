@@ -1,9 +1,1 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  pricer.cpp
-c:\users\manu\documents\visual studio 2015\projects\pricer\nativepricerconsole\pricer.hpp(9): warning C4091: '__declspec(dllexport)': ignored on left of 'pricerOption::pricer' when no variable is declared
-c:\users\manu\documents\visual studio 2015\projects\pricer\nativepricerconsole\pricer.cpp(60): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\manu\documents\visual studio 2015\projects\pricer\nativepricerconsole\pricer.cpp(79): warning C4244: 'initializing': conversion from 'double' to 'clock_t', possible loss of data
-c:\users\manu\documents\visual studio 2015\projects\pricer\nativepricerconsole\pricer.cpp(88): warning C4244: 'initializing': conversion from 'double' to 'clock_t', possible loss of data
-c:\users\manu\documents\visual studio 2015\projects\pricer\nativepricerconsole\pricer.cpp(177): warning C4715: 'pricerOption::pricer::price': not all control paths return a value
-  NativePricerConsole.vcxproj -> C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\NativePricerConsole\..\Web\bin\NativePricerConsole.dll
-  NativePricerConsole.vcxproj -> ..\Web\bin\NativePricerConsole.pdb (Full PDB)
+﻿
