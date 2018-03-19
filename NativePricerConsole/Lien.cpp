@@ -19,3 +19,27 @@ Lien::Lien(int size, double r, double *VarHis, double *spot, double *trend, doub
 	MonteCarlo * mt_ = new MonteCarlo(fdStep, nbSamples, eurostral, bs_);
 
 }
+double Lien::PriceEurostral() {
+	double prix;
+	double ic;
+	Mt->priceEurostral( prix, ic);
+	return prix;
+}
+double Lien::PriceEurostral(double *past, double t) {
+	double prix;
+	double ic;
+	PnlMat* PastPnl = pnl_mat_create_from_ptr( opt->nbTimeSteps_,bs->size_, past);
+	Mt->priceEurostral(PastPnl, t, prix, ic);
+	return prix;
+}
+//todo on peut trouver int Time à partir de t
+double* Lien::deltaEurostral(double* past, double t,int Time){
+	PnlVect* Delta = pnl_vect_create(bs->size_);
+	PnlMat* pastpnl = pnl_mat_create_from_ptr( Time,bs->size_,past);
+	Mt->deltaEurostral(pastpnl, t, Delta);
+	double* Deltadouble;
+	for (int i = 0; i < Time; i++) {
+		Deltadouble[i] = pnl_vect_get(Delta, i);
+	}
+	return Deltadouble;
+}
