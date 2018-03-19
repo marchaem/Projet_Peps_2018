@@ -15,29 +15,6 @@ namespace Data
     // on commence par construire un DataFXTop
     public class DataPricer
     {
-        static public void Export_Taux_de_change(DateTime debut, DateTime fin)
-        {
-            List<Currency> curr = new List<Currency>();
-            curr.Add(Currency.USD);
-            curr.Add(Currency.AUD);
-            // Ici, on s’intéresse à l’euro par rapport aux autres :
-            // EUR/USD, EUR/AUD
-
-            DataFXTop xchange = new DataFXTop(Currency.EUR,
-                                              curr,
-                                              debut,
-                                              fin,
-                                              Frequency.Daily);
-            // On récupère les données, on les parse et on remplit xchange
-
-            xchange.ImportData(new ParserFXTop());
-            
-
-            // On exporte les données récupérées, dans le format de notre choix, ici CSV
-
-            xchange.Export(new ExportXML("recupTauxChange.xml"));
-
-        }
 
         //taux euribor entre debut et fin
         public static void Export_Taux_EURIBOR(DateTime debut, DateTime fin)
@@ -57,19 +34,19 @@ namespace Data
 
         static void Main()
         {
-            Console.WriteLine("on entre dans le Main");
-            Export_Taux_de_change(new DateTime(2012, 6, 9), DateTime.Now);
-            var xml = XDocument.Load(@"C:\contacts.xml");
-            var query = from c in xml.Root.Descendants("contact")
-                        where (int)c.Attribute("id") < 4
-                        select c.Element("firstName").Value + " " +
-                               c.Element("lastName").Value;
-
-
-            foreach (string name in query)
+            DateTime dateDebut = new DateTime(2015,6,1);
+            DateTime dateFin = DateTime.Today;
+            RecupData data = new RecupData(dateDebut, dateFin);
+            data.RecupCSV(4);
+            List<double> test = data.ParseCSV(data.Files[0]);
+            foreach(double d in test)
             {
-                Console.WriteLine("Contact's Full Name: {0}", name);
+                Console.Write(d);
+                Console.Write("-");
             }
+            Console.WriteLine("Fin du programme ...");
+            Console.ReadLine();
+            data.deleteFiles();
         }
 
     }
