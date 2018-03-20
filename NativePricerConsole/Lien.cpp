@@ -27,10 +27,25 @@ double Lien::PriceEurostral() {
 
 }
 
-PnlVect * Lien::deltaEurostral(double * past, double t) {
-	PnlMat * pastMat = pnl_mat_create_from_ptr(this->bs->size_, this->bs->size_, past);
-	PnlVect * delta = pnl_vect_create(5);
+PnlVect * Lien::deltaEurostral(double * past, double t,double H) {
+	int nbdate = 0;
+	if (t / H - floor(t / H) == 0) {
+		nbdate = floor(t / H);
+	}
+	else {
+		nbdate = floor(t / H) + 1;
+	}
+	PnlMat * pastMat = pnl_mat_create_from_ptr(this->bs->size_, nbdate, past);
+	PnlVect * delta = pnl_vect_create(bs->size_);
 	Mt->deltaEurostral(pastMat, t, delta);
 	pnl_mat_free(&pastMat);
 	return delta;	
 }
+double Lien::PriceEurostral(double *past, double t) {
+	double prix;
+	double ic;
+	PnlMat* PastPnl = pnl_mat_create_from_ptr(opt->nbTimeSteps_, bs->size_, past);
+	Mt->priceEurostral(PastPnl, t, prix, ic);
+	return prix;
+}
+//todo on peut trouver int Time à partir de t
