@@ -3,5 +3,10 @@ packages
 Wrapper/x64
 Wrapper/Debug
 WebApplication/bin
+WebApplication/obj
+NativePricerConsole/x64
+NativePricerConsole/Debug
 Data/bin
 Data/obj
+Debug
+x64
