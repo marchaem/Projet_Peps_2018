@@ -22,7 +22,7 @@ Lien::Lien(int size, double r, double *VarHis, double *spot, double *trend, doub
 
 double Lien::PriceEurostral() {
 	double prix, ic;
-	Mt->priceEurostral(prix, ic);
+	Mt->priceEurostral(prix,ic);
 	return prix;
 
 }
