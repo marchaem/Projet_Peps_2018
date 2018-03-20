@@ -1,8 +1,0 @@
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\bin\Debug\Data.exe
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\bin\Debug\Data.pdb
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\bin\Debug\APIFiMag.dll
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\obj\Debug\Data.csprojResolveAssemblyReference.cache
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\obj\Debug\Data.Properties.Resources.resources
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\obj\Debug\Data.csproj.GenerateResource.Cache
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\obj\Debug\Data.exe
-C:\Users\Manu\Documents\Visual Studio 2015\Projects\Pricer\Data\obj\Debug\Data.pdb
