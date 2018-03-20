@@ -15,11 +15,11 @@ namespace Wrapper {
 	
 	}
 
-	cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
+	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);
 		PnlVect * delta=lien->deltaEurostral(convert_past,t);
 		return(convertPnlVectToCli(delta));
-	}
+	}*/
 
 	WrapperClass::WrapperClass(int size, double r, cli::array<double,2>^ VarHis, cli::array<double>^ spot, cli::array<double>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double>^ lambdas1) {
 		pricer1 = new Pricer();
@@ -29,7 +29,7 @@ namespace Wrapper {
 		double * convert_lambdas = convertArrayPointer(lambdas1);
 		lien = new Lien(size,r,convert_varHis,convert_spot,convert_trend,fdStep,nbSamples,strike,T1,nbTimeSteps1,convert_lambdas);
 	}
-
+	
 	double WrapperClass::getZero() {
 		return 0.0;
 	}
@@ -56,13 +56,13 @@ namespace Wrapper {
 		}
 		return res;
 	}
-
-	cli::array<double>^ WrapperClass::convertPnlVectToCli(PnlVect * delta) {
+	
+	/*cli::array<double>^ WrapperClass::convertPnlVectToCli(PnlVect * delta) {
 		cli::array<double>^ delta_cli = gcnew cli::array<double,1>(delta->size);
 		for (int i = 0; i < delta->size - 1; i++) {
 			delta_cli[i] = pnl_vect_get(delta, i);
 		}
 		return delta_cli;
-	}
+	}*/
 }
 
