@@ -22,14 +22,10 @@ namespace Data
 
         public static double Cov(List<double> v1, List<double> v2)
         {
-            int size = 0;
+            int size = v1.Count;
             if (v1.Count != v2.Count)
             {
-                size = Math.Min(v1.Count, v2.Count);
-            }
-            else
-            {
-                size = v1.Count;
+                throw new Exception("[Erreur] Covariance de vecteurs de tailles différentes ! Arrêt");
             }
             List<double> aux = new List<double>();
             double mean1 = v1.Average();
@@ -39,6 +35,23 @@ namespace Data
                 aux.Add((v1[i] - mean1) * (v2[i] - mean2));
             }
             return aux.Average();                        
+        }
+
+        public static double Cov(Dictionary<DateTime, double> d1, Dictionary<DateTime, double> d2)
+        {
+            var data = d1.Keys.Intersect(d2.Keys);
+            List<double> d1Values = new List<double>();
+            List<double> d2Values = new List<double>();
+            foreach (DateTime d in data)
+            {
+                d1Values.Add(d1[d]);
+                d2Values.Add(d2[d]);
+            }
+            if (d1Values.Count != d2Values.Count)
+            {
+                throw new Exception("[ERROR] Les listes générés ne sont pas de même taille ! (" + d1Values.Count + " != " + d2Values.Count + ")");
+            }
+            return Cov(d1Values, d2Values);
         }
 
         public static double Cor(List<double> v1, List<double> v2)
@@ -58,6 +71,37 @@ namespace Data
             return ret;
         }
 
+        public static double Cor(Dictionary<DateTime,double> d1, Dictionary<DateTime, double> d2)
+        {
+            var data = d1.Keys.Intersect(d2.Keys);
+            List<double> d1Values = new List<double>();
+            List<double> d2Values = new List<double>();
+            foreach (DateTime d in data)
+            {
+                d1Values.Add(d1[d]);
+                d2Values.Add(d2[d]);
+            }
+            if (d1Values.Count != d2Values.Count)
+            {
+                throw new Exception("[ERROR] Les listes générés ne sont pas de même taille ! (" + d1Values.Count + " != " + d2Values.Count + ")");
+            }
+            return Cor(d1Values,d2Values);
+        }
+
+        public static double[,] CorMatrix(List<Dictionary<DateTime, double>> data)
+        {
+            double[,] matrix = new double[data.Count, data.Count];
+            //Amélioration possible : On peut faire que la moitié des calculs, la matrice est symétrique ...
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < data.Count; j++)
+                {
+                    matrix[i, j] = Cor(data[i], data[j]);
+                }
+            }
+            return matrix;
+        }
+
         public static double[,] CorMatrix(List<List<double>> data)
         {
             double[,] matrix = new double[data.Count, data.Count];
@@ -66,7 +110,21 @@ namespace Data
             {
                 for (int j=0; j<data.Count; j++)
                 {
-                    matrix[i, j] = Math.Round(Cor(data[i],data[j]),2);
+                    matrix[i, j] = Cor(data[i],data[j]);
+                }
+            }
+            return matrix;
+        }
+
+        public static double[,] CovMatrix(List<Dictionary<DateTime, double>> data)
+        {
+            double[,] matrix = new double[data.Count, data.Count];
+            //Amélioration possible : On peut faire que la moitié des calculs, la matrice est symétrique ...
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < data.Count; j++)
+                {
+                    matrix[i, j] = Cov(data[i], data[j]);
                 }
             }
             return matrix;
@@ -88,7 +146,13 @@ namespace Data
 
         public static double volStd(List<double> data)
         {
-            return std(logRendement(data));
+            return Math.Sqrt(252) *std(logRendement(data));
+        }
+
+        public static double volStd(Dictionary<DateTime, double> data)
+        {
+            List<double> val = data.Values.ToList();
+            return volStd(val);
         }
 
         public static double volHisto(List<double> data)
@@ -105,6 +169,12 @@ namespace Data
             sum = sum * (252.0 / data.Count);
             sum = Math.Sqrt(sum);
             return sum;
+        }
+
+        public static double volHisto(Dictionary<DateTime, double> data)
+        {
+            List<double> val = data.Values.ToList();
+            return volHisto(val);
         }
 
     }
