@@ -18,6 +18,7 @@ namespace Data
         public List<string> Files; //Liste des noms de fichiers CSV
         DateTime dateDebut;
         DateTime dateFin;
+        List<Dictionary<DateTime, double>> data;
 
         public RecupData(DateTime dateDebut, DateTime dateFin)
         {
@@ -39,11 +40,64 @@ namespace Data
             this.dateFin = dateFin;
         }
 
-        public List<double> ParseCSV(string file)
+        public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
         {
-            List<double> donnees = new List<double>();
+            double joursTotaux = (finProduit - debutProduit).TotalDays;
+            joursTotaux = t / 8 * joursTotaux;
+            DateTime res = debutProduit.AddDays(joursTotaux);
+            return res;
+        }
+
+        public int GetNbTimeSteps(DateTime debutProduit, DateTime finProduit, int freq)
+        {
+            double joursTotaux = (finProduit - debutProduit).TotalDays;
+            Console.WriteLine((int)joursTotaux / freq);
+            return (int)joursTotaux / freq;
+        }
+
+        public List<double> GetClosestData(DateTime date)
+        {
+            List<double> res = new List<double>();
+            foreach(Dictionary<DateTime,double> dico in this.data)
+            {
+                res.Add(GetClosestData(date,dico));
+            }
+            for (int i=0; i<res.Count; i++)
+            {
+                Console.WriteLine(res[i]);
+            }
+            return res;
+        }
+
+        public double GetClosestData(DateTime date, Dictionary<DateTime, double> dico)
+        {
+            DateTime dateOpt = dico.Keys.ToList()[0];
+            double dist = Double.MaxValue;
+            double min = Double.MaxValue;
+            // Pas optimal ...
+            foreach (KeyValuePair<DateTime, double> entry in dico)
+            {
+                dist = Math.Abs((date-entry.Key).TotalDays);
+                if (dist < min)
+                {
+                    dist = min;
+                    dateOpt = entry.Key;
+                }
+            }
+            return dico[dateOpt];
+        }
+
+        public double DateToDouble(DateTime debutProduit, DateTime date, DateTime finProduit)
+        {
+            double joursTotaux = (finProduit - debutProduit).TotalDays;
+            double joursPasses = (date - debutProduit).TotalDays;
+            return joursPasses / joursTotaux * 8.0;
+        }
+
+        private Dictionary<DateTime,double> ParseCSV(string file)
+        {
             List<string> AllDonnees = new List<string>();
-            List<string> donneesString = new List<string>();
+            Dictionary<DateTime, double> mapData = new Dictionary<DateTime, double>();
             using (TextFieldParser parser = new TextFieldParser(file))
             {
                 parser.TextFieldType = FieldType.Delimited;
@@ -59,35 +113,69 @@ namespace Data
                 }
             }
 
-            // On ne garde que les cours de cloture
-            for (int i = 11; i < AllDonnees.Count; i = i + 7)
+            double token;
+            DateTime dateCour;
+
+            for (int i=7; i< AllDonnees.Count; i = i +7)
             {
-                if (AllDonnees[i] != "null")
+                if (double.TryParse(AllDonnees[i + 4], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out token))
                 {
-                    donneesString.Add(AllDonnees[i]);
-                }
+                    dateCour = DateTime.Parse(AllDonnees[i]);
+                    mapData[dateCour] = double.Parse(AllDonnees[i + 4], CultureInfo.InvariantCulture);
+                }              
             }
-            donnees = donneesString.ConvertAll(item => double.Parse(item, CultureInfo.InvariantCulture));
-            return donnees;
+
+            return mapData;
         }
 
-        public List<List<double>> ParseAll()
+        private List<Dictionary<DateTime,double>> ParseAll()
         {
-            List<List<double>> res = new List<List<double>>();
-            for (int i=0; i<Symbols.Count; i++)
+            List<Dictionary<DateTime, double>> res = new List<Dictionary<DateTime, double>>();
+            for (int i=0; i<Files.Count; i++)
             {
                 res.Add(ParseCSV(Files[i]));
             }
             return res;
         }
 
-        public double[,] exportPastToWrapper()
+        public double[,] exportPast()
         {
-            //TODO
+            //Nombre de lignes = nb de sousjacents
+            //Nombre de col = nb de dates 
             return null;
         }
 
-        public void RecupCSV(int time)
+        public double[] exportVol()
+        {
+            double[] res = new double[data.Count];
+            for (int i= 0; i < this.data.Count; i++)
+            {
+                res[i] = Stats.volStd(this.data[i].Values.ToList());
+            }
+            return res;
+        }
+
+        public double[,] exportCor()
+        {
+            return Stats.CorMatrix(this.data);
+        }
+
+        public double[,] exportCov()
+        {
+            return Stats.CovMatrix(this.data);
+        }
+
+        private bool inAllData(DateTime date)
+        {
+            bool res = true;
+            foreach(Dictionary<DateTime,double> dico in this.data)
+            {
+                res = res && dico.ContainsKey(date);
+            }
+            return res;
+        }
+
+        public void Fetch()
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -97,11 +185,13 @@ namespace Data
                 System.Threading.Thread.Sleep(25);
             }
             sw.Stop();
-            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Milliseconds/1000.0 + " secondes");
+            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
+            Console.WriteLine("Mise en forme des données ...");
+            this.data = ParseAll();
             return;
         }
 
-        public bool DownloadFinished()
+        private bool DownloadFinished()
         {
             bool res = true;
             for (int i=0; i<Files.Count; i++)
@@ -112,7 +202,7 @@ namespace Data
             return res;
         }
 
-        async Task GetYahooCSV()
+        private async Task GetYahooCSV()
         {
             for (int i = 0; i < Symbols.Count; i++)
             {

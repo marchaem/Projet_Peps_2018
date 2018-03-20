@@ -11,31 +11,20 @@ namespace Data
     {
         static void Main()
         {
-            DateTime dateDebut = new DateTime(2010,1,1);
+            DateTime dateDebut = new DateTime(2018,10,3);
             DateTime dateFin = DateTime.Today;
             RecupData data = new RecupData(dateDebut, dateFin);
-            data.RecupCSV(4);
-            List<List<double>> test = data.ParseAll();
-            List<double> cour;
-            for (int i=0; i<data.Files.Count; i++)
-            {
-                cour = test[i];
-                Console.WriteLine("Vol histo = " + Stats.volHisto(cour));
-                Console.WriteLine("Vol std log = " + Stats.volStd(cour));
-            }
-
-            double[,] corMatrix = Stats.CorMatrix(test);
-            for (int i = 0; i<5; i++)
-            {
-                for (int j=0; j<5; j++)
-                {
-                    Console.Write(corMatrix[i, j]+ "  ");
-                }
-                Console.WriteLine();
-            }
+            DateTime debut = new DateTime(2014, 12, 18);
+            DateTime fin = new DateTime(2022, 12, 18);
+            data.Fetch();
+            data.GetClosestData(new DateTime(2016,4,25));
+            double[,] past = data.exportPast();
+            double[] vol = data.exportVol();
+            double[,] cor = data.exportCor();
+            double[,] cov = data.exportCov();
             Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
-            data.deleteFiles();
+            //data.deleteFiles();
         }
     }   
 }
