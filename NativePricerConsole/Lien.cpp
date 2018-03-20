@@ -6,8 +6,7 @@ Lien::Lien(int size, double r, double *VarHis, double *spot, double *trend, doub
 	PnlMat *Varhispnl = pnl_mat_create_from_ptr(size, size, VarHis);
 	PnlVect *spotpnl = pnl_vect_create_from_ptr(size, spot);
 	PnlVect *trendpnl = pnl_vect_create_from_ptr(size, trend);
-	BlackScholesModel* bs_ = new BlackScholesModel(size, r, Varhispnl, spotpnl, trendpnl);
-	this->bs = bs_;
+	bs = new BlackScholesModel(size, r, Varhispnl, spotpnl, trendpnl);
 
 	//Création de l'eurostral
 	PnlVect *lambdapnl = pnl_vect_create_from_ptr(size, lambdas1);
@@ -16,15 +15,22 @@ Lien::Lien(int size, double r, double *VarHis, double *spot, double *trend, doub
 
 	//Création du MonteCarlo
 
-	MonteCarlo * mt_ = new MonteCarlo(fdStep, nbSamples, eurostral, bs_);
-	Mt = mt_;
+	Mt = new MonteCarlo(fdStep, nbSamples, eurostral, bs);
+	
 
 }
 
 double Lien::PriceEurostral() {
 	double prix, ic;
 	Mt->priceEurostral(prix, ic);
-
 	return prix;
 
+}
+
+PnlVect * Lien::deltaEurostral(double * past, double t) {
+	PnlMat * pastMat = pnl_mat_create_from_ptr(this->bs->size_, this->bs->size_, past);
+	PnlVect * delta = pnl_vect_create(5);
+	Mt->deltaEurostral(pastMat, t, delta);
+	pnl_mat_free(&pastMat);
+	return delta;	
 }

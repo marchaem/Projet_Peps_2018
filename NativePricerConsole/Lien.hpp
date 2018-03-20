@@ -21,9 +21,9 @@ public:
 	DLLEXP	double PriceEurostral(double *past, double t);
 
 		/*delta*/
-	DLLEXP	double* deltaEurostral(double *past, double t,int Time);
+	DLLEXP	PnlVect * deltaEurostral(double *past, double t);
 
 		/*P&l final*/
-		double profitLoss_Eurostral(const PnlMat *past, double H);
+	DLLEXP	double profitLoss_Eurostral(const PnlMat *past, double H);
 
 };
