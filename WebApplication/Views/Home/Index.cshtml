@@ -17,16 +17,7 @@
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
     </div>
     <div class="col-md-4">
-        @{
-            var myChart = new Chart(width: 600, height: 400)
-                .AddTitle("Chart Title")
-                .AddSeries(
-                    name: "Employee",
-                    xValue: new[] { "Peter", "Andrew", "Julie", "Mary", "Dave" },
-                    yValues: new[] { "2", "6", "4", "5", "3" })
-                    .AddSeries("Default",chartType: "Line")
-                .Write();
-        }
+        
     </div>
     <div class="col-md-4">
         <h2>Web Hosting</h2>
