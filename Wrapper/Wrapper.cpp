@@ -4,6 +4,58 @@
 #include "Wrapper.h"
 using namespace std;
 
+
+int main(int argc, char* argv[], char *envp[]) {
+	int size = 5;
+	double r = 0.01;
+	cli::array<double, 2> ^ varHis = gcnew cli::array<double, 2>(5, 5);
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			varHis[i, j] = 0.15;
+		}
+
+	}
+
+	cli::array<double> ^ spots = gcnew cli::array<double>(5);
+	for (int i = 0; i < 5; i++)
+	{
+		spots[i] = 100;
+	}
+
+
+
+	cli::array<double> ^ trends = gcnew cli::array<double>(5);
+	for (int i = 0; i < 5; i++)
+	{
+		trends[i] = 0.05;
+	}
+
+	cli::array<double> ^ lambdas = gcnew cli::array<double>(5);
+	for (int i = 0; i < 5; i++)
+	{
+		lambdas[i] = 0.05;
+	}
+
+	Wrapper::WrapperClass^ wc = gcnew Wrapper::WrapperClass(size, r, varHis, spots, trends, 0.1, 1, 100, 8.0, 3, lambdas);
+
+	cli::array<double> ^ deltas = gcnew cli::array<double>(5);
+	cli::array<double,2> ^ past = gcnew cli::array<double,2>(1,5);
+	for (int i = 0; i < 1; i++)
+		{
+			for (int j = 0; j < 5; j++) {
+				past[i,j] = 20.0;
+			}
+		}
+	wc->getDeltaEurostral(past, 0.0, deltas, 0.1);
+	cout << " hello " << endl;
+	cout << deltas[0] << endl;
+	cout << "bye" << endl;
+
+	return 0;
+}
+
 namespace Wrapper {
 
 	WrapperClass::WrapperClass() {
@@ -15,21 +67,23 @@ namespace Wrapper {
 	
 	}
 
-<<<<<<< HEAD
 	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);
 		PnlVect * delta=lien->deltaEurostral(convert_past,t);
 		return(convertPnlVectToCli(delta));
 	}*/
 
-	WrapperClass::WrapperClass(int size, double r, cli::array<double,2>^ VarHis, cli::array<double>^ spot, cli::array<double>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double>^ lambdas1) {
+	
 
-	void  WrapperClass::getDeltaEurostral(cli::array<double,1>^ past,double t, cli::array<double,1>^ delta0,double H) {
-		pin_ptr<double> pPast = &past[0];
-		double *convert_past = pPast;
+	void  WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t, [Runtime::InteropServices::OutAttribute] cli::array<double,1>^ %delta0,double H) {
+		/*pin_ptr<double> pPast = &past[0];
+		double *convert_past = pPast;*/
+		double *convert_past;
+		convert_past = convertMatrixPointer(past);
 		//double * convert_past = convertArrayPointer(past);
 		double * delta = new double[size_];
 		delta=lien->deltaEurostral(convert_past,t,H);
+		cout << delta[0] << endl;
 		//cli::array<double>^ deltacli = gcnew cli::array<double, 1>(5);		
 		convertTabToCli(delta,delta0);
 	}
@@ -67,12 +121,14 @@ namespace Wrapper {
 	double* WrapperClass::convertMatrixPointer(cli::array<double,2> ^ mat) {
 		double* res = new double[mat->Length];
 		
-		int a = mat->GetLength(0);
-
+		int a = mat->GetLength(1);
+		//cout << "dans convert" << a << endl;
+		//cout << "dans convert" << mat->GetLength(1) << endl;
 		for (int i = 0; i < mat->GetLength(0); i++) {	
 			for (int j = 0; j < mat->GetLength(1); j++) {
 				//*(res + mat->GetLength(0)*i + j) = mat[i, j];
 				res[a*i+j] = mat[i, j];
+				
 			}		
 		}
 		return res;
@@ -87,10 +143,13 @@ namespace Wrapper {
 	}*/
 	
 	void WrapperClass::convertTabToCli(double* delta, cli::array<double, 1>^ delta0) {
-		for (int i = 0; i < sizeof(delta); i++) {
+		for (int i = 0; i < 5; i++) {
 			delta0[i] = delta[i];
 		}
 		
 	}
+
+
+	 
 }
 
