@@ -22,15 +22,34 @@ Lien::Lien(int size, double r, double *VarHis, double *spot, double *trend, doub
 
 double Lien::PriceEurostral() {
 	double prix, ic;
-	Mt->priceEurostral(prix, ic);
+	Mt->priceEurostral(prix,ic);
 	return prix;
 
 }
 
-PnlVect * Lien::deltaEurostral(double * past, double t) {
-	PnlMat * pastMat = pnl_mat_create_from_ptr(this->bs->size_, this->bs->size_, past);
-	PnlVect * delta = pnl_vect_create(5);
+double * Lien::deltaEurostral(double * past, double t,double H) {
+	int nbdate = 0;
+	if (t / H - floor(t / H) == 0) {
+		nbdate = floor(t / H);
+	}
+	else {
+		nbdate = floor(t / H) + 1;
+	}
+	PnlMat * pastMat = pnl_mat_create_from_ptr(this->bs->size_, nbdate, past);
+	PnlVect * delta = pnl_vect_create(bs->size_);
 	Mt->deltaEurostral(pastMat, t, delta);
 	pnl_mat_free(&pastMat);
-	return delta;	
+	double* deltabis = new double[bs->size_];
+	for (int i = 0; i < delta->size - 1; i++) {
+		deltabis[i] = pnl_vect_get(delta, i);
+	}
+	return deltabis;	
 }
+double Lien::PriceEurostral(double *past, double t) {
+	double prix;
+	double ic;
+	PnlMat* PastPnl = pnl_mat_create_from_ptr(opt->nbTimeSteps_, bs->size_, past);
+	Mt->priceEurostral(PastPnl, t, prix, ic);
+	return prix;
+}
+//todo on peut trouver int Time à partir de t
