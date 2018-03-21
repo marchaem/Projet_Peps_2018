@@ -17,8 +17,8 @@ namespace Data
             DateTime debut = new DateTime(2014, 12, 18);
             DateTime fin = new DateTime(2022, 12, 18);
             data.Fetch();
-            data.GetClosestData(new DateTime(2016,4,25));
-            double[,] past = data.exportPast();
+            //data.GetClosestData(new DateTime(2015,4,25));
+            double[,] past = data.exportPast(0.2,7,debut,fin);
             double[] vol = data.exportVol();
             double[,] cor = data.exportCor();
             double[,] cov = data.exportCov();
