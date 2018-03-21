@@ -11,7 +11,7 @@ public:
 	Option * opt;
 
 		/*Constructeur*/
-	DLLEXP	Lien(int size, double r, double *CovLogR, double *spot, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1);
+	DLLEXP	Lien(int size, double r, double *CovLogR, double *spot, double * trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1);
         /*Transformation de pnl en pointeur double */
 
 		/*Prix en 0*/

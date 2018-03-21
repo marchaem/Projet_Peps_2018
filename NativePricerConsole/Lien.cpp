@@ -1,12 +1,12 @@
 #include "Lien.hpp"
 #include "Eurostral100.hpp"
 
-Lien::Lien(int size, double r, double *CovLogR, double *spot, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1) {
+Lien::Lien(int size, double r, double *CovLogR, double *spot,double * trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1) {
     // création du BlackScholes
 	PnlMat *CovlogRpnl = pnl_mat_create_from_ptr(size, size,CovLogR);
 	PnlVect *spotpnl = pnl_vect_create_from_ptr(size, spot);
-	
-	bs = new BlackScholesModel(size,r,CovlogRpnl,spotpnl);
+	PnlVect * trendpnl = pnl_vect_create_from_ptr(size, trend);
+	bs = new BlackScholesModel(size,r,CovlogRpnl,spotpnl,trendpnl);
 
 	//Création de l'eurostral
 	PnlVect *lambdapnl = pnl_vect_create_from_ptr(size, lambdas1);
@@ -28,14 +28,14 @@ double Lien::PriceEurostral() {
 }
 
 double * Lien::deltaEurostral(double * past, double t,double H) {
-	int nbdate = 0;
+	int nbdate = 1;
 	if (t / H - floor(t / H) == 0) {
 		nbdate = floor(t / H);
 	}
 	else {
 		nbdate = floor(t / H) + 1;
 	}
-	PnlMat * pastMat = pnl_mat_create_from_ptr(this->bs->size_, nbdate, past);
+	PnlMat * pastMat = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	PnlVect * delta = pnl_vect_create(bs->size_);
 	Mt->deltaEurostral(pastMat, t, delta);
 	pnl_mat_free(&pastMat);
@@ -46,18 +46,33 @@ double * Lien::deltaEurostral(double * past, double t,double H) {
 	return deltabis;	
 }
 double Lien::PriceEurostral(double *past, double t) {
+	
 	double prix;
 	double ic;
-	int nbdate = 0;
+	int nbdate = 1;
 	if (t / opt->nbTimeSteps_ - floor(t / opt->nbTimeSteps_) == 0) {
-		nbdate = floor(t / opt->nbTimeSteps_);
+		if (t - floor(t) < 0.5) {
+			nbdate += 2 * floor(t);
+		}
+		else {
+			nbdate += 2 * floor(t) + 1;
+		}
 	}
 	else {
-		nbdate = floor(t / opt->nbTimeSteps_) + 1;
+
+		if (t - floor(t) < 0.5) {
+			nbdate += 2 * floor(t)+1;
+		}
+		else {
+			nbdate += 2 * floor(t) + 2;
+		}
 	}
+
+	return bs->size_;
 	PnlMat* PastPnl = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	Mt->priceEurostral(PastPnl, t, prix, ic);
-	return prix;
+	//return prix;
+	
 }
 
 double Lien::profitLoss_Eurostral(double * past, double H) {

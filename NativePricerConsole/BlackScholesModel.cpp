@@ -24,13 +24,12 @@ BlackScholesModel::BlackScholesModel(int size,double r, double rho, PnlVect *sig
     g = pnl_vect_new();
 }
 
-BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect *spot ) {
+BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect *spot,PnlVect * trend ) {
 	size_ = size;
 	r_ = r;
 	g = pnl_vect_new();
 	rho_ = 0.0;
 	spot_ = spot;
-	PnlVect* trend = pnl_vect_create_from_zero(size);
 	trends_ = trend;
 	PnlVect* vol = pnl_vect_create(size);
 	for (int i = 0; i < size; i++) {
@@ -48,7 +47,7 @@ BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect
 	}
 
 }
-BlackScholesModel::BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend) {
+/*BlackScholesModel::BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend) {
 	size_ = size;
 	r_ = r;
 	g = pnl_vect_new();
@@ -88,7 +87,7 @@ BlackScholesModel::BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVec
 	pnl_mat_plus_mat(cor, id);
 	corr = cor;
 
-}
+}*/
 
 
 BlackScholesModel::BlackScholesModel(){

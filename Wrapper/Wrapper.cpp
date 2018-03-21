@@ -66,6 +66,11 @@ namespace Wrapper {
 		return lien->PriceEurostral();
 	
 	}
+	double WrapperClass::getPriceEurostral(double t, cli::array<double, 2>^ past) {
+		double * convert_past = convertMatrixPointer(past);
+		//return 1.0;
+		return lien->PriceEurostral(convert_past, t);
+	}
 
 	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);
@@ -88,7 +93,7 @@ namespace Wrapper {
 		convertTabToCli(delta,delta0);
 	}
 
-	WrapperClass::WrapperClass(int size, double r, cli::array<double,2>^ VarHis, cli::array<double,1>^ spot, cli::array<double,1>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double,1>^ lambdas1) {
+	WrapperClass::WrapperClass(int size, double r, cli::array<double,2>^ covlogR, cli::array<double,1>^ spot, cli::array<double, 1>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double,1>^ lambdas1) {
 		pricer1 = new Pricer();
 		size_ = size;
 		pin_ptr<double> pS = &spot[0];
@@ -97,11 +102,11 @@ namespace Wrapper {
 		double *convert_trend = pT;
 		pin_ptr<double> pL = &lambdas1[0];
 		double *convert_lambdas = pL;
-		double * convert_varHis = convertMatrixPointer(VarHis);
+		double * convert_covlogr = convertMatrixPointer(covlogR);
 		//double * convert_spot = convertArrayPointer(spot);
 		//double * convert_trend = convertArrayPointer(trend);
 		//double * convert_lambdas = convertArrayPointer(lambdas1);
-		lien = new Lien(size,r,convert_varHis,convert_spot,convert_trend,fdStep,nbSamples,strike,T1,nbTimeSteps1,convert_lambdas);
+		lien = new Lien(size,r,convert_covlogr,convert_spot,convert_trend,fdStep,nbSamples,strike,T1,nbTimeSteps1,convert_lambdas);
 	}
 	
 	double WrapperClass::getZero() {

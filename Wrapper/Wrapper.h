@@ -16,8 +16,9 @@ namespace Wrapper {
 
 	public:
 		WrapperClass();
-	    WrapperClass(int size, double r, cli::array<double,2>^ VarHis, cli::array<double>^ spot, cli::array<double>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double>^ lambdas1);
+	    WrapperClass(int size, double r, cli::array<double,2>^ covlogR, cli::array<double,1>^ spot, cli::array<double, 1>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double>^ lambdas1);
 		double getPriceEurostral();
+		double getPriceEurostral(double t, cli::array<double, 2>^ past);
 		//cli::array<double>^ getDeltaEurostral(cli::array<double, 2>^ past, double t);
 		void getDeltaEurostral(cli::array<double, 2>^ past, double t, [Runtime::InteropServices::OutAttribute] cli::array<double, 1>^ %delta0,double H);
 		double getZero();

@@ -25,7 +25,7 @@ public:
 	/**
 	*Constructeur
 	*/
-	BlackScholesModel(int size, double r, PnlMat *CovLogR, PnlVect *spot);
+	BlackScholesModel(int size, double r, PnlMat *CovLogR, PnlVect *spot,PnlVect* trend);
 
     /**
     *Constructeur
@@ -34,7 +34,7 @@ public:
 	/**
 	*Constructeur
 	*/
-	BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend);
+	//BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend);
     /**
     *Destructeur
     */
