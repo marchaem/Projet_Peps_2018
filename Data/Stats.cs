@@ -28,11 +28,18 @@ namespace Data
                 throw new Exception("[Erreur] Covariance de vecteurs de tailles différentes ! Arrêt");
             }
             List<double> aux = new List<double>();
-            double mean1 = v1.Average();
-            double mean2 = v2.Average();
-            for (int i=0; i<size; i++)
+            List<double> logRenta1 = new List<double>();
+            List<double> logRenta2 = new List<double>();
+            for (int i=0; i<(v1.Count-1); i++)
             {
-                aux.Add((v1[i] - mean1) * (v2[i] - mean2));
+                logRenta1.Add(Math.Log(v1[i+1]/v1[i]));
+                logRenta2.Add(Math.Log(v2[i+1]/v2[i]));
+            }
+            double mean1 = logRenta1.Average();
+            double mean2 = logRenta2.Average();
+            for (int i=0; i<(size-1); i++)
+            {
+                aux.Add((logRenta1[i] - mean1) * (logRenta2[i] - mean2));
             }
             return aux.Average();                        
         }
@@ -125,7 +132,9 @@ namespace Data
                 for (int j = 0; j < data.Count; j++)
                 {
                     matrix[i, j] = Cov(data[i], data[j]);
+                    Console.Write(matrix[i,j] + " ");
                 }
+                Console.WriteLine();
             }
             return matrix;
         }

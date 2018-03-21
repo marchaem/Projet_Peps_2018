@@ -59,7 +59,6 @@ namespace Data
             List<double> res = new List<double>();
             foreach(Dictionary<DateTime,double> dico in this.data)
             {
-                Console.WriteLine(GetClosestData(date, dico));
                 res.Add(GetClosestData(date,dico));
             }
             return res;
@@ -157,10 +156,7 @@ namespace Data
                 for (int j=0; j<toPutInPast.Count; j++)
                 {
                     res[i, j] = GetClosestData(toPutInPast[j], this.data[i]);
-                    Console.Write(res[i,j]);
-                    Console.Write(" ");
                 }
-                Console.WriteLine();
             }
             return res;
         }
@@ -197,15 +193,15 @@ namespace Data
 
         public void Fetch()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
             GetYahooCSV();
             while (!DownloadFinished())
             {
-                System.Threading.Thread.Sleep(25);
+                //System.Threading.Thread.Sleep(100);
             }
-            sw.Stop();
-            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
+            //sw.Stop();
+            //Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
             Console.WriteLine("Mise en forme des données ...");
             this.data = ParseAll();
             return;
