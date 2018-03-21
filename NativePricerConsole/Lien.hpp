@@ -11,7 +11,7 @@ public:
 	Option * opt;
 
 		/*Constructeur*/
-	DLLEXP	Lien(int size, double r, double *VarHis, double *spot, double *trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1);
+	DLLEXP	Lien(int size, double r, double *CovLogR, double *spot, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1);
         /*Transformation de pnl en pointeur double */
 
 		/*Prix en 0*/
@@ -24,6 +24,6 @@ public:
 	DLLEXP	double * deltaEurostral(double *past, double t,double H);
 
 		/*P&l final*/
-	DLLEXP	double profitLoss_Eurostral(const PnlMat *past, double H);
+	DLLEXP	double profitLoss_Eurostral(double *past, double H);
 
 };

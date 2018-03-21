@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Wrapper;
+using Data;
 
 namespace WebApplication.Models
 {
@@ -12,35 +13,58 @@ namespace WebApplication.Models
     {
         public double displayPrice()
         {
+            DateTime date = DateTime.Today;
+            DateTime debutProduit = new DateTime(2014, 12, 18);
+            DateTime finProduit = new DateTime(2022, 12, 18);
+            Data.RecupData recup = new RecupData(new DateTime(2000, 1, 1), date);
+
+            for (int i=0; i<5; i++)
+            {
+                recup.Files[i] = "C:\\Users\\thame\\Peps1\\Projet_Peps_2018\\WebApplication\\bin\\" + recup.Files[i];
+            }
+            recup.Fetch();
+
+            double t = recup.DateToDouble(debutProduit, date, finProduit);
+            double[,] covLogR = recup.exportCov();
+            double[,] pastDelta = recup.exportPast(t, 7, debutProduit, finProduit); 
+            double[,] pastPrice = recup.exportPast(t, 183, debutProduit, finProduit);
+
 
 
             //int size, double r, double* VarHis, double* spot, double* trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double* lambdas1
-
+            double r_eu = 0.002;
+            double r_aus = 0.025;
+            double r_us = 0.00025;
             int size = 5;
-            double r = 0.01;
+            double r = r_eu;
             double[,] varHis = new double[5,5];
             for (int i = 0; i < 5; i++)
             {
                 for(int j=0; j<5; j++)
                 {
-                    varHis[i,j] = 0.15;
+                    varHis[i,j] = 0.1;
                 }
                 
             }
+            //construction du vecteur de corrélation 
+           // double[,] 
 
             double[] spots = new double[5];
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
-                spots[i] = 100;
+                spots[i] = 3000;
             }
+            spots[3] = 1.0;
+            spots[4] = 1.0;
 
             
 
             double[] trends = new double[5];
-            for (int i = 0; i < 5; i++)
-            {
-                trends[i] = 0.05;
-            }
+            trends[0] = r_eu;
+            trends[1] = r_us - 0.1 * 0.1 * 0.1;
+            trends[2] = r_aus - 0.1 * 0.1 * 0.1;
+            trends[3] = r_eu - r_us;
+            trends[4] = r_eu - r_aus;
 
             double[] lambdas = new double[5];
             for (int i = 0; i < 5; i++)
@@ -49,7 +73,8 @@ namespace WebApplication.Models
             }
             
             WrapperClass wc = new WrapperClass(size, r, varHis, spots, trends, 0.1, 50, 100, 8.0, 10, lambdas);
-            return wc.getPriceEurostral();
+            //return wc.getPriceEurostral();
+            return pastDelta[1,12];
 
         }
         public double[] displayDelta0()

@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Data
 {
-    class RecupData
+    public class RecupData
     {
 
         List<string> Symbols; //Liste des symboles à récupérer sur Yahoo
@@ -23,18 +23,18 @@ namespace Data
         public RecupData(DateTime dateDebut, DateTime dateFin)
         {
             Symbols = new List<String>();
+            Symbols.Add("^STOXX50E");
+            Symbols.Add("^GSPC");
+            Symbols.Add("^AXJO");
             Symbols.Add("EURUSD=X");
             Symbols.Add("EURAUD=X");
-            Symbols.Add("^GSPC");
-            Symbols.Add("^STOXX50E");
-            Symbols.Add("^AXJO");
-
+            
             Files = new List<String>();
+            Files.Add("Eurostoxx50.csv");
+            Files.Add("SP500.csv");
+            Files.Add("ASX200.csv");
             Files.Add("EURUSD.csv");
             Files.Add("EURAUD.csv");
-            Files.Add("SP500.csv");
-            Files.Add("Eurostoxx50.csv");
-            Files.Add("ASX200.csv");
 
             this.dateDebut = dateDebut;
             this.dateFin = dateFin;
@@ -51,7 +51,6 @@ namespace Data
         public int GetNbTimeSteps(DateTime debutProduit, DateTime finProduit, int freq)
         {
             double joursTotaux = (finProduit - debutProduit).TotalDays;
-            Console.WriteLine((int)joursTotaux / freq);
             return (int)joursTotaux / freq;
         }
 
@@ -60,11 +59,8 @@ namespace Data
             List<double> res = new List<double>();
             foreach(Dictionary<DateTime,double> dico in this.data)
             {
+                Console.WriteLine(GetClosestData(date, dico));
                 res.Add(GetClosestData(date,dico));
-            }
-            for (int i=0; i<res.Count; i++)
-            {
-                Console.WriteLine(res[i]);
             }
             return res;
         }
@@ -80,7 +76,7 @@ namespace Data
                 dist = Math.Abs((date-entry.Key).TotalDays);
                 if (dist < min)
                 {
-                    dist = min;
+                    min = dist;
                     dateOpt = entry.Key;
                 }
             }
@@ -91,7 +87,7 @@ namespace Data
         {
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             double joursPasses = (date - debutProduit).TotalDays;
-            return joursPasses / joursTotaux * 8.0;
+            return joursPasses / joursTotaux * 8.0; // Maturité = 8
         }
 
         private Dictionary<DateTime,double> ParseCSV(string file)
@@ -138,11 +134,35 @@ namespace Data
             return res;
         }
 
-        public double[,] exportPast()
+        public double freqToH(int freq, DateTime debutProd, DateTime finProd)
         {
-            //Nombre de lignes = nb de sousjacents
-            //Nombre de col = nb de dates 
-            return null;
+            return 8 * freq / (finProd - debutProd).TotalDays;
+        }
+
+        public double[,] exportPast(double t, int freq, DateTime debutProd, DateTime finProd)
+        {
+            double H = freqToH(freq, debutProd, finProd);
+            List<DateTime> toPutInPast = new List<DateTime>();
+            DateTime dateActuelle = DoubleToDate(debutProd, t, finProd);
+            double cour = 0;
+            while (cour < t)
+            {
+                toPutInPast.Add(DoubleToDate(debutProd, cour, finProd));
+                cour += H;
+            }
+            toPutInPast.Add(dateActuelle);
+            double[,] res = new double[data.Count, toPutInPast.Count];
+            for (int i=0; i<this.data.Count; i++)
+            {
+                for (int j=0; j<toPutInPast.Count; j++)
+                {
+                    res[i, j] = GetClosestData(toPutInPast[j], this.data[i]);
+                    Console.Write(res[i,j]);
+                    Console.Write(" ");
+                }
+                Console.WriteLine();
+            }
+            return res;
         }
 
         public double[] exportVol()
@@ -179,6 +199,7 @@ namespace Data
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
+            Console.WriteLine("Récupération des données");
             GetYahooCSV();
             while (!DownloadFinished())
             {
