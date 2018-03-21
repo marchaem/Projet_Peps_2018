@@ -1,12 +1,12 @@
 #include "Lien.hpp"
 #include "Eurostral100.hpp"
 
-Lien::Lien(int size, double r, double *VarHis, double *spot, double *trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1) {
+Lien::Lien(int size, double r, double *CovLogR, double *spot, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double *lambdas1) {
     // création du BlackScholes
-	PnlMat *Varhispnl = pnl_mat_create_from_ptr(size, size, VarHis);
+	PnlMat *CovlogRpnl = pnl_mat_create_from_ptr(size, size,CovLogR);
 	PnlVect *spotpnl = pnl_vect_create_from_ptr(size, spot);
-	PnlVect *trendpnl = pnl_vect_create_from_ptr(size, trend);
-	bs = new BlackScholesModel(size, r, Varhispnl, spotpnl, trendpnl);
+	
+	bs = new BlackScholesModel(size,r,CovlogRpnl,spotpnl);
 
 	//Création de l'eurostral
 	PnlVect *lambdapnl = pnl_vect_create_from_ptr(size, lambdas1);

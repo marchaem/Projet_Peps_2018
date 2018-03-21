@@ -22,6 +22,11 @@ public:
     */
     BlackScholesModel(int size, double r, double rho, PnlVect *sigma, PnlVect *spot, PnlVect *trend);
 	
+	/**
+	*Constructeur
+	*/
+	BlackScholesModel(int size, double r, PnlMat *CovLogR, PnlVect *spot);
+
     /**
     *Constructeur
     */

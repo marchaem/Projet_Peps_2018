@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    static class Stats
+    public static class Stats
     {
         public static double std(List<double> data)
         {
