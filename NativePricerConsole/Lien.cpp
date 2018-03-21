@@ -48,8 +48,23 @@ double * Lien::deltaEurostral(double * past, double t,double H) {
 double Lien::PriceEurostral(double *past, double t) {
 	double prix;
 	double ic;
-	PnlMat* PastPnl = pnl_mat_create_from_ptr(opt->nbTimeSteps_, bs->size_, past);
+	int nbdate = 0;
+	if (t / opt->nbTimeSteps_ - floor(t / opt->nbTimeSteps_) == 0) {
+		nbdate = floor(t / opt->nbTimeSteps_);
+	}
+	else {
+		nbdate = floor(t / opt->nbTimeSteps_) + 1;
+	}
+	PnlMat* PastPnl = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	Mt->priceEurostral(PastPnl, t, prix, ic);
 	return prix;
 }
-//todo on peut trouver int Time à partir de t
+
+double Lien::profitLoss_Eurostral(double * past, double H) {
+	int rebalanc = floor(opt->T_ / H);
+	double pl;
+	PnlMat* pastpnl = pnl_mat_create_from_ptr(rebalanc, bs->size_, past);
+	Mt->profitLoss_Eurostral(pastpnl, H, pl);
+	return pl;
+}
+
