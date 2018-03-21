@@ -6,7 +6,7 @@ using namespace std;
 
 
 int main(int argc, char* argv[], char *envp[]) {
-	int size = 5;
+	/*int size = 5;
 	double r = 0.01;
 	cli::array<double, 2> ^ varHis = gcnew cli::array<double, 2>(5, 5);
 	for (int i = 0; i < 5; i++)
@@ -51,7 +51,7 @@ int main(int argc, char* argv[], char *envp[]) {
 	wc->getDeltaEurostral(past, 0.0, deltas, 0.1);
 	cout << " hello " << endl;
 	cout << deltas[0] << endl;
-	cout << "bye" << endl;
+	cout << "bye" << endl;*/
 
 	return 0;
 }
@@ -68,7 +68,7 @@ namespace Wrapper {
 	}
 	double WrapperClass::getPriceEurostral(double t, cli::array<double, 2>^ past) {
 		double * convert_past = convertMatrixPointer(past);
-		//return 1.0;
+		
 		return lien->PriceEurostral(convert_past, t);
 	}
 
@@ -79,18 +79,21 @@ namespace Wrapper {
 	}*/
 
 	
-
-	void  WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t, [Runtime::InteropServices::OutAttribute] cli::array<double,1>^ %delta0,double H) {
+	cli::array<double, 1>^ WrapperClass::test(cli::array<double, 1>^ test) {
+		return test;
+	}
+	cli::array<double, 1>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
 		/*pin_ptr<double> pPast = &past[0];
 		double *convert_past = pPast;*/
-		double *convert_past;
-		convert_past = convertMatrixPointer(past);
+		
+		double *convert_past= convertMatrixPointer(past);
 		//double * convert_past = convertArrayPointer(past);
 		double * delta = new double[size_];
-		delta=lien->deltaEurostral(convert_past,t,H);
-		cout << delta[0] << endl;
-		//cli::array<double>^ deltacli = gcnew cli::array<double, 1>(5);		
-		convertTabToCli(delta,delta0);
+		
+		delta= lien->deltaEurostral(convert_past,t,H);
+		//cli::array<double>^ deltacli = gcnew cli::array<double, 1>(5);	
+		
+		return convertTabToCli(delta);
 	}
 
 	WrapperClass::WrapperClass(int size, double r, cli::array<double,2>^ covlogR, cli::array<double,1>^ spot, cli::array<double, 1>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double,1>^ lambdas1) {
@@ -147,11 +150,13 @@ namespace Wrapper {
 		return delta_cli;
 	}*/
 	
-	void WrapperClass::convertTabToCli(double* delta, cli::array<double, 1>^ delta0) {
+	cli::array<double, 1>^  WrapperClass::convertTabToCli(double* delta ) {
+
+		cli::array<double>^ deltacli = gcnew cli::array<double, 1>(5);
 		for (int i = 0; i < 5; i++) {
-			delta0[i] = delta[i];
+			deltacli[i] = delta[i];
 		}
-		
+		return deltacli;
 	}
 
 

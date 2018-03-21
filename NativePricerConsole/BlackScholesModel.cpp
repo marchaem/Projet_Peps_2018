@@ -31,6 +31,7 @@ BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect
 	rho_ = 0.0;
 	spot_ = spot;
 	trends_ = trend;
+	
 	PnlVect* vol = pnl_vect_create(size);
 	for (int i = 0; i < size; i++) {
 		pnl_vect_set(vol, i, sqrt(pnl_mat_get(CovLogR, i, i)));
@@ -45,6 +46,7 @@ BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect
 			pnl_mat_set(cor, j, i, corij);
 		}
 	}
+	corr = cor;
 
 }
 /*BlackScholesModel::BlackScholesModel(int size, double r, PnlMat * VarHis, PnlVect *spot, PnlVect *trend) {

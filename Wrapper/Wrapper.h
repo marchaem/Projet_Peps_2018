@@ -20,12 +20,13 @@ namespace Wrapper {
 		double getPriceEurostral();
 		double getPriceEurostral(double t, cli::array<double, 2>^ past);
 		//cli::array<double>^ getDeltaEurostral(cli::array<double, 2>^ past, double t);
-		void getDeltaEurostral(cli::array<double, 2>^ past, double t, [Runtime::InteropServices::OutAttribute] cli::array<double, 1>^ %delta0,double H);
+		cli::array<double, 1>^  getDeltaEurostral(cli::array<double, 2>^ past, double t,double H);
 		double getZero();
 		double* convertArrayPointer(cli::array<double,1> ^ arr);
 		double* convertMatrixPointer(cli::array<double,2> ^ mat);
 		//cli::array<double>^ convertPnlVectToCli(PnlVect * delta);
-		void convertTabToCli(double * delta, cli::array<double, 1>^ delta0);
+		cli::array<double, 1>^ convertTabToCli(double * delta);
+		cli::array<double, 1>^ test(cli::array<double, 1>^);
 		
 	};
 }

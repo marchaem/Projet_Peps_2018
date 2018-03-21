@@ -151,14 +151,12 @@ namespace Data
                 cour += H;
             }
             toPutInPast.Add(dateActuelle);
-            double[,] res = new double[data.Count, toPutInPast.Count];
+            double[,] res = new double[toPutInPast.Count, data.Count];
             for (int i=0; i<this.data.Count; i++)
             {
                 for (int j=0; j<toPutInPast.Count; j++)
                 {
-                    res[i, j] = GetClosestData(toPutInPast[j], this.data[i]);
-                    Console.Write(res[i,j]);
-                    Console.Write(" ");
+                    res[j, i] = GetClosestData(toPutInPast[j], this.data[i]);
                 }
                 Console.WriteLine();
             }
