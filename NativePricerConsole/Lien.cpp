@@ -65,26 +65,13 @@ double Lien::PriceEurostral(double *past, double t) {
 	
 	double prix;
 	double ic;
-	int nbdate = 1;
-	if (t / opt->nbTimeSteps_ - floor(t / opt->nbTimeSteps_) == 0) {
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t);
-		}
-		else {
-			nbdate += 2 * floor(t) + 1;
-		}
-	}
-	else {
-
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t)+1;
-		}
-		else {
-			nbdate += 2 * floor(t) + 2;
-		}
+	int partieEntiere = floor(t);
+	int nbdate = 2 + 2 * partieEntiere + floor(2 * (t - partieEntiere));
+	if (t - partieEntiere == 0 || t - partieEntiere == 0.5) {
+		nbdate--;
 	}
 
-	
+	return nbdate;
 	PnlMat* PastPnl = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	
 	Mt->priceEurostral(PastPnl, t, prix, ic);
