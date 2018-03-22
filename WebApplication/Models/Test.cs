@@ -13,9 +13,9 @@ namespace WebApplication.Models
     {
         public double displayPrice()
         {
-            DateTime date = DateTime.Today;
+            DateTime date = new DateTime(2014,12,18);
             DateTime debutProduit = new DateTime(2014, 12, 18);
-            DateTime finProduit = new DateTime(2022, 12, 18);
+            DateTime finProduit = new DateTime(2022, 12, 08);
             Data.RecupData recup = new RecupData(new DateTime(2000, 1, 1), date);
 
             for (int i=0; i<5; i++)
@@ -26,8 +26,8 @@ namespace WebApplication.Models
 
             double t = recup.DateToDouble(debutProduit, date, finProduit);
             double[,] covLogR = recup.exportCov();
-            double[,] pastDelta = recup.exportPast(t, 7, debutProduit, finProduit); 
-            double[,] pastPrice = recup.exportPast(t, 183, debutProduit, finProduit);
+            double[,] pastDelta = recup.exportPast(t, 182, debutProduit, finProduit); 
+            double[,] pastPrice = recup.exportPast(t, 182, debutProduit, finProduit);
 
 
 
@@ -37,32 +37,21 @@ namespace WebApplication.Models
             double r_us = 0.00025;
             int size = 5;
             double r = r_eu;
-            double[,] varHis = new double[5,5];
-            for (int i = 0; i < 5; i++)
-            {
-                for(int j=0; j<5; j++)
-                {
-                    varHis[i,j] = 0.1;
-                }
-                
-            }
-            //construction du vecteur de corrélation 
-           // double[,] 
+           
+           
 
             double[] spots = new double[5];
             for (int i = 0; i < 3; i++)
             {
-                spots[i] = 3000;
+                spots[i] = pastPrice[0,i];
             }
-            spots[3] = 1.0;
-            spots[4] = 1.0;
-
+           
             
 
             double[] trends = new double[5];
             trends[0] = r_eu;
-            trends[1] = r_us - 0.1 * 0.1 * 0.1;
-            trends[2] = r_aus - 0.1 * 0.1 * 0.1;
+            trends[1] = r_us-covLogR[1,3];
+            trends[2] = r_aus-covLogR[2,4];
             trends[3] = r_eu - r_us;
             trends[4] = r_eu - r_aus;
 
@@ -72,54 +61,22 @@ namespace WebApplication.Models
                 lambdas[i] = 0.05;
             }
             
-            WrapperClass wc = new WrapperClass(size, r, varHis, spots, trends, 0.1, 50, 100, 8.0, 10, lambdas);
-            //return wc.getPriceEurostral();
-            return pastDelta[1,12];
+            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 100, 8.0, 16, lambdas);
+            double[] delta = new double[5];
+            double H = 416;
+            return wc.getPriceEurostral();
+            //return wc.getPriceEurostral(t, pastPrice);
+            //return wc.getDeltaEurostral(pastPrice, t, H)[0];
+            
 
         }
         public double[] displayDelta0()
         {
 
 
-            //int size, double r, double* VarHis, double* spot, double* trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double* lambdas1
-
-            int size = 5;
-            double r = 0.01;
-            double[,] varHis = new double[5, 5];
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    varHis[i, j] = 0.15;
-                }
-
-            }
-
-            double[] spots = new double[5];
-            for (int i = 0; i < 5; i++)
-            {
-                spots[i] = 100;
-            }
-
-
-
-            double[] trends = new double[5];
-            for (int i = 0; i < 5; i++)
-            {
-                trends[i] = 0.05;
-            }
-
-            double[] lambdas = new double[5];
-            for (int i = 0; i < 5; i++)
-            {
-                lambdas[i] = 0.05;
-            }
-
-            
-
-            WrapperClass wc = new WrapperClass(size, r, varHis, spots, trends, 0.1, 50, 100, 8.0, 10, lambdas);
+           
             double[] delta0 = new double[5];
-            wc.getDeltaEurostral(spots, 0.0, delta0, 0.1);
+            //wc.getDeltaEurostral(spots, 0.0, delta0, 0.1);
             return delta0;
             
 
