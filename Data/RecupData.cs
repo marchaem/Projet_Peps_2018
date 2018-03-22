@@ -15,7 +15,7 @@ namespace Data
     {
 
         List<string> Symbols; //Liste des symboles à récupérer sur Yahoo
-        public List<string> Files; //Liste des noms de fichiers CSV
+        List<string> RawData; //Données brutes récupérés de Yahoo
         DateTime dateDebut;
         DateTime dateFin;
         List<Dictionary<DateTime, double>> data;
@@ -29,17 +29,7 @@ namespace Data
             Symbols.Add("EURUSD=X");
             Symbols.Add("EURAUD=X");
 
-            Files = new List<String>();
-            Files.Add("Eurostoxx50.csv");
-            Files.Add("SP500.csv");
-            Files.Add("ASX200.csv");
-            Files.Add("EURUSD.csv");
-            Files.Add("EURAUD.csv");
-
-            if (Files.Count !=Symbols.Count)
-            {
-                throw new Exception("[ERREUR] La taille des symboles et des fichiers associés sont différentes");
-            }
+            RawData = new List<string>();
 
             this.dateDebut = dateDebut;
             this.dateFin = dateFin;
@@ -109,7 +99,6 @@ namespace Data
                 parser.SetDelimiters(";");
                 while (!parser.EndOfData)
                 {
-                    //Process row
                     string[] fields = parser.ReadFields();
                     foreach (string field in fields)
                     {
@@ -126,6 +115,7 @@ namespace Data
                 if (double.TryParse(AllDonnees[i + 4], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out token))
                 {
                     dateCour = DateTime.Parse(AllDonnees[i]);
+                    Console.WriteLine("Ajouter à la base : (" + dateCour + " , " + double.Parse(AllDonnees[i + 4], CultureInfo.InvariantCulture) + " )");
                     mapData[dateCour] = double.Parse(AllDonnees[i + 4], CultureInfo.InvariantCulture);
                 }              
             }
@@ -133,12 +123,49 @@ namespace Data
             return mapData;
         }
 
-        private List<Dictionary<DateTime,double>> ParseAll()
+        private Dictionary<DateTime, double> ParseStringCSV(string CSVstring)
+        {
+            var stream = new MemoryStream();
+            var bytes = System.Text.Encoding.Default.GetBytes(CSVstring);
+            List<string> AllDonnees = new List<string>();
+            Dictionary<DateTime, double> mapData = new Dictionary<DateTime, double>();
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            using (TextFieldParser parser = new TextFieldParser(stream))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(";");
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+                    foreach (string field in fields)
+                    {
+                        AllDonnees.Add(field);
+                    }
+                }
+            }
+
+            double token;
+            DateTime dateCour;
+
+            for (int i = 7; i < AllDonnees.Count; i = i + 7)
+            {
+                if (double.TryParse(AllDonnees[i + 4], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out token))
+                {
+                    dateCour = DateTime.Parse(AllDonnees[i]);
+                    Console.WriteLine("Ajouté à la base : (" + dateCour + " , " + double.Parse(AllDonnees[i + 4], CultureInfo.InvariantCulture) + " )");
+                    mapData[dateCour] = double.Parse(AllDonnees[i + 4], CultureInfo.InvariantCulture);
+                }
+            }
+            return mapData;
+        }
+
+        private List<Dictionary<DateTime, double>> ParseAllStringCSV()
         {
             List<Dictionary<DateTime, double>> res = new List<Dictionary<DateTime, double>>();
-            for (int i=0; i<Files.Count; i++)
+            for (int i = 0; i < Symbols.Count; i++)
             {
-                res.Add(ParseCSV(Files[i]));
+                res.Add(ParseStringCSV(RawData[i]));
             }
             return res;
         }
@@ -175,7 +202,7 @@ namespace Data
                 {
                     for (int j=0; j<this.data.Count; j++)
                     {
-                        Console.Write(Files[j] + " ");
+                        Console.Write(Symbols[j] + " ");
                     }
                     Console.WriteLine();
                 } 
@@ -223,27 +250,15 @@ namespace Data
             Stopwatch sw = new Stopwatch();
             sw.Start();
             GetYahooCSV();
-            while (!DownloadFinished())
+            while (RawData.Count< this.Symbols.Count)
             {
                 System.Threading.Thread.Sleep(25);
             }
             sw.Stop();
-            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
+            Console.WriteLine("Fichiers récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
             Console.WriteLine("Mise en forme des données ...");
-            this.data = ParseAll();
-            deleteFiles();
+            this.data = ParseAllStringCSV();
             return;
-        }
-
-        private bool DownloadFinished()
-        {
-            bool res = true;
-            for (int i=0; i<Files.Count; i++)
-            {
-                string file = Files[i];
-                res = res && File.Exists(file);
-            }
-            return res;
         }
 
         private async Task GetYahooCSV()
@@ -256,18 +271,8 @@ namespace Data
                 }
                 string csvdata = await Historical.GetRawAsync(Symbols[i], dateDebut, dateFin).ConfigureAwait(false);
                 csvdata = csvdata.Replace(",", ";");
-                System.IO.File.WriteAllText(Files[i], csvdata);
-            }
-        }
-
-        public void deleteFiles()
-        {
-            foreach (string s in Files)
-            {
-                if (File.Exists(s))
-                {
-                    File.Delete(s);
-                }
+                RawData.Add(csvdata);
+                //System.IO.File.WriteAllText(Files[i], csvdata);
             }
         }
 

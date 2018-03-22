@@ -22,7 +22,7 @@ namespace Data
             double[,] past = data.exportPast(3.0,7,debut,fin);
             //double[] vol = data.exportVol();
             //double[,] cor = data.exportCor();
-            //double[,] cov = data.exportCov();
+            double[,] cov = data.exportCov();
             Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
             //data.deleteFiles();
