@@ -165,10 +165,27 @@ namespace Data
             {
                 for (int j=0; j<toPutInPast.Count; j++)
                 {
-                    res[j, i] = GetClosestData(toPutInPast[j], this.data[i]);
+                    res[j, i] = GetClosestData(toPutInPast[j], this.data[i]);                    
                 }
             }
-            return res;
+
+            for (int i=0; i< toPutInPast.Count; i++)
+            {
+                if (i == 0)
+                {
+                    for (int j=0; j<this.data.Count; j++)
+                    {
+                        Console.Write(Files[j] + " ");
+                    }
+                    Console.WriteLine();
+                } 
+                for (int j=0; j<this.data.Count; j++)
+                {
+                    Console.Write(res[i,j] + " ");
+                }
+                Console.WriteLine();
+            }
+                return res;
         }
 
         public double[] exportVol()
@@ -211,7 +228,7 @@ namespace Data
                 System.Threading.Thread.Sleep(25);
             }
             sw.Stop();
-            //Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
+            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
             Console.WriteLine("Mise en forme des données ...");
             this.data = ParseAll();
             deleteFiles();

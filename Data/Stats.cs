@@ -118,7 +118,9 @@ namespace Data
                 for (int j=0; j<data.Count; j++)
                 {
                     matrix[i, j] = Cor(data[i],data[j]);
+                    Console.Write(matrix[i,j] + " ");
                 }
+                Console.WriteLine();
             }
             return matrix;
         }
