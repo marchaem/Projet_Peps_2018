@@ -57,9 +57,12 @@ double Eurostral100::payoff(const PnlMat *path){
    
     payoff += 0.5*cour3 + 0.3*cour2 + 0.2*cour1;
   }
+
   payoff /= 16 ;
+
   if ( payoff < 0 ) {
     return 1.0;
   }
+
   return 1.0+0.55*payoff;
 }
