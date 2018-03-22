@@ -22,7 +22,7 @@ Eurostral100::~Eurostral100()
 {}
 
 double Eurostral100::payoff(const PnlMat *path){
-  PnlVect*  indice1 = pnl_vect_create(path->m);
+  PnlVect* indice1 = pnl_vect_create(path->m);
   PnlVect* indice2 = pnl_vect_create(path->m);
   PnlVect* indice3 = pnl_vect_create(path->m);
 
@@ -59,7 +59,9 @@ double Eurostral100::payoff(const PnlMat *path){
   }
 
   payoff /= 16 ;
-
+  pnl_vect_free(&indice1);
+  pnl_vect_free(&indice2);
+  pnl_vect_free(&indice3);
   if ( payoff < 0 ) {
     return 1.0;
   }

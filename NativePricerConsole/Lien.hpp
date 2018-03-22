@@ -24,6 +24,6 @@ public:
 	DLLEXP	double* deltaEurostral(double *past, double t,double H);
 
 		/*P&l final*/
-	DLLEXP	double profitLoss_Eurostral(double *past, double H);
+	DLLEXP	double profitLoss_Eurostral(double *past, double t, double H);
 
 };

@@ -22,6 +22,7 @@ namespace Wrapper {
 		//cli::array<double>^ getDeltaEurostral(cli::array<double, 2>^ past, double t);
 		cli::array<double, 1>^  getDeltaEurostral(cli::array<double, 2>^ past, double t,double H);
 		double getZero();
+		double getPLEurostral(cli::array<double, 2>^past, double t, double H);
 		double* convertArrayPointer(cli::array<double,1> ^ arr);
 		double* convertMatrixPointer(cli::array<double,2> ^ mat);
 		//cli::array<double>^ convertPnlVectToCli(PnlVect * delta);
