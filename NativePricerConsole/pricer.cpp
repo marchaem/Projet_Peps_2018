@@ -79,15 +79,13 @@ void main() {
 	double tho =  3* eurostral->T_ / H;
 	PnlMat *cPast = pnl_mat_create_from_zero(1, past->n);
 	
-	u.getConstatationDatesFromZero(cPast, past, eurostral, tho);
-	Bs->assetEurostral(trajectoire, t, T, H, mt->rng_, past);
-	pnl_mat_print(trajectoire);
+	
 	
 
-	//mt->tracking_error(past, t, H, price, pocket, TrackingE);
+	 mt->tracking_error(past, t, H, price, pocket, TrackingE);
 	//pnl_vect_print(price);
 	//pnl_vect_print(pocket);
-	//pnl_vect_print(TrackingE);
+	pnl_vect_print(TrackingE);
 	
 	pnl_vect_free(&spot);
 	pnl_vect_free(&lambdas);
