@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Data
 {
-    public class RecupData
+    class RecupData
     {
 
         List<string> Symbols; //Liste des symboles à récupérer sur Yahoo
@@ -23,21 +23,31 @@ namespace Data
         public RecupData(DateTime dateDebut, DateTime dateFin)
         {
             Symbols = new List<String>();
-            Symbols.Add("^STOXX50E");
-            Symbols.Add("^GSPC");
-            Symbols.Add("^AXJO");
             Symbols.Add("EURUSD=X");
             Symbols.Add("EURAUD=X");
-            
+            Symbols.Add("^GSPC");
+            Symbols.Add("^STOXX50E");
+            Symbols.Add("^AXJO");
+
             Files = new List<String>();
-            Files.Add("Eurostoxx50.csv");
-            Files.Add("SP500.csv");
-            Files.Add("ASX200.csv");
             Files.Add("EURUSD.csv");
             Files.Add("EURAUD.csv");
+            Files.Add("SP500.csv");
+            Files.Add("Eurostoxx50.csv");
+            Files.Add("ASX200.csv");
+
+            if (Files.Count !=Symbols.Count)
+            {
+                throw new Exception("[ERREUR] La taille des symboles et des fichiers associés sont différentes");
+            }
 
             this.dateDebut = dateDebut;
             this.dateFin = dateFin;
+
+            if (dateDebut > dateFin)
+            {
+                throw new Exception("[Erreur] Les dates sont incohérentes (Date de début postérieure à date de fin)");
+            }
         }
 
         public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
@@ -59,7 +69,6 @@ namespace Data
             List<double> res = new List<double>();
             foreach(Dictionary<DateTime,double> dico in this.data)
             {
-                Console.WriteLine(GetClosestData(date, dico));
                 res.Add(GetClosestData(date,dico));
             }
             return res;
@@ -151,14 +160,13 @@ namespace Data
                 cour += H;
             }
             toPutInPast.Add(dateActuelle);
-            double[,] res = new double[toPutInPast.Count, data.Count];
+            double[,] res = new double[data.Count, toPutInPast.Count];
             for (int i=0; i<this.data.Count; i++)
             {
                 for (int j=0; j<toPutInPast.Count; j++)
                 {
-                    res[j, i] = GetClosestData(toPutInPast[j], this.data[i]);
+                    res[i, j] = GetClosestData(toPutInPast[j], this.data[i]);
                 }
-                Console.WriteLine();
             }
             return res;
         }
@@ -197,16 +205,16 @@ namespace Data
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            Console.WriteLine("Récupération des données");
             GetYahooCSV();
             while (!DownloadFinished())
             {
                 System.Threading.Thread.Sleep(25);
             }
             sw.Stop();
-            Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
+            //Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
             Console.WriteLine("Mise en forme des données ...");
             this.data = ParseAll();
+            deleteFiles();
             return;
         }
 
@@ -233,7 +241,6 @@ namespace Data
                 csvdata = csvdata.Replace(",", ";");
                 System.IO.File.WriteAllText(Files[i], csvdata);
             }
-            return;
         }
 
         public void deleteFiles()
