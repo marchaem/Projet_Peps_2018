@@ -105,7 +105,7 @@ namespace WebEurostral.Controllers
             //wr1.getPriceEurostral(eurost.t, pastPrice);
            // return (eurost.prixEnt);
 
-             ViewData["price"] = eurost.prixEnt;
+            // ViewData["price"] = eurost.prixEnt;
             return View(eurost);
         }
 
