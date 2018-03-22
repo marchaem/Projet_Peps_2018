@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Data
 {
-    class RecupData
+    public class RecupData
     {
 
         List<string> Symbols; //Liste des symboles à récupérer sur Yahoo
