@@ -28,24 +28,12 @@ double Lien::PriceEurostral() {
 }
 
 double* Lien::deltaEurostral(double * past, double t,double H) {
-	int nbdate = 1;
-	if (t / opt->nbTimeSteps_ - floor(t / opt->nbTimeSteps_) == 0) {
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t);
-		}
-		else {
-			nbdate += 2 * floor(t) + 1;
-		}
+	int partieEntiere = floor(t);
+	int nbdate = 2 + 2 * partieEntiere + floor(2 * (t - partieEntiere));
+	if (t - partieEntiere == 0 || t - partieEntiere == 0.5) {
+		nbdate--;
 	}
-	else {
 
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t) + 1;
-		}
-		else {
-			nbdate += 2 * floor(t) + 2;
-		}
-	}
 	
 	PnlMat * pastMat = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	PnlVect * delta = pnl_vect_create(bs->size_);
@@ -61,6 +49,7 @@ double* Lien::deltaEurostral(double * past, double t,double H) {
 	
 	return deltabis;	
 }
+
 double Lien::PriceEurostral(double *past, double t) {
 	
 	double prix;
@@ -71,7 +60,6 @@ double Lien::PriceEurostral(double *past, double t) {
 		nbdate--;
 	}
 
-	return nbdate;
 	PnlMat* PastPnl = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	
 	Mt->priceEurostral(PastPnl, t, prix, ic);
