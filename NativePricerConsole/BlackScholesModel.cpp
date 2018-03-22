@@ -29,7 +29,7 @@ BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect
 	r_ = r;
 	g = pnl_vect_new();
 	rho_ = 0.0;
-	spot_ = spot;
+	spot_ = spot;   
 	trends_ = trend;
 	
 	PnlVect* vol = pnl_vect_create(size);
