@@ -5,7 +5,7 @@
 using namespace std;
 
 
-int main(int argc, char* argv[], char *envp[]) {
+/*int main(int argc, char* argv[], char *envp[]) {
 	/*int size = 5;
 	double r = 0.01;
 	cli::array<double, 2> ^ varHis = gcnew cli::array<double, 2>(5, 5);
@@ -51,10 +51,10 @@ int main(int argc, char* argv[], char *envp[]) {
 	wc->getDeltaEurostral(past, 0.0, deltas, 0.1);
 	cout << " hello " << endl;
 	cout << deltas[0] << endl;
-	cout << "bye" << endl;*/
+	cout << "bye" << endl;
 
 	return 0;
-}
+}*/
 
 namespace Wrapper {
 
@@ -72,6 +72,11 @@ namespace Wrapper {
 		return lien->PriceEurostral(convert_past, t);
 	}
 
+	double WrapperClass::getPLEurostral(cli::array<double, 2>^past, double t, double H) {
+		double * convert_past = convertMatrixPointer(past);
+
+		return lien->profitLoss_Eurostral(convert_past, t, H);
+	}
 	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);
 		PnlVect * delta=lien->deltaEurostral(convert_past,t);

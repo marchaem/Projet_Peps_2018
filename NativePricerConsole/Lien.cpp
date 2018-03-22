@@ -28,24 +28,12 @@ double Lien::PriceEurostral() {
 }
 
 double* Lien::deltaEurostral(double * past, double t,double H) {
-	int nbdate = 1;
-	if (t / opt->nbTimeSteps_ - floor(t / opt->nbTimeSteps_) == 0) {
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t);
-		}
-		else {
-			nbdate += 2 * floor(t) + 1;
-		}
+	int partieEntiere = floor(t);
+	int nbdate = 2 + 2 * partieEntiere + floor(2 * (t - partieEntiere));
+	if (t - partieEntiere == 0 || t - partieEntiere == 0.5) {
+		nbdate--;
 	}
-	else {
 
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t) + 1;
-		}
-		else {
-			nbdate += 2 * floor(t) + 2;
-		}
-	}
 	
 	PnlMat * pastMat = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	PnlVect * delta = pnl_vect_create(bs->size_);
@@ -61,30 +49,17 @@ double* Lien::deltaEurostral(double * past, double t,double H) {
 	
 	return deltabis;	
 }
+
 double Lien::PriceEurostral(double *past, double t) {
 	
 	double prix;
 	double ic;
-	int nbdate = 1;
-	if (t / opt->nbTimeSteps_ - floor(t / opt->nbTimeSteps_) == 0) {
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t);
-		}
-		else {
-			nbdate += 2 * floor(t) + 1;
-		}
-	}
-	else {
-
-		if (t - floor(t) < 0.5) {
-			nbdate += 2 * floor(t)+1;
-		}
-		else {
-			nbdate += 2 * floor(t) + 2;
-		}
+	int partieEntiere = floor(t);
+	int nbdate = 2 + 2 * partieEntiere + floor(2 * (t - partieEntiere));
+	if (t - partieEntiere == 0 || t - partieEntiere == 0.5) {
+		nbdate--;
 	}
 
-	
 	PnlMat* PastPnl = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
 	
 	Mt->priceEurostral(PastPnl, t, prix, ic);
@@ -93,11 +68,30 @@ double Lien::PriceEurostral(double *past, double t) {
 	
 }
 
-double Lien::profitLoss_Eurostral(double * past, double H) {
-	int rebalanc = floor(opt->T_ / H);
+double Lien::profitLoss_Eurostral(double * past, double t, double H) {
+	int rebalanc = floor(H);
 	double pl;
-	PnlMat* pastpnl = pnl_mat_create_from_ptr(rebalanc, bs->size_, past);
-	Mt->profitLoss_Eurostral(pastpnl, H, pl);
-	return pl;
+
+	PnlMat* pastpnl = pnl_mat_create_from_ptr(bs->size_,rebalanc+1, past);
+	PnlMat * pastpnl2 = pnl_mat_create(rebalanc + 1, bs->size_);
+	pastpnl2 = pnl_mat_transpose(pastpnl);
+	//return pnl_mat_get(pastpnl2,150,0);
+	
+	double pas = (double)opt->T_ / H;
+	int compteur = floor(t / pas);
+	if ((t / pas - floor(t / pas) > 0.001 && t / pas - floor(t / pas) < 0.999)) {
+		compteur--;
+	}
+	//return pnl_mat_get(pastpnl2, 100, 0);
+	int test = pnl_mat_resize(pastpnl2, compteur, bs->size_);
+	//return pnl_mat_get(pastpnl2, 100, 0);
+	PnlMat* donnees = pnl_mat_create_from_scalar(rebalanc + 1, bs->size_,2);
+	//return pnl_mat_get(donnees, 0, 0);
+	PnlMat* pasttt = pnl_mat_create_from_scalar(1, 5, 15);
+	bs->assetEurostral(donnees, t, opt->T_, 16, Mt->rng_, pasttt);
+	return pnl_mat_get(donnees, 0, 0);
+	Mt->profitLoss_Eurostral(donnees, H, pl);
+	return pnl_mat_get(donnees,100, 0);
+	
 }
 

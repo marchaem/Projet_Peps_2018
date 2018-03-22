@@ -14,12 +14,68 @@ namespace Data
     public class RecupData
     {
 
-        List<string> Symbols; //Liste des symboles à récupérer sur Yahoo
-        public List<string> Files; //Liste des noms de fichiers CSV
-        DateTime dateDebut;
-        DateTime dateFin;
-        List<Dictionary<DateTime, double>> data;
+        /// <summary>
+        /// Liste des symboles Yahoo correpondant à nos sous-jacent
+        /// </summary>
+        private List<string> Symbols; 
+        /// <summary>
+        /// List des données brutes récupérés de Yahoo pour chaque sous-jacent
+        /// </summary>
+        private List<string> RawData; //Données brutes récupérés de Yahoo
+        /// <summary>
+        /// Date de début de récupération des données (pas celle du début du produit)
+        /// </summary>
+        private DateTime dateDebut;
+        /// <summary>
+        /// Date de fin de récup des données
+        /// </summary> 
+        private DateTime dateFin;
+        /// <summary>
+        /// Structure de données pour le stockage
+        /// Les données pour un sous-jacent est stocké dans un dictionnaire (date,valeur)
+        /// On fait ensuite une liste de ces dictionnaires pour avoir le total des sous-jacents
+        /// </summary>
+        private List<Dictionary<DateTime, double>> data;
 
+        public DateTime getDebutData()
+        {
+            return this.dateDebut;
+        }
+
+        public DateTime getFinData()
+        {
+            return this.dateFin;
+        }
+
+        public List<Dictionary<DateTime, double>> getWholeData()
+        {
+            return this.data;
+        }
+
+        public List<String> getSymbols()
+        {
+            return this.Symbols;
+        }
+
+        public Dictionary<DateTime, double> getData(String symbol)
+        {
+            int Index = Symbols.IndexOf(symbol);
+            return data[Index];
+        }
+
+        public void PrintData(String symbol)
+        {
+            Dictionary<DateTime, double> dico = getData(symbol);
+            foreach(KeyValuePair<DateTime,double> entry in dico)
+            {
+                Console.Write("<" + symbol + ";"+ entry.Key.ToString("dd/MM/yyyy") + ";" + entry.Value + ">" + " - ");
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="dateDebut">Date de début des donées (avant le début du produit c'est mieux)</param>
+        /// <param name="dateFin">Date de fin de récup des données (max : Aujourd'hui)</param>
         public RecupData(DateTime dateDebut, DateTime dateFin)
         {
             Symbols = new List<String>();
@@ -29,17 +85,7 @@ namespace Data
             Symbols.Add("EURUSD=X");
             Symbols.Add("EURAUD=X");
 
-            Files = new List<String>();
-            Files.Add("Eurostoxx50.csv");
-            Files.Add("SP500.csv");
-            Files.Add("ASX200.csv");
-            Files.Add("EURUSD.csv");
-            Files.Add("EURAUD.csv");
-
-            if (Files.Count !=Symbols.Count)
-            {
-                throw new Exception("[ERREUR] La taille des symboles et des fichiers associés sont différentes");
-            }
+            RawData = new List<string>();
 
             this.dateDebut = dateDebut;
             this.dateFin = dateFin;
@@ -50,6 +96,15 @@ namespace Data
             }
         }
 
+        /// <summary>
+        /// Convertit une date en double sur la grille de discrétisation du pricer
+        /// t est en année depuis le début du produit 
+        /// notre porduit dure 8 ans, donc t<8
+        /// </summary>
+        /// <param name="debutProduit">DateTime Début du produit</param>
+        /// <param name="t">double instant sur la grille du pricer</param>
+        /// <param name="finProduit">DateTime fin du produit</param>
+        /// <returns></returns>
         public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
         {
             double joursTotaux = (finProduit - debutProduit).TotalDays;
@@ -109,7 +164,6 @@ namespace Data
                 parser.SetDelimiters(";");
                 while (!parser.EndOfData)
                 {
-                    //Process row
                     string[] fields = parser.ReadFields();
                     foreach (string field in fields)
                     {
@@ -133,12 +187,48 @@ namespace Data
             return mapData;
         }
 
-        private List<Dictionary<DateTime,double>> ParseAll()
+        private Dictionary<DateTime, double> ParseStringCSV(string CSVstring)
+        {
+            var stream = new MemoryStream();
+            var bytes = System.Text.Encoding.Default.GetBytes(CSVstring);
+            List<string> AllDonnees = new List<string>();
+            Dictionary<DateTime, double> mapData = new Dictionary<DateTime, double>();
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            using (TextFieldParser parser = new TextFieldParser(stream))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(";");
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+                    foreach (string field in fields)
+                    {
+                        AllDonnees.Add(field);
+                    }
+                }
+            }
+
+            double token;
+            DateTime dateCour;
+
+            for (int i = 7; i < AllDonnees.Count; i = i + 7)
+            {
+                if (double.TryParse(AllDonnees[i + 4], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out token))
+                {
+                    dateCour = DateTime.Parse(AllDonnees[i]);
+                    mapData[dateCour] = double.Parse(AllDonnees[i + 4], CultureInfo.InvariantCulture);
+                }
+            }
+            return mapData;
+        }
+
+        private List<Dictionary<DateTime, double>> ParseAllStringCSV()
         {
             List<Dictionary<DateTime, double>> res = new List<Dictionary<DateTime, double>>();
-            for (int i=0; i<Files.Count; i++)
+            for (int i = 0; i < Symbols.Count; i++)
             {
-                res.Add(ParseCSV(Files[i]));
+                res.Add(ParseStringCSV(RawData[i]));
             }
             return res;
         }
@@ -165,10 +255,27 @@ namespace Data
             {
                 for (int j=0; j<toPutInPast.Count; j++)
                 {
-                    res[j, i] = GetClosestData(toPutInPast[j], this.data[i]);
+                    res[j, i] = GetClosestData(toPutInPast[j], this.data[i]);                    
                 }
             }
-            return res;
+
+            for (int i=0; i< toPutInPast.Count; i++)
+            {
+                if (i == 0)
+                {
+                    for (int j=0; j<this.data.Count; j++)
+                    {
+                        Console.Write(Symbols[j] + " ");
+                    }
+                    Console.WriteLine();
+                } 
+                for (int j=0; j<this.data.Count; j++)
+                {
+                    Console.Write(res[i,j] + " ");
+                }
+                Console.WriteLine();
+            }
+                return res;
         }
 
         public double[] exportVol()
@@ -206,27 +313,15 @@ namespace Data
             Stopwatch sw = new Stopwatch();
             sw.Start();
             GetYahooCSV();
-            while (!DownloadFinished())
+            while (RawData.Count< this.Symbols.Count)
             {
                 System.Threading.Thread.Sleep(25);
             }
             sw.Stop();
-            //Console.WriteLine("Fichiers CSV récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
+            Console.WriteLine("Fichiers récupérés de Yahoo en " + sw.Elapsed.Seconds + " secondes");
             Console.WriteLine("Mise en forme des données ...");
-            this.data = ParseAll();
-            deleteFiles();
+            this.data = ParseAllStringCSV();
             return;
-        }
-
-        private bool DownloadFinished()
-        {
-            bool res = true;
-            for (int i=0; i<Files.Count; i++)
-            {
-                string file = Files[i];
-                res = res && File.Exists(file);
-            }
-            return res;
         }
 
         private async Task GetYahooCSV()
@@ -239,18 +334,8 @@ namespace Data
                 }
                 string csvdata = await Historical.GetRawAsync(Symbols[i], dateDebut, dateFin).ConfigureAwait(false);
                 csvdata = csvdata.Replace(",", ";");
-                System.IO.File.WriteAllText(Files[i], csvdata);
-            }
-        }
-
-        public void deleteFiles()
-        {
-            foreach (string s in Files)
-            {
-                if (File.Exists(s))
-                {
-                    File.Delete(s);
-                }
+                RawData.Add(csvdata);
+                //System.IO.File.WriteAllText(Files[i], csvdata);
             }
         }
 
