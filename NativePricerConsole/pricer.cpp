@@ -21,61 +21,78 @@ double Pricer::zero() {
 	
 }
 
-/*void main() {
+void main() {
 	Pricer * pricertest = new Pricer();
 	cout << "on rentre ici " << pricertest->price() << endl;
 	cout << "lol" << endl;
-}*/
+}
 
   double Pricer::price()
 {
   try {
     Utilities u;
-    //Check the number and the value of the parameters, and return the input file with the option description
-    //Parse the input file
-	/*
+    
+	// Eurostral 
     double T=8, r=0.1, strike=100.0, rho=0.1, fdStep=0.01;
-	int size = 5, timestep = 100;
-    PnlVect *spot=pnl_vect_create_from_double(size,100), *sigma= pnl_vect_create_from_double(size, 1.0/5), *divid= pnl_vect_create_from_double(size, 1.0 / 5), *lambdas= pnl_vect_create_from_double(size, 1.0 / 5), *trend= pnl_vect_create_from_double(size, 1.0 / 5);
-
-    */
-    //size_t n_samples=5;
-
-	double T = 1, r = 0.04879, strike = 100.0, rho = 0, fdStep = 0.01;
-	int size = 1, timestep = 1;
-	PnlVect *spot = pnl_vect_create_from_double(size, 100), *sigma = pnl_vect_create_from_double(size, 0.2), *divid = pnl_vect_create_from_double(size, 1.0 / 5), *lambdas = pnl_vect_create_from_double(size, 1.0/size), *trend = pnl_vect_create_from_double(size, 0.04879);
-	string optionType = "basket";
-    size_t n_samples=50000;
-
-
-
-
-    //trend = pnl_vect_create(5) ;
-    /*trend = pnl_vect_create(5);
+	PnlMat* Covlog = pnl_mat_create_from_double(5, 5, 0.1);
+	int size = 5, timestep = 16;
+	PnlVect *spot = pnl_vect_create_from_double(size, 3000);
+	pnl_vect_set(spot, 3, 1.0);
+	pnl_vect_set(spot, 4, 1.0);
+	PnlVect* lambdas = pnl_vect_create_from_double(size, 1.0 / 5);
+	PnlVect*trend= pnl_vect_create_from_double(size, 1.0 / 5);
+	// nombre de simulation montecarlo
+	int n_samples = 50000;
+	//nombre de rebalancement ( tous les 7 jours )
+	double H = 416;
     pnl_vect_set(trend,0,r);
     pnl_vect_set(trend,1,0.04-0.1*0.2*0.2);
     pnl_vect_set(trend,2,0.05-0.1*0.2*0.2);
     pnl_vect_set(trend,3,r-0.04);
-    pnl_vect_set(trend,4,r-0.05);*/
+    pnl_vect_set(trend,4,r-0.05);
 
-    //Create the Option, the BlackScholesModel and the MonteCarlo instances
-    //BlackScholesModel bsModel(size, r, rho, sigma, spot);
-    BlackScholesModel bsModel(size, r, rho, sigma, spot,trend);
-    Option *opt;
-    if (optionType == "asian"){
-      opt = new AsianOption(strike, T, timestep, size, lambdas);
-    } else if (optionType == "basket"){
-      opt = new BasketOption(strike, T, timestep, size, lambdas);
-    } else if (optionType == "performance"){
-      opt = new PerformanceOption(T, timestep, size, lambdas);
-    } else if (optionType == "quanto" ) {
-      opt = new QuantoOption(strike,T,timestep,size,lambdas);
-    } else if (optionType == "eurostral") {
-      opt = new Eurostral100(strike,T,timestep,size,lambdas);
-     }else {
-      throw string("Unimplemented type of financial product: must be 'asian', 'basket', or 'performance' or 'quanto'");
-    }
-    MonteCarlo mc(fdStep, n_samples, opt, &bsModel);
+	BlackScholesModel * Bs = new BlackScholesModel(size, r, Covlog, spot, trend);
+	Eurostral100* eurostral = new Eurostral100(strike, T, timestep, size, lambdas);
+	MonteCarlo* mt = new MonteCarlo(fdStep, n_samples, eurostral, Bs);
+
+	//Création d'une trajectoire toute la durée tous les 7 jours 
+	PnlMat* trajectoire = pnl_mat_create(H + 1,size);
+	Bs->assetEurostral(trajectoire, T, H, mt->rng_);
+	
+
+	PnlVect *V = pnl_vect_create_from_zero(H + 1);
+	PnlVect *delta = pnl_vect_create_from_zero(size);
+
+	double p0 = mt->PL_init_Eurostral(trajectoire, delta);
+	cout << p0 << endl;
+	PnlMat * past = pnl_mat_create_from_zero(30, 5);
+	for (int i = 0; i < 30; i++) {
+		for (int j = 0; j < 5; j++) {
+			pnl_mat_set(past, i, j, pow(-1, i) * 0.01*i + pnl_vect_get(spot, j));
+		}
+
+	}
+	double t = 0.54757015;
+	PnlVect* price = pnl_vect_create_from_double(30,0.0);
+	PnlVect *pocket = pnl_vect_create(30);
+	PnlVect *TrackingE = pnl_vect_create(30);
+	double tho =  3* eurostral->T_ / H;
+	PnlMat *cPast = pnl_mat_create_from_zero(1, past->n);
+	
+	
+	
+
+	 mt->tracking_error(past, t, H, price, pocket, TrackingE);
+	//pnl_vect_print(price);
+	//pnl_vect_print(pocket);
+	pnl_vect_print(TrackingE);
+	
+	pnl_vect_free(&spot);
+	pnl_vect_free(&lambdas);
+	pnl_vect_free(&V);
+	return 1.0;
+	
+	/*
 
     //Compute the price and display the result
 
@@ -186,11 +203,7 @@ double Pricer::zero() {
     } */
 
     //Free the memory
-    pnl_vect_free(&spot);
-    pnl_vect_free(&sigma);
-    pnl_vect_free(&lambdas);
-    pnl_vect_free(&divid);
-    delete opt;
+    
   } catch(string const& e) {
     cout << e << endl;
   }

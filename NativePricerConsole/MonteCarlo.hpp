@@ -163,9 +163,18 @@ public:
   	double actualisation(double t);
     void PL_build_V_Eurostral(const PnlMat *past, double H,PnlVect *delta, PnlVect *V);
     double PL_init_Eurostral(const PnlMat *past, PnlVect *delta);
-    void PL_finalSet_Eurostral(const PnlMat *past, double v_h, PnlVect *delta, double& pl);
+    void PL_finalSet_Eurostral(const PnlMat *past, double v_h, PnlVect *delta, double& pl,double H);
     void profitLoss_Eurostral(const PnlMat *past, double H, double &pl);
+	/*
+	Rempli price des prix du produit jusqu'à t et de la valeur du portefeuille jusqu'à t (juste avant rebalancement)*/
+	void tracking_error(const PnlMat *past,double t, double H, PnlVect *price, PnlVect* pocket,PnlVect * TrackingE);
+	/*
+	retourne la valeur des actifs risqués au temps i+1
+	*/
+	
     /**
+
+	
      * Operateur d'assignation
      *
      * @param[in] reference constant a un MonteCarlo
