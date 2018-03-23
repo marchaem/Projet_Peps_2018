@@ -21,11 +21,11 @@ double Pricer::zero() {
 	
 }
 
-void main() {
+/*void main() {
 	Pricer * pricertest = new Pricer();
 	cout << "on rentre ici " << pricertest->price() << endl;
 	cout << "lol" << endl;
-}
+}*/
 
   double Pricer::price()
 {
@@ -85,7 +85,7 @@ void main() {
 	 mt->tracking_error(past, t, H, price, pocket, TrackingE);
 	//pnl_vect_print(price);
 	//pnl_vect_print(pocket);
-	pnl_vect_print(TrackingE);
+	//pnl_vect_print(TrackingE);
 	
 	pnl_vect_free(&spot);
 	pnl_vect_free(&lambdas);

@@ -414,9 +414,9 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 	double r_aus = -1 * pnl_vect_get(mod_->trends_, 4) + mod_->r_;
 	pnl_vect_clone(prevDelta, delta);
 	double trackingErrror;
-	for (int i = 1; i < past->m; i++)
+	for (int i = 1; i < 5; i++)
 	{
-		
+		pnl_vect_print(delta);
 		tho = i * opt_->T_ / H;
 		thomoins = (i - 1)*opt_->T_ / H;
 		u.getConstatationDatesFromZero(cPast, past, opt_, tho);
