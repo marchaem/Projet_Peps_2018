@@ -13,27 +13,23 @@ namespace WebApplication.Models
     {
         public double displayPrice()
         {
-            DateTime date = new DateTime(2016,12,18);
-            DateTime debutProduit = new DateTime(2014, 12, 18);
-            DateTime finProduit = new DateTime(2022, 12, 08);
-            Data.RecupData recup = new RecupData(new DateTime(2000, 1, 1), date);
+             DateTime date = new DateTime(2016,12,18);
+             DateTime debutProduit = new DateTime(2014, 12, 18);
+             DateTime finProduit = new DateTime(2022, 12, 08);
+             Data.RecupData recup = new RecupData(new DateTime(2000, 1, 1), date);
+             recup.Fetch();
+             double t = recup.DateToDouble(debutProduit, date, finProduit);
+             double[,] covLogR = recup.exportCov();
+             double[,] pastDelta = recup.exportPast(t, 7, debutProduit, finProduit);
+             double[,] pastPrice = recup.exportPast(t, 182, debutProduit, finProduit);
 
-            recup.Fetch();
+             
 
-            double t = recup.DateToDouble(debutProduit, date, finProduit);
-            double[,] covLogR = recup.exportCov();
-            double[,] pastDelta = recup.exportPast(t, 7, debutProduit, finProduit); 
-            double[,] pastPrice = recup.exportPast(t, 182, debutProduit, finProduit);
+            DateTime debutBackTest = new DateTime(2010, 03, 22);
+            DateTime finBacktest = new DateTime(2018, 03, 22);
+            double t0 = recup.DateToDouble(debutBackTest, finBacktest, finBacktest);
+            double[,] donneesHistoriques = recup.exportPast(t0, 7, debutBackTest, finBacktest);
 
-            double[,] past = new double[417, 5];
-
-            for ( int i = 0; i < 417; i++)
-            {
-                for ( int j = 0; j < 5; j++)
-                {
-                    past[i, j] = 1.0;
-                }
-            }
             //int size, double r, double* VarHis, double* spot, double* trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double* lambdas1
             double r_eu = 0.002;
             double r_aus = 0.025;
@@ -64,16 +60,16 @@ namespace WebApplication.Models
                 lambdas[i] = 0.05;
             }
             
-            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50, 10, 8.0, 15, lambdas);
+            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 15, lambdas);
             double[] delta = new double[5];
-            double H = 416;
+            double H = 416 ;
             //return 2.0;
             //return wc.getPriceEurostral();
             //return wc.getPriceEurostral(t, pastPrice);
-            return wc.getPLEurostral(pastDelta, t, H);
+            return wc.getPLEurostral(donneesHistoriques, H);
             //return wc.getDeltaEurostral(pastPrice, t, H)[4];
             
-
+            
         }
         /*public double[] displayDelta0()
         {
@@ -87,5 +83,5 @@ namespace WebApplication.Models
 
         }*/
 
+        }
     }
-}
