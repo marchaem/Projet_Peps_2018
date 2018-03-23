@@ -327,7 +327,7 @@ void MonteCarlo::PL_finalSet(const PnlMat *past, double v_h,
 
     pnl_mat_free(&constDates);
 }
-void MonteCarlo::PL_finalSet_Eurostral(const PnlMat *past, double v_h, PnlVect *delta, double& pl)
+void MonteCarlo::PL_finalSet_Eurostral(const PnlMat *past, double v_h, PnlVect *delta, double& pl,double H)
 {
     double p, ic;
     PnlMat* constDates = u.getConstatationDates(past, opt_, opt_->T_);
@@ -365,7 +365,7 @@ void MonteCarlo::profitLoss_Eurostral(const PnlMat *past, double H, double &pl)
 
     PL_build_V_Eurostral(past, H, delta, V);
     pnl_vect_set(V, H, pnl_vect_get(V, H-1) * exp(mod_->r_ * opt_->T_/ H));
-    PL_finalSet_Eurostral(past, pnl_vect_get(V, H), delta, pl);
+    PL_finalSet_Eurostral(past, pnl_vect_get(V, H), delta, pl,H);
 
     pnl_vect_free(&V);
     pnl_vect_free(&delta);
