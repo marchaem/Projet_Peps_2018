@@ -43,7 +43,7 @@ double* Lien::deltaEurostral(double * past, double t,double H) {
 	pnl_mat_free(&pastMat);
 	
 	double* deltabis = new double[bs->size_];
-	for (int i = 0; i < delta->size - 1; i++) {
+	for (int i = 0; i < delta->size; i++) {
 		deltabis[i] = pnl_vect_get(delta, i);
 	}
 	
