@@ -86,7 +86,7 @@ namespace Wrapper {
 		return test;
 	}
 
-	cli::array<double, 1>^WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
+	cli::array<double, 1>^    WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
 		/*pin_ptr<double> pPast = &past[0];
 		double *convert_past = pPast;*/
 

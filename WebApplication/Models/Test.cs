@@ -66,8 +66,8 @@ namespace WebApplication.Models
             //return 2.0;
             //return wc.getPriceEurostral();
             //return wc.getPriceEurostral(t, pastPrice);
-            //return wc.getPLEurostral(donneesHistoriques, H);
-            return wc.getDeltaEurostral(pastPrice, t, H)[4];
+            return wc.getPLEurostral(donneesHistoriques, H);
+            //return wc.getDeltaEurostral(pastPrice, t, H)[4];
             
             
         }
