@@ -13,6 +13,7 @@ namespace WebEurostral.Models
         public double t;
         public WrapperClass wc;
         public double prixEnt;
+        public double[] deltaEnt;
 
         [Required(ErrorMessage = "La date courante est obligatoire")]
         [DataType(DataType.Date)]
@@ -23,6 +24,7 @@ namespace WebEurostral.Models
 
             p = new ParametresModel();
             WrapperClass wc = new WrapperClass();
+            deltaEnt = null;
 
        
         }
