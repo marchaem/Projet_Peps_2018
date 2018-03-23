@@ -68,7 +68,7 @@ namespace Data
             Dictionary<DateTime, double> dico = getData(symbol);
             foreach(KeyValuePair<DateTime,double> entry in dico)
             {
-                Console.Write("<" + symbol + ";"+ entry.Key.ToString("dd/MM/yyyy") + ";" + entry.Value + ">" + " - ");
+                Console.WriteLine("<" + symbol + ";"+ entry.Key.ToString("dd/MM/yyyy") + ";" + entry.Value + ">");
             }
         }
 
@@ -104,7 +104,7 @@ namespace Data
         /// <param name="debutProduit">DateTime Début du produit</param>
         /// <param name="t">double instant sur la grille du pricer</param>
         /// <param name="finProduit">DateTime fin du produit</param>
-        /// <returns></returns>
+        /// <returns>Datetime correspondant a t(double) en entrée</returns>
         public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
         {
             double joursTotaux = (finProduit - debutProduit).TotalDays;
@@ -134,7 +134,7 @@ namespace Data
             DateTime dateOpt = dico.Keys.ToList()[0];
             double dist = Double.MaxValue;
             double min = Double.MaxValue;
-            // Pas optimal ...
+            // Pas optimal
             foreach (KeyValuePair<DateTime, double> entry in dico)
             {
                 dist = Math.Abs((date-entry.Key).TotalDays);
@@ -249,7 +249,7 @@ namespace Data
                 toPutInPast.Add(DoubleToDate(debutProd, cour, finProd));
                 cour += H;
             }
-            toPutInPast.Add(dateActuelle);
+            toPutInPast.Add(dateActuelle);            
             double[,] res = new double[toPutInPast.Count, data.Count];
             for (int i=0; i<this.data.Count; i++)
             {
@@ -298,6 +298,11 @@ namespace Data
             return Stats.CovMatrix(this.data);
         }
 
+        public double[,] exportCov(DateTime debut, DateTime fin)
+        {
+            return Stats.CovMatrix(Restreindre(debut,fin));
+        }
+
         private bool inAllData(DateTime date)
         {
             bool res = true;
@@ -322,6 +327,34 @@ namespace Data
             Console.WriteLine("Mise en forme des données ...");
             this.data = ParseAllStringCSV();
             return;
+        }
+
+        public List<Dictionary<DateTime,double>> Restreindre(DateTime debut, DateTime fin)
+        {
+            List<Dictionary<DateTime, double>> DataRestr = new List<Dictionary<DateTime, double>>();
+            for (int i=0; i<this.data.Count; i++)
+            {
+                DataRestr.Add(RestreindreDico(debut,fin,data[i]));
+            }
+            return DataRestr;
+        }
+
+        static private Dictionary<DateTime,double> RestreindreDico(DateTime debut, DateTime fin, Dictionary<DateTime,double> data)
+        {
+            if (fin < debut)
+            {
+                throw new Exception("[ERREUR] Date de début et fin incohérentes (fin < début)");
+            }
+            Dictionary<DateTime, double> DataRestr = new Dictionary<DateTime, double>();
+            foreach(KeyValuePair<DateTime,double> entry in data)
+            {
+                if (entry.Key <= fin && entry.Key >= debut)
+                {
+                    DataRestr[entry.Key] = entry.Value;
+                    //Console.WriteLine("<" + entry.Key.ToString("dd/MM/yyyy") + ";" + entry.Value + ">");
+                }
+            }
+            return DataRestr;
         }
 
         private async Task GetYahooCSV()
