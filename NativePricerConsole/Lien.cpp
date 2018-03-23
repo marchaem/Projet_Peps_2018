@@ -101,5 +101,6 @@ void Lien::trackingError(double * past, double t, double H, double * pricet, dou
 		trackingE[i] = pnl_vect_get(trackEpnl, i);
 
 	}
+	
 }
 
