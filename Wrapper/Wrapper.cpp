@@ -82,8 +82,8 @@ namespace Wrapper {
 		return(convertPnlVectToCli(delta));
 	}*/
 	
-	cli::array<double, 1>^ WrapperClass::test(cli::array<double, 1>^ test) {
-		return test;
+	 void WrapperClass::test(cli::array<double, 1>^ test) {
+		 test[0] = 5.2152;
 	}
 
 	cli::array<double, 1>^WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
@@ -161,7 +161,18 @@ namespace Wrapper {
 		return deltacli;
 	}
 
+	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE) {
+		double * pastP = new double[past->Length];
+		double * pricetP = new double[pricet->Length];
+		double * pocketP = new double[pocket->Length];
+		double * trackingP = new double[trackingE->Length];
+		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP);
+		pricet = convertTabToCli(pricetP);
+		pocket = convertTabToCli(pocketP);
+		trackingE = convertTabToCli(trackingP);
 
+
+	}
 	 
 }
 
