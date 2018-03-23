@@ -13,11 +13,14 @@ namespace WebApplication.Models
     {
         public double displayPrice()
         {
-             DateTime date = new DateTime(2016,12,18);
+            DateTime date = new DateTime(2015,01,10);
              DateTime debutProduit = new DateTime(2014, 12, 18);
              DateTime finProduit = new DateTime(2022, 12, 08);
              Data.RecupData recup = new RecupData(new DateTime(2000, 1, 1), date);
+             //Data.RecupData recup1 = new RecupData(new DateTime(2000, 1, 1), debutProduit);
              recup.Fetch();
+            //recup1.Fetch();
+
              double t = recup.DateToDouble(debutProduit, date, finProduit);
              double[,] covLogR = recup.exportCov();
              double[,] pastDelta = recup.exportPast(t, 7, debutProduit, finProduit);
@@ -63,10 +66,10 @@ namespace WebApplication.Models
             WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 15, lambdas);
             double[] delta = new double[5];
             double H = 416 ;
-            //return 2.0;
-            //return wc.getPriceEurostral();
-            //return wc.getPriceEurostral(t, pastPrice);
-            return wc.getPLEurostral(donneesHistoriques, H);
+            
+            
+            return wc.getPriceEurostral(t, pastPrice);
+            //return wc.getPLEurostral(donneesHistoriques, H);
             //return wc.getDeltaEurostral(pastPrice, t, H)[4];
             
             

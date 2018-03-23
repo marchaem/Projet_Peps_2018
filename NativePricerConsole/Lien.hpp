@@ -25,5 +25,8 @@ public:
 
 		/*P&l final*/
 	DLLEXP	double profitLoss_Eurostral(double *past,  double H);
+	
+		/*trackingError*/
+	DLLEXP void trackingError(double * past,double t, double H, double * pricet, double * pocket,double * trackingE);
 
 };

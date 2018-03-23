@@ -63,41 +63,38 @@ namespace Wrapper {
 	}
 
 	double WrapperClass::getPriceEurostral() {
-		return lien->PriceEurostral();
-	
+		return lien->PriceEurostral();	
 	}
+
 	double WrapperClass::getPriceEurostral(double t, cli::array<double, 2>^ past) {
-		double * convert_past = convertMatrixPointer(past);
-		
+		double * convert_past = convertMatrixPointer(past);		
 		return lien->PriceEurostral(convert_past, t);
 	}
 
 	double WrapperClass::getPLEurostral(cli::array<double, 2>^past, double H) {
 		double * convert_past = convertMatrixPointer(past);
-
 		return lien->profitLoss_Eurostral(convert_past, H);
 	}
+
 	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);
 		PnlVect * delta=lien->deltaEurostral(convert_past,t);
 		return(convertPnlVectToCli(delta));
 	}*/
-
 	
-	cli::array<double, 1>^ WrapperClass::test(cli::array<double, 1>^ test) {
-		return test;
+	 void WrapperClass::test(cli::array<double, 1>^ test) {
+		 test[0] = 5.2152;
 	}
-	cli::array<double, 1>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
+
+	cli::array<double, 1>^WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
 		/*pin_ptr<double> pPast = &past[0];
 		double *convert_past = pPast;*/
-		
+
 		double *convert_past= convertMatrixPointer(past);
 		//double * convert_past = convertArrayPointer(past);
-		double * delta = new double[size_];
-		
-		delta= lien->deltaEurostral(convert_past,t,H);
+		double * delta = new double[size_];		
+		delta = lien->deltaEurostral(convert_past,t,H);
 		//cli::array<double>^ deltacli = gcnew cli::array<double, 1>(5);	
-		
 		return convertTabToCli(delta);
 	}
 
@@ -164,7 +161,18 @@ namespace Wrapper {
 		return deltacli;
 	}
 
+	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE) {
+		double * pastP = new double[past->Length];
+		double * pricetP = new double[pricet->Length];
+		double * pocketP = new double[pocket->Length];
+		double * trackingP = new double[trackingE->Length];
+		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP);
+		pricet = convertTabToCli(pricetP);
+		pocket = convertTabToCli(pocketP);
+		trackingE = convertTabToCli(trackingP);
 
+
+	}
 	 
 }
 
