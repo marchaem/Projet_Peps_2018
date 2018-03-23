@@ -1,0 +1,73 @@
+﻿@model WebEurostral.Models.EurostralModels
+
+@{
+    ViewBag.Title = "DeltaEnt";
+}
+
+
+<style>
+    table {
+        border : solid
+    }
+</style>
+<h2>PrixEnt</h2>
+
+<div class="jumbotron">
+    <h1>Eurostral 100</h1>
+</div>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>EurostralModels</h4>
+        <div id="Info">
+            Le prix en t du produit est de :
+           
+                 
+           
+            <table id="tableauChanges" class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Acitf
+                        </th>
+                        <th>
+                            Delta
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="actionsByDate">
+                    @foreach (var item in Model.deltaEnt)
+                    {
+                        <tr>
+                            <td id="nom">
+                               
+                            </td>
+                            <td id="valeur">
+                                @Html.DisplayFor(modelItem => item)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+                    
+        </div>
+        <hr />
+       
+
+        
+    </div>
+}
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
