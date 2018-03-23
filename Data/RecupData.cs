@@ -68,7 +68,7 @@ namespace Data
             Dictionary<DateTime, double> dico = getData(symbol);
             foreach(KeyValuePair<DateTime,double> entry in dico)
             {
-                Console.Write("<" + symbol + ";"+ entry.Key.ToString("dd/MM/yyyy") + ";" + entry.Value + ">" + " - ");
+                Console.WriteLine("<" + symbol + ";"+ entry.Key.ToString("dd/MM/yyyy") + ";" + entry.Value + ">");
             }
         }
 
@@ -104,7 +104,7 @@ namespace Data
         /// <param name="debutProduit">DateTime Début du produit</param>
         /// <param name="t">double instant sur la grille du pricer</param>
         /// <param name="finProduit">DateTime fin du produit</param>
-        /// <returns></returns>
+        /// <returns>Datetime correspondant a t(double) en entrée</returns>
         public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
         {
             double joursTotaux = (finProduit - debutProduit).TotalDays;
@@ -134,7 +134,7 @@ namespace Data
             DateTime dateOpt = dico.Keys.ToList()[0];
             double dist = Double.MaxValue;
             double min = Double.MaxValue;
-            // Pas optimal ...
+            // Pas optimal
             foreach (KeyValuePair<DateTime, double> entry in dico)
             {
                 dist = Math.Abs((date-entry.Key).TotalDays);
@@ -249,7 +249,7 @@ namespace Data
                 toPutInPast.Add(DoubleToDate(debutProd, cour, finProd));
                 cour += H;
             }
-            toPutInPast.Add(dateActuelle);
+            toPutInPast.Add(dateActuelle);            
             double[,] res = new double[toPutInPast.Count, data.Count];
             for (int i=0; i<this.data.Count; i++)
             {
