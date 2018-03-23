@@ -394,3 +394,53 @@ void MonteCarlo::set(double fdStep, int nbSamples, Option * opt, BlackScholesMod
 	opt_ = opt;
 	mod_ = mod;
 }
+
+void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect *Pricet, PnlVect* pocket, PnlVect* trackingE) {
+	PnlVect *V = pnl_vect_create_from_zero(past->m);
+	PnlVect *delta = pnl_vect_create_from_zero(past->n);
+	// on met dans le vecteur V la valeur investi dans le zéro coupon européen 
+	pnl_vect_set(V, 0, PL_init_Eurostral(past, delta));
+	double prix,ic;
+	priceEurostral(prix, ic);
+	pnl_vect_set(Pricet, 0, prix);
+	pnl_vect_set(pocket, 0, prix);
+	
+	double expCoef = exp(mod_->r_ * opt_->T_ / H), tho,thomoins;
+	PnlVect *prevDelta = pnl_vect_create_from_zero(past->n);
+	PnlMat *cPast = pnl_mat_create_from_zero(1, past->n);
+	double r_dollar = -1 * pnl_vect_get(mod_->trends_, 3) + mod_->r_;
+	double r_aus = -1 * pnl_vect_get(mod_->trends_, 4) + mod_->r_;
+	pnl_vect_clone(prevDelta, delta);
+	double trackingErrror;
+	for (int i = 1; i < past->m; i++)
+	{
+		pnl_vect_print(delta);
+		tho = i * opt_->T_ / H;
+		thomoins = (i - 1)*opt_->T_ / H;
+		u.getConstatationDatesFromZero(cPast, past, opt_, tho);
+		this->delta(cPast, tho, delta);
+
+
+		PnlVect S = pnl_vect_wrap_mat_row(cPast, cPast->m - 1);
+		pnl_vect_set(&S, 1, pnl_vect_get(&S, 1)*pnl_vect_get(&S, 3));
+		pnl_vect_set(&S, 2, pnl_vect_get(&S, 2)*pnl_vect_get(&S, 4));
+		pnl_vect_set(&S, 3, exp(-((opt_->T_ - thomoins)* r_dollar))* pnl_vect_get(&S, 3));
+		pnl_vect_set(&S, 4, exp(-((opt_->T_ - thomoins)* r_aus))* pnl_vect_get(&S, 4));
+		this->priceEurostral(cPast, tho, prix, ic);
+		pnl_vect_set(Pricet, i, prix);
+		pnl_vect_set(pocket, i,pnl_vect_scalar_prod(prevDelta, &S) + pnl_vect_get(V, i - 1)*expCoef);
+		pnl_vect_set(trackingE,i,pnl_vect_get(pocket,i)-prix);
+		pnl_vect_minus_vect(prevDelta, delta);
+
+		pnl_vect_set(V, i,
+			pnl_vect_get(V, i - 1) * expCoef +
+			pnl_vect_scalar_prod(prevDelta, &S)
+		);
+
+		pnl_vect_clone(prevDelta, delta);
+	}
+	pnl_vect_free(&prevDelta);
+	pnl_mat_free(&cPast);
+
+}
+
