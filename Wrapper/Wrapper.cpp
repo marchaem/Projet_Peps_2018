@@ -72,10 +72,10 @@ namespace Wrapper {
 		return lien->PriceEurostral(convert_past, t);
 	}
 
-	double WrapperClass::getPLEurostral(cli::array<double, 2>^past, double t, double H) {
+	double WrapperClass::getPLEurostral(cli::array<double, 2>^past, double H) {
 		double * convert_past = convertMatrixPointer(past);
 
-		return lien->profitLoss_Eurostral(convert_past, t, H);
+		return lien->profitLoss_Eurostral(convert_past, H);
 	}
 	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);

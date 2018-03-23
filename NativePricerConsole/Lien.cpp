@@ -68,30 +68,15 @@ double Lien::PriceEurostral(double *past, double t) {
 	
 }
 
-double Lien::profitLoss_Eurostral(double * past, double t, double H) {
+double Lien::profitLoss_Eurostral(double * past, double H) {
 	int rebalanc = floor(H);
 	double pl;
 
-	PnlMat* pastpnl = pnl_mat_create_from_ptr(bs->size_,rebalanc+1, past);
-	PnlMat * pastpnl2 = pnl_mat_create(rebalanc + 1, bs->size_);
-	pastpnl2 = pnl_mat_transpose(pastpnl);
-	//return pnl_mat_get(pastpnl2,150,0);
+	PnlMat * pastpnl = pnl_mat_create_from_ptr(rebalanc + 1, bs->size_,past);
 	
-	double pas = (double)opt->T_ / H;
-	int compteur = floor(t / pas);
-	if ((t / pas - floor(t / pas) > 0.001 && t / pas - floor(t / pas) < 0.999)) {
-		compteur--;
-	}
-	//return pnl_mat_get(pastpnl2, 100, 0);
-	int test = pnl_mat_resize(pastpnl2, compteur, bs->size_);
-	//return pnl_mat_get(pastpnl2, 100, 0);
-	PnlMat* donnees = pnl_mat_create_from_scalar(rebalanc + 1, bs->size_,2);
-	//return pnl_mat_get(donnees, 0, 0);
-	PnlMat* pasttt = pnl_mat_create_from_scalar(1, 5, 15);
-	bs->assetEurostral(donnees, t, opt->T_, 16, Mt->rng_, pasttt);
-	return pnl_mat_get(donnees, 0, 0);
-	Mt->profitLoss_Eurostral(donnees, H, pl);
-	return pnl_mat_get(donnees,100, 0);
+	Mt->profitLoss_Eurostral(pastpnl, H, pl);
+	
+	return pl;
 	
 }
 
