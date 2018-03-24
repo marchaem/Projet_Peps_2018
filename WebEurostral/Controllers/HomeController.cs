@@ -50,7 +50,7 @@ namespace WebEurostral.Controllers
         public ActionResult PrixEnt()
         {
             //ViewBag.Message = "Your contact page.";
-            int nbActions = 3;
+           /* int nbActions = 3;
 
             double[,] past = new double[2,nbActions];
 
@@ -70,7 +70,7 @@ namespace WebEurostral.Controllers
             eurost.pastPrice = new double[5, 5];
             eurost.covLogR = recup.exportCov();
             eurost.pastDelta = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
-            eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
+            eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);*/
 
             double r_eu = 0.002;
             double r_aus = 0.025;
@@ -107,8 +107,9 @@ namespace WebEurostral.Controllers
             //wr1.getPriceEurostral(eurost.t, pastPrice);
            // return (eurost.prixEnt);
 
-            // ViewData["price"] = eurost.prixEnt;
-            return RedirectToAction("DeltaEnt");
+            ViewData["price"] = eurost.prixEnt;
+            return View(eurost);
+            //return RedirectToAction("DeltaEnt");
         }
 
         public ActionResult DeltaEnt()
@@ -169,16 +170,17 @@ namespace WebEurostral.Controllers
             //wr1.getPriceEurostral(eurost.t, pastPrice);
             // return (eurost.prixEnt);
 
-            eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
+           // eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
 
             //Ajout
             for (int i = 0; i < 5; i++)
             {
                 eurost.prixActifs[i] = eurost.pastPrice[(eurost.pastPrice.GetLength(0)) - 1, i];
             }
-            
+
             // ViewData["price"] = eurost.prixEnt;
             //ViewBag.data = eurost.deltaEnt;
+            //return RedirectToAction("PrixEnt");
             return View(eurost);
         }
 

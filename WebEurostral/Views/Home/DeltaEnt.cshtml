@@ -12,62 +12,119 @@
 </style>
 <h2>PrixEnt</h2>
 
-<div class="jumbotron">
-    <h1>Eurostral 100</h1>
-</div>
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>EurostralModels</h4>
-        <div id="Info">
-            Le prix en t du produit est de :
-           
-                 
-           
-            <table id="tableauChanges" class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Acitf
-                        </th>
-                        <th>
-                            Delta
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="actionsByDate">
-                    @foreach (var item in Model.deltaEnt)
-                    {
-                        <tr>
-                            <td id="nom">
-                               
-                            </td>
-                            <td id="valeur">
-                                @Html.DisplayFor(modelItem => item)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-
-                    
-        </div>
-        <hr />
-       
-
-        
-    </div>
-}
-
-
-
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Iso Code</th>
+                <th scope="col">Price</th>
+                <th scope="col">Currency</th>
+            </tr>
+        </thead>
+        <tbody>
 </div>
+            <div class="jumbotron">
+                <h1>Eurostral 100</h1>
+            </div>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+                <div class="form-horizontal">
+                    <h4>EurostralModels</h4>
+                    <div id="Info">
+                        Le prix en t du produit est de :
+
+
+
+                        <table id="tableDelta" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Acitf
+                                    </th>
+                                    <th>
+                                        Delta
+                                    </th>
+                                </tr>
+                            </thead>
+                            @{
+                                int i = 0;
+                                <tbody id="actionsByDate">
+                                    @foreach (var item in Model.deltaEnt)
+                                    {
+                                        <tr>
+                                            <td id="nom">
+
+                                                @Html.DisplayFor(Model => Model.nomActifs[i])
+
+                                            </td>
+
+                                            <td id="valeur">
+                                                @Math.Round(item,4)
+                                               
+                                            </td>
+                                        </tr>
+                                        i = i + 1;
+                                    }
+                                </tbody>
+                            }
+                        </table>
+
+
+
+                        <table id="tablePrix" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Actif
+                                    </th>
+                                    <th>
+                                        Prix en t
+                                    </th>
+                                </tr>
+                            </thead>
+                            @{
+                                int j = 0;
+                                <tbody id="actionsByDate">
+                                    @foreach (var item in Model.prixActifs)
+                                    {
+                                        <tr>
+                                            <td id="nom">
+
+                                                @Html.DisplayFor(Model => Model.nomActifs[j])
+
+                                            </td>
+
+                                            <td id="valeur">
+                                                @Math.Round(item, 2)
+                                            </td>
+                                        </tr>
+                                        j = j + 1;
+                                    }
+                                </tbody>
+                            }
+                        </table>
+
+
+
+                    </div>
+                    <hr />
+
+
+
+                </div>
+                                }
+
+
+
+            <div>
+                <span>
+                    @Html.ActionLink("Calculer le prix en t", "PrixEnt")
+                </span>
+            </div>
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+            }
