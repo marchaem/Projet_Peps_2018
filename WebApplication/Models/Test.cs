@@ -43,6 +43,7 @@ namespace WebApplication.Models
            
 
             double[] spots = new double[5];
+            
             for (int i = 0; i < 5; i++)
             {
                 spots[i] = pastPrice[0,i];
@@ -67,17 +68,18 @@ namespace WebApplication.Models
             double[] delta = new double[5];
             double H = 416 ;
 
-            //return 2.0;
-            //return wc.getPriceEurostral();
-            //return wc.getPriceEurostral(t, pastPrice);
-           // return wc.getPLEurostral(donneesHistoriques, H);
+            double[] price = new double[5];
+            double[] pocket = new double[5];
+            double[] tracking = new double[5];
 
-            
-            
+
+
             //return wc.getPriceEurostral(t, pastPrice);
             //return wc.getPLEurostral(donneesHistoriques, H);
 
-            return wc.getDeltaEurostral(pastPrice, t, H)[0];
+            wc.trackingError(pastDelta, t, H, price, pocket, tracking);
+            return tracking[1];
+            
             
             
         }
