@@ -174,7 +174,7 @@ namespace WebEurostral.Controllers
             double [] track = new double[eurost.pastPrice.GetLength(0)];
             double[] pp = new double[eurost.pastPrice.GetLength(0)];
             double[] pock = new double[eurost.pastPrice.GetLength(0)];
-            wr1.trackingError(eurost.pastPrice, eurost.t, H, pp, pock, track);
+            wr1.trackingError(eurost.pastPrice, eurost.t, H, pp, pock, track, eurost.pastPrice.GetLength(0));
             eurost.PandL = track;
             //Ajout
             for (int i = 0; i < 5; i++)

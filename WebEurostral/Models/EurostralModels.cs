@@ -19,8 +19,8 @@ namespace WebEurostral.Models
         public double[,] covLogR;
         public double[,] pastDelta;
         public double[,] pastPrice;
-        public double PandL;
-
+        public double[] PandL { get; set; }
+        public DateTime[] dates;
 
         [Required(ErrorMessage = "La date courante est obligatoire")]
         [DataType(DataType.Date)]
@@ -34,7 +34,8 @@ namespace WebEurostral.Models
             deltaEnt = null;
             nomActifs = new string [5];
             prixActifs = new double[5];
-            
+            PandL = new double[2];
+            dates = new DateTime[2];
 
             nomActifs[0] = "Euro stoxx 50";
             nomActifs[1] = "S&P ASX 200";
