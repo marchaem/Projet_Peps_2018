@@ -44,6 +44,7 @@
                                     <th>
                                         Acitf
                                     </th>
+                                  
                                     <th>
                                         Delta
                                     </th>
@@ -107,7 +108,34 @@
                             }
                         </table>
 
+                        <table id="tablePrix" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Actif
+                                    </th>
+                                   
+                                </tr>
+                            </thead>
+                            @{
+                                
+                                <tbody id="actionsByDate">
+                                    @foreach (var item in Model.pastPrice)
+                                    {
+                                        <tr>
+                                            <td id="nom">
 
+                                                @Html.DisplayFor(modelItem => item)
+
+                                            </td>
+
+                                            
+                                        </tr>
+                                       
+                                    }
+                                </tbody>
+                            }
+                        </table>
 
                     </div>
                     <hr />

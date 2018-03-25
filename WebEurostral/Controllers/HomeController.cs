@@ -205,10 +205,10 @@ namespace WebEurostral.Controllers
             eurost.PandL[2] = 2.5;*/
             DateTime date1 = new DateTime(2014, 12, 18);
             DateTime date2 = new DateTime(2015, 12, 08);
-            DateTime date3 = new DateTime(2015, 12, 08);
+           // DateTime date3 = new DateTime(2015, 12, 08);
             eurost.dates[0] = date1;
             eurost.dates[1] = date2;
-            eurost.dates[2] = date3;
+           // eurost.dates[2] = date3;
             // ViewData("PandL") = eurost.PandL;
 
             return View(eurost);
