@@ -170,8 +170,12 @@ namespace WebEurostral.Controllers
             //wr1.getPriceEurostral(eurost.t, pastPrice);
             // return (eurost.prixEnt);
 
-           // eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
-
+            // eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
+            double [] track = new double[eurost.pastPrice.GetLength(0)];
+            double[] pp = new double[eurost.pastPrice.GetLength(0)];
+            double[] pock = new double[eurost.pastPrice.GetLength(0)];
+            wr1.trackingError(eurost.pastPrice, eurost.t, H, pp, pock, track);
+            eurost.PandL = track;
             //Ajout
             for (int i = 0; i < 5; i++)
             {
@@ -189,6 +193,25 @@ namespace WebEurostral.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public ActionResult AffPL()
+        {
+            // double[] tab1 = new double[3];
+            
+            /*
+            eurost.PandL[0] = 1.2;
+            eurost.PandL[1] = 3;
+            eurost.PandL[2] = 2.5;*/
+            DateTime date1 = new DateTime(2014, 12, 18);
+            DateTime date2 = new DateTime(2015, 12, 08);
+            DateTime date3 = new DateTime(2015, 12, 08);
+            eurost.dates[0] = date1;
+            eurost.dates[1] = date2;
+            eurost.dates[2] = date3;
+            // ViewData("PandL") = eurost.PandL;
+
+            return View(eurost);
         }
     }
 }
