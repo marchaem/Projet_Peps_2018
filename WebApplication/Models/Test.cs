@@ -13,7 +13,7 @@ namespace WebApplication.Models
     {
         public double displayPrice()
         {
-            DateTime date = new DateTime(2015,01,10);
+            DateTime date = new DateTime(2015,03,27);
              DateTime debutProduit = new DateTime(2014, 12, 18);
              DateTime finProduit = new DateTime(2022, 12, 08);
              Data.RecupData recup = new RecupData(new DateTime(2000, 1, 1), date);
@@ -67,17 +67,17 @@ namespace WebApplication.Models
             WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 15, lambdas);
             double[] delta = new double[5];
             double H = 416 ;
-
-            double[] price = new double[5];
-            double[] pocket = new double[5];
-            double[] tracking = new double[5];
+            int m = pastDelta.GetLength(0);
+            double[] price = new double[m];
+            double[] pocket = new double[m];
+            double[] tracking = new double[m];
 
 
 
             //return wc.getPriceEurostral(t, pastPrice);
             //return wc.getPLEurostral(donneesHistoriques, H);
 
-            wc.trackingError(pastDelta, t, H, price, pocket, tracking);
+            wc.trackingError(pastDelta, t, H, price, pocket, tracking,pastDelta.GetLength(0));
             return tracking[1];
             
             

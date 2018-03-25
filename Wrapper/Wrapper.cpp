@@ -161,12 +161,12 @@ namespace Wrapper {
 		return deltacli;
 	}
 
-	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE) {
+	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre) {
 		double * pastP = convertMatrixPointer(past);
 		double * pricetP = new double[pricet->Length];
 		double * pocketP = new double[pocket->Length];
 		double * trackingP = new double[trackingE->Length];
-		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP);
+		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP,nbre);
 		
 		
 		for (int i = 0; i < pricet->Length; i++) {
