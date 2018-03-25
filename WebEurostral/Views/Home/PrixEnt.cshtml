@@ -1,0 +1,17 @@
+﻿@model WebEurostral.Models.EurostralModels
+
+@{
+    ViewBag.Title = "PrixEnt";
+}
+
+<h2>PrixEnt</h2>
+
+
+@Html.DisplayFor(Model => Model.prixEnt)
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
