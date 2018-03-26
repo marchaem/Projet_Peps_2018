@@ -437,10 +437,10 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 		thomoins = (i - 1)*opt_->T_ / H;
 
 		
-		//u.getConstatationDatesFromZero(cPast, past, opt_, tho);
+		u.getConstatationDatesFromZero(cPast, past, opt_, tho);
 
 		// on récupère la matrice historiques ne contenant que les dates de constations et la dernière date
-		this->getConstat(cPast, past, H, tho);
+		//this->getConstat(cPast, past, H, tho);
 		
 		// calcul du nouveau nouveau vecteur delta
 		this->deltaEurostral(cPast, tho, delta);
