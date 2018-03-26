@@ -416,7 +416,7 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 	// initialisation
 	pnl_vect_set(Pricet, 0, prix);
 	pnl_vect_set(pocket, 0, prix);
-	pnl_vect_set(trackingE, 0, 0.0);
+	
 
 	// facteur de capitalisation 
 	double expCoef = exp(mod_->r_ * opt_->T_ / H), tho,thomoins;
@@ -463,8 +463,8 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 		pnl_vect_set(pocket, i, pnl_vect_scalar_prod(&S, prevDelta) +pnl_vect_get(V, i - 1)*expCoef);
 		
 			
-		pnl_vect_set(trackingE,i,pnl_vect_get(pocket,i)-prix);
-		cout << pnl_vect_get(trackingE, i) << endl;
+		pnl_vect_set(trackingE,i-1,pnl_vect_get(pocket,i)-prix);
+		cout << pnl_vect_get(trackingE, i-1) << endl;
 		
 		pnl_vect_minus_vect(prevDelta, delta);
 

@@ -165,15 +165,17 @@ namespace Wrapper {
 		double * pastP = convertMatrixPointer(past);
 		double * pricetP = new double[pricet->Length];
 		double * pocketP = new double[pocket->Length];
-		double * trackingP = new double[trackingE->Length];
+		double * trackingP = new double[trackingE->Length-1];
 		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP,nbre);
 		
 		
-		for (int i = 0; i < pricet->Length; i++) {
+		for (int i = 0; i < pricet->Length-1; i++) {
 			pricet[i] = pricetP[i];
 			pocket[i] = pocketP[i];
 			trackingE[i] = trackingP[i];
 		}
+		pricet[pricet->Length - 1] = pricetP[pricet->Length - 1];
+		pocket[pocket->Length - 1] = pocketP[pocket->Length - 1];
 		
 
 
