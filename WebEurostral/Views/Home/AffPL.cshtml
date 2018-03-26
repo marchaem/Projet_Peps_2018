@@ -1,17 +1,18 @@
-﻿@model WebEurostral.Models.EurostralModels
-@*
-@{ 
-    DateTime[] dates=Model.dates;
-    double[] PandL=Model.PandL;
-    var dataChart = new Chart(width: 1000, height: 300).AddSeries(
-          chartType: "line",
-          xValue: dates,
-          yValues: PandL)
-               .AddTitle("P&L")
-               .write();
+﻿@model WebEurostral.Models.EurostralModels 
+    @*
+    @{
+        DateTime[] dates=Model.dates;
+        double[] PandL=Model.PandL;
+        var dataChart = new Chart(width: 1000, height: 300).AddSeries(
+              chartType: "line",
+              xValue: dates,
+              yValues: PandL)
+                   .AddTitle("P&L")
+                   .write();
 
- }
+     }
 *@
+@*
 <div>
     @{
         DateTime[] dates = Model.dates;
@@ -24,3 +25,17 @@
     .Write();
     }
 </div>
+*@
+
+
+    @{
+        int[] dates = Model.datesbis;//{ 1, 2,3,4};
+        double[] PandL = Model.PandL;//{ 1.0, 2.0 };
+       
+        var myChart = new Chart(width: 1000, height: 1000)
+    .AddTitle("Tracking Error")
+    .AddSeries(chartType: "line",
+      xValue: dates,
+      yValues: PandL)
+    .Write();
+    }

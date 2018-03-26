@@ -21,6 +21,8 @@ namespace WebEurostral.Models
         public double[,] pastPrice;
         public double[] PandL { get; set; }
         public DateTime[] dates;
+        public int[] datesbis;
+        public double[] pock;
 
         [Required(ErrorMessage = "La date courante est obligatoire")]
         [DataType(DataType.Date)]
@@ -34,14 +36,14 @@ namespace WebEurostral.Models
             deltaEnt = null;
             nomActifs = new string [5];
             prixActifs = new double[5];
-            PandL = new double[2];
+            //PandL = new double[2];
             dates = new DateTime[2];
 
             nomActifs[0] = "Euro stoxx 50";
-            nomActifs[1] = "S&P ASX 200";
-            nomActifs[2] = " S&P 500";
-            nomActifs[3] = "Eur / USD";
-            nomActifs[4] = "Eur / AUD";
+            nomActifs[1] = "S&P 500";
+            nomActifs[2] = " S&P ASX 200";
+            nomActifs[3] = "USD / EUR";
+            nomActifs[4] = "AUD / EUR";
 
 
         }
