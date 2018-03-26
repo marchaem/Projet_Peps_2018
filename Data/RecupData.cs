@@ -82,8 +82,8 @@ namespace Data
             Symbols.Add("^STOXX50E");
             Symbols.Add("^GSPC");
             Symbols.Add("^AXJO");
-            Symbols.Add("EURUSD=X");
-            Symbols.Add("EURAUD=X");
+            Symbols.Add("USDEUR=X");
+            Symbols.Add("AUDEUR=X");
 
             RawData = new List<string>();
 

@@ -307,7 +307,8 @@ void MonteCarlo::PL_build_V_Eurostral(const PnlMat *past, double H,PnlVect *delt
 
         this->priceEurostral(cPast,tho,prix,ic);
 		trackingErrror = pnl_vect_scalar_prod(&S, prevDelta) + pnl_vect_get(V, i - 1)*expCoef - prix;
-
+		cout << " dans le portefeuille Zc eu" << pnl_vect_get(V, i - 1) << endl;
+		cout << "tracking error " << trackingErrror << endl;
 	
         pnl_vect_minus_vect(prevDelta, delta);
 

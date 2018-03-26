@@ -16,7 +16,7 @@ namespace Data
             RecupData data = new RecupData(dateDebut, dateFin);
             data.Fetch();
             //data.Restreindre(new DateTime(2005,01,01), new DateTime(2005, 12, 31));
-            double[,] cov = data.exportCov(new DateTime(2007, 01, 01), new DateTime(2007, 12, 31));
+            //double[,] cov = data.exportCov(new DateTime(2007, 01, 01), new DateTime(2007, 12, 31));
             Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
         }
