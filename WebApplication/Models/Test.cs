@@ -34,9 +34,9 @@ namespace WebApplication.Models
             double[,] donneesHistoriques = recup.exportPast(t0, 7, debutBackTest, finBacktest);
 
             //int size, double r, double* VarHis, double* spot, double* trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double* lambdas1
-            double r_eu = 0.002;
-            double r_aus = 0.025;
-            double r_us = 0.00025;
+            double r_eu = 0.003;
+            double r_aus = 0.002;
+            double r_us = 0.004;
             int size = 5;
             double r = r_eu;
            
@@ -69,15 +69,15 @@ namespace WebApplication.Models
 
             //return 2.0;
             //return wc.getPriceEurostral();
-            //return wc.getPriceEurostral(t, pastPrice);
-           // return wc.getPLEurostral(donneesHistoriques, H);
+           // return wc.getPriceEurostral(t, pastPrice);
+            return wc.getPLEurostral(donneesHistoriques, H);
 
             
             
             //return wc.getPriceEurostral(t, pastPrice);
             //return wc.getPLEurostral(donneesHistoriques, H);
 
-            return wc.getDeltaEurostral(pastPrice, t, H)[0];
+            //return wc.getDeltaEurostral(pastPrice, t, H)[0];
             
             
         }
