@@ -12,10 +12,10 @@ Lien::Lien(int size, double r, double *CovLogR, double *spot,double * trend, dou
 	PnlVect *lambdapnl = pnl_vect_create_from_ptr(size, lambdas1);
 	Option *eurostral = new Eurostral100(strike, T1, nbTimeSteps1, size,lambdapnl);
 	opt = eurostral;
+	Mt = new MonteCarlo(fdStep, nbSamples, eurostral, bs);
 
 	//Création du MonteCarlo
 
-	Mt = new MonteCarlo(fdStep, nbSamples, eurostral, bs);
 	
 
 }
@@ -78,6 +78,14 @@ double Lien::profitLoss_Eurostral(double * past, double H) {
 	
 	return pl;
 	
+}
+
+double Lien::forwardTest(double H) {
+	double pl;
+	PnlMat * past = pnl_mat_create_from_double(floor(H) + 1, 5,5.0);
+	bs->assetEurostral(past, 8.0, 416, Mt->rng_);
+	Mt->profitLoss_Eurostral(past, H, pl);
+	return pl;
 }
 void Lien::trackingError(double * past, double t, double H, double * pricet, double * pocket, double * trackingE,int nbre) {
 	/*double weeks = (H / opt->T_) *t;

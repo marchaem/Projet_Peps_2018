@@ -295,6 +295,10 @@ void MonteCarlo::PL_build_V_Eurostral(const PnlMat *past, double H,PnlVect *delt
 		thomoins = (i - 1)*opt_->T_ / H;
 		
         u.getConstatationDatesFromZero(cPast, past, opt_, tho);
+	
+		cout << "matrice past " << endl;
+
+		pnl_mat_print(cPast);
         this->deltaEurostral(cPast, tho, delta);
 
         PnlVect S = pnl_vect_wrap_mat_row(cPast, cPast->m-1);
@@ -371,7 +375,6 @@ void MonteCarlo::profitLoss_Eurostral(const PnlMat *past, double H, double &pl)
     assert(past->m == H+1);
     PnlVect *V = pnl_vect_create_from_zero(H+1);
     PnlVect *delta = pnl_vect_create_from_zero(past->n);
-
     PL_build_V_Eurostral(past, H, delta, V);
     pnl_vect_set(V, H, pnl_vect_get(V, H-1) * exp(mod_->r_ * opt_->T_/ H));
     PL_finalSet_Eurostral(past, pnl_vect_get(V, H), delta, pl,H);
@@ -380,7 +383,13 @@ void MonteCarlo::profitLoss_Eurostral(const PnlMat *past, double H, double &pl)
     pnl_vect_free(&delta);
 }
 
+void MonteCarlo::forwardTestPL(double H, double &pl) {
+	PnlMat * past = pnl_mat_create(H + 1, 5);
+	mod_->assetEurostral(past, 8.0, 417, rng_);
+	profitLoss_Eurostral(past, H, pl);
+	pnl_mat_free(&past);
 
+}
 double MonteCarlo::actualisation(double t)
 {
     return(exp(- mod_->r_ * (opt_->T_ - t)) / nbSamples_);
@@ -430,18 +439,23 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 	
 	pnl_vect_clone(prevDelta, delta);
 	
-	for (int i = 1; i < past->m; i++)
+	for (int i = 1; i < past->m-1; i++)
 	{
 		// on boucle jusqu'à la date d'aujourd'hui
 		tho = i * opt_->T_ / H;
 		thomoins = (i - 1)*opt_->T_ / H;
 
 		
-		u.getConstatationDatesFromZero(cPast, past, opt_, tho);
-
-		// on récupère la matrice historiques ne contenant que les dates de constations et la dernière date
-		//this->getConstat(cPast, past, H, tho);
+		//u.getConstatationDatesFromZero(cPast, past, opt_, tho);
 		
+		
+		// on récupère la matrice historiques ne contenant que les dates de constations et la dernière date
+		this->getConstat(cPast, past, H, i-1);
+
+		//cout << "matrice past " << endl;
+
+		//pnl_mat_print(cPast);
+
 		// calcul du nouveau nouveau vecteur delta
 		this->deltaEurostral(cPast, tho, delta);
 		
@@ -475,13 +489,49 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 
 		pnl_vect_clone(prevDelta, delta);
 	}
+	int n = pnl_mat_resize(cPast, cPast->m+1, opt_->size_);
+	PnlVect S = pnl_vect_wrap_mat_row(past, past->m-1);
+	pnl_mat_set_row(cPast, &S,cPast->m -1 );
+	//this->deltaEurostral(cPast, t, delta);
+	this->priceEurostral(cPast, tho, prix, ic);
+	pnl_vect_set(&S, 1, pnl_vect_get(&S, 1)*pnl_vect_get(&S, 3));
+	pnl_vect_set(&S, 2, pnl_vect_get(&S, 2)*pnl_vect_get(&S, 4));
+	pnl_vect_set(&S, 3, exp(-((opt_->T_ - t)* r_dollar))* pnl_vect_get(&S, 3));
+	pnl_vect_set(&S, 4, exp(-((opt_->T_ - t)* r_aus))* pnl_vect_get(&S, 4));
+
+	pnl_vect_set(Pricet,Pricet->size -1 , prix);
+	pnl_vect_set(pocket, pocket->size-1, pnl_vect_scalar_prod(&S, prevDelta) + pnl_vect_get(V, V->size-2)*expCoef);
+	pnl_vect_set(trackingE,trackingE->size -1 , pnl_vect_get(pocket, pocket->size-1) - prix);
+
 	pnl_vect_free(&prevDelta);
+
 	pnl_mat_free(&cPast);
 
 }
 
-void MonteCarlo::getConstat(PnlMat * dateconstatation,const PnlMat* past, double H, double t) {
-	double temps = t*opt_->nbTimeSteps_ / opt_->T_;
+void MonteCarlo::getConstat(PnlMat * dateconstatation,const PnlMat* past, double H, int i) {
+
+	if (i== 0) {
+		int n = pnl_mat_resize(dateconstatation, 2, opt_->size_);
+		PnlVect S = pnl_vect_wrap_mat_row(past, 0);
+		pnl_mat_set_row(dateconstatation, &S, 0);
+		S = pnl_vect_wrap_mat_row(past, 1);
+		pnl_mat_set_row(dateconstatation, &S, 1);
+	}
+	else {
+		int nb = floor(H / opt_->nbTimeSteps_);
+		if (i % nb == 0) {
+			int n = pnl_mat_resize(dateconstatation, dateconstatation->m +1, opt_->size_);
+			PnlVect S = pnl_vect_wrap_mat_row(past, i+1);
+			pnl_mat_set_row(dateconstatation, &S, dateconstatation->m-1);
+		}
+		else {
+			PnlVect S = pnl_vect_wrap_mat_row(past, i + 1);
+			pnl_mat_set_row(dateconstatation, &S, dateconstatation->m - 1);
+		}
+	}
+	
+	/*double temps = t*opt_->nbTimeSteps_ / opt_->T_;
 	int nbdate;
 	
 	if (floor(temps) == temps) {
@@ -511,7 +561,7 @@ void MonteCarlo::getConstat(PnlMat * dateconstatation,const PnlMat* past, double
 		S = pnl_vect_wrap_mat_row(past, floor(t*H/opt_->T_));
 		pnl_mat_set_row(dateconstatation, &S, nbdate-1);
 		
-	}
+	}*/
 
 	
 }
