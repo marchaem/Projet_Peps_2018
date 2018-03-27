@@ -183,4 +183,5 @@ public:
     MonteCarlo& operator= (const MonteCarlo&);
 	void set(double fdStep, int nbSamples, Option *opt, BlackScholesModel *mod);
 	void getConstat(PnlMat * dateconstatation, const PnlMat* past, double H, double t);
+	void forwardTestPL(double H, double&pl);
 };

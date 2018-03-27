@@ -371,7 +371,6 @@ void MonteCarlo::profitLoss_Eurostral(const PnlMat *past, double H, double &pl)
     assert(past->m == H+1);
     PnlVect *V = pnl_vect_create_from_zero(H+1);
     PnlVect *delta = pnl_vect_create_from_zero(past->n);
-
     PL_build_V_Eurostral(past, H, delta, V);
     pnl_vect_set(V, H, pnl_vect_get(V, H-1) * exp(mod_->r_ * opt_->T_/ H));
     PL_finalSet_Eurostral(past, pnl_vect_get(V, H), delta, pl,H);
@@ -380,7 +379,13 @@ void MonteCarlo::profitLoss_Eurostral(const PnlMat *past, double H, double &pl)
     pnl_vect_free(&delta);
 }
 
+void MonteCarlo::forwardTestPL(double H, double &pl) {
+	PnlMat * past = pnl_mat_create(H + 1, 5);
+	mod_->assetEurostral(past, 8.0, 417, rng_);
+	profitLoss_Eurostral(past, H, pl);
+	pnl_mat_free(&past);
 
+}
 double MonteCarlo::actualisation(double t)
 {
     return(exp(- mod_->r_ * (opt_->T_ - t)) / nbSamples_);

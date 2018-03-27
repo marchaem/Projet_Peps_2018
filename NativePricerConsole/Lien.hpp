@@ -29,4 +29,5 @@ public:
 		/*trackingError*/
 	DLLEXP void trackingError(double * past,double t, double H, double * pricet, double * pocket,double * trackingE,int nbre);
 
+	DLLEXP double forwardTest(double H);
 };

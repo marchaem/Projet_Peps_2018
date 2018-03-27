@@ -34,9 +34,9 @@ namespace WebApplication.Models
             double[,] donneesHistoriques = recup.exportPast(t0, 7, debutBackTest, finBacktest);
 
             //int size, double r, double* VarHis, double* spot, double* trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, double* lambdas1
-            double r_eu = 0.003;
-            double r_aus = 0.002;
-            double r_us = 0.004;
+            double r_eu = 0.002;
+            double r_aus = 0.025;
+            double r_us = 0.00025;
             int size = 5;
             double r = r_eu;
            
@@ -64,7 +64,7 @@ namespace WebApplication.Models
                 lambdas[i] = 0.05;
             }
             
-            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 15, lambdas);
+            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 16, lambdas);
             double[] delta = new double[5];
             double H = 416 ;
             int m = pastDelta.GetLength(0);
@@ -72,7 +72,7 @@ namespace WebApplication.Models
             double[] pocket = new double[m];
             double[] tracking = new double[m];
 
-
+            return wc.getForwardTest(H);
 
             //return 2.0;
             //return wc.getPriceEurostral();
@@ -86,8 +86,8 @@ namespace WebApplication.Models
 
             //return wc.getDeltaEurostral(pastPrice, t, H)[0];
 
-            wc.trackingError(pastDelta, t, H, price, pocket, tracking,pastDelta.GetLength(0));
-            return tracking[1];
+            //wc.trackingError(pastDelta, t, H, price, pocket, tracking,pastDelta.GetLength(0));
+            //return tracking[1];
             
 
             
