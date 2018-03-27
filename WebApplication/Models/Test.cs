@@ -64,7 +64,7 @@ namespace WebApplication.Models
                 lambdas[i] = 0.05;
             }
             
-            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 15, lambdas);
+            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 16, lambdas);
             double[] delta = new double[5];
             double H = 416 ;
             int m = pastDelta.GetLength(0);
@@ -72,14 +72,24 @@ namespace WebApplication.Models
             double[] pocket = new double[m];
             double[] tracking = new double[m];
 
+            return wc.getForwardTest(H);
+
+            //return 2.0;
+            //return wc.getPriceEurostral();
+           // return wc.getPriceEurostral(t, pastPrice);
+            return wc.getPLEurostral(donneesHistoriques, H);
 
 
             //return wc.getPriceEurostral(t, pastPrice);
             //return wc.getPLEurostral(donneesHistoriques, H);
 
-            wc.trackingError(pastDelta, t, H, price, pocket, tracking,pastDelta.GetLength(0));
-            return tracking[1];
+
+            //return wc.getDeltaEurostral(pastPrice, t, H)[0];
+
+            //wc.trackingError(pastDelta, t, H, price, pocket, tracking,pastDelta.GetLength(0));
+            //return tracking[1];
             
+
             
             
         }

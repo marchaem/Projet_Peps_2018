@@ -76,6 +76,10 @@ namespace Wrapper {
 		return lien->profitLoss_Eurostral(convert_past, H);
 	}
 
+	double WrapperClass::getForwardTest(double H) {
+		return lien->forwardTest(H);
+	}
+
 	/*cli::array<double>^ WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t) {
 		double * convert_past = convertMatrixPointer(past);
 		PnlVect * delta=lien->deltaEurostral(convert_past,t);
