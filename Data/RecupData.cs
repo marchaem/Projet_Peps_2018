@@ -107,6 +107,10 @@ namespace Data
         /// <returns>Datetime correspondant a t(double) en entrée</returns>
         public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
         {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             joursTotaux = t / 8 * joursTotaux;
             DateTime res = debutProduit.AddDays(joursTotaux);
@@ -115,6 +119,10 @@ namespace Data
 
         public int GetNbTimeSteps(DateTime debutProduit, DateTime finProduit, int freq)
         {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             return (int)joursTotaux / freq;
         }
@@ -149,6 +157,10 @@ namespace Data
 
         public double DateToDouble(DateTime debutProduit, DateTime date, DateTime finProduit)
         {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             double joursPasses = (date - debutProduit).TotalDays;
             return joursPasses / joursTotaux * 8.0; // Maturité = 8
@@ -259,7 +271,7 @@ namespace Data
                 }
             }
 
-            for (int i=0; i< toPutInPast.Count; i++)
+            /*for (int i=0; i< toPutInPast.Count; i++)
             {
                 if (i == 0)
                 {
@@ -274,7 +286,7 @@ namespace Data
                     Console.Write(res[i,j] + " ");
                 }
                 Console.WriteLine();
-            }
+            }*/
                 return res;
         }
 
@@ -284,6 +296,7 @@ namespace Data
             for (int i= 0; i < this.data.Count; i++)
             {
                 res[i] = Stats.volStd(this.data[i].Values.ToList());
+                Console.WriteLine(Math.Round(res[i]*100.0,2));
             }
             return res;
         }
@@ -311,6 +324,13 @@ namespace Data
                 res = res && dico.ContainsKey(date);
             }
             return res;
+        }
+
+        public RecupData DataCommon()
+        {
+            RecupData res = new RecupData(this.dateDebut, this.dateFin);
+            res.Symbols = new List<String>(this.Symbols);
+            return null;
         }
 
         public void Fetch()
