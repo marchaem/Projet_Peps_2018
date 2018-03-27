@@ -27,7 +27,7 @@
     <div class="form-horizontal">
         <h4>EurostralModels</h4>
         <div id="Info">
-            Le prix en t du produit est de :
+            Le prix en t du produit est de : @Model.nb_iterations
 
 
 
@@ -102,50 +102,50 @@
             </table>
 
             <table id="tablePrix" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            Actif
-                        </th>
+            <thead>
+                <tr>
+                    <th>
+                        Actif
+                    </th>
 
-                    </tr>
-                </thead>
-                @{
+                </tr>
+            </thead>
+           @{
 
-                    <tbody id="actionsByDate">
-                        @foreach (var item in Model.pock)
-                        {
-                            <tr>
-                                <td id="nom">
+                <tbody id="actionsByDate">
+                    @foreach (var item in Model.pock)
+                    {
+                        <tr>
+                            <td id="nom">
 
-                                    @Html.DisplayFor(modelItem => item)
+                                @Html.DisplayFor(modelItem => item)
 
-                                </td>
+                            </td>
 
 
-                            </tr>
+                        </tr>
 
-                        }
-                    </tbody>
-                }
-            </table>
+                    }
+                </tbody>
+            }
+        </table> 
+
+            </div>
+            <hr />
+
+
 
         </div>
-        <hr />
+                        }
 
 
 
+    <div>
+        <span>
+            @Html.ActionLink("Calculer le prix en t", "PrixEnt")
+        </span>
     </div>
-                    }
 
-
-
-<div>
-    <span>
-        @Html.ActionLink("Calculer le prix en t", "PrixEnt")
-    </span>
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
