@@ -36,6 +36,8 @@ namespace Data
         /// On fait ensuite une liste de ces dictionnaires pour avoir le total des sous-jacents
         /// </summary>
         private List<Dictionary<DateTime, double>> data;
+        bool done = false;
+        string cour;
 
         public DateTime getDebutData()
         {
@@ -375,6 +377,43 @@ namespace Data
                 }
             }
             return DataRestr;
+        }
+
+        public double[] GetEurostralHisto(DateTime debut, int freq, DateTime fin)
+        {
+            Console.WriteLine("Fetch eurostral ...");
+            FetchEurostralHisto(debut, freq, fin);
+            while (!done)
+            {
+                System.Threading.Thread.Sleep(25);
+            }
+            Dictionary<DateTime, double> dico;
+            dico = ParseStringCSV(cour);
+            List<DateTime> toReturn = new List<DateTime>();
+            for (DateTime date = debut; date < fin; date = date.AddDays(freq))
+            {
+                toReturn.Add(date);
+            }
+            toReturn.Add(fin);
+            double[] res = new double[toReturn.Count];
+            for (int i =0; i<toReturn.Count; i++)
+            {
+                res[i] = GetClosestData(toReturn[i],dico);
+            }
+            return res;
+        }
+
+        public async void FetchEurostralHisto(DateTime debut, int freq, DateTime fin)
+        {
+            done = false;
+            string symbolEurostral = "FR0012034023.PA";
+            while (string.IsNullOrEmpty(Token.Cookie) || string.IsNullOrEmpty(Token.Crumb))
+            {
+                await Token.RefreshAsync().ConfigureAwait(false);
+            }
+            cour = await Historical.GetRawAsync(symbolEurostral, dateDebut, dateFin).ConfigureAwait(false);
+            cour = cour.Replace(",", ";");
+            done = true;
         }
 
         private async Task GetYahooCSV()
