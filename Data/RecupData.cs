@@ -36,6 +36,8 @@ namespace Data
         /// On fait ensuite une liste de ces dictionnaires pour avoir le total des sous-jacents
         /// </summary>
         private List<Dictionary<DateTime, double>> data;
+        bool done = false;
+        string cour;
 
         public DateTime getDebutData()
         {
@@ -82,8 +84,8 @@ namespace Data
             Symbols.Add("^STOXX50E");
             Symbols.Add("^GSPC");
             Symbols.Add("^AXJO");
-            Symbols.Add("EURUSD=X");
-            Symbols.Add("EURAUD=X");
+            Symbols.Add("USDEUR=X");
+            Symbols.Add("AUDEUR=X");
 
             RawData = new List<string>();
 
@@ -107,6 +109,10 @@ namespace Data
         /// <returns>Datetime correspondant a t(double) en entrée</returns>
         public DateTime DoubleToDate(DateTime debutProduit, double t, DateTime finProduit)
         {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             joursTotaux = t / 8 * joursTotaux;
             DateTime res = debutProduit.AddDays(joursTotaux);
@@ -115,6 +121,10 @@ namespace Data
 
         public int GetNbTimeSteps(DateTime debutProduit, DateTime finProduit, int freq)
         {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             return (int)joursTotaux / freq;
         }
@@ -149,6 +159,10 @@ namespace Data
 
         public double DateToDouble(DateTime debutProduit, DateTime date, DateTime finProduit)
         {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
             double joursTotaux = (finProduit - debutProduit).TotalDays;
             double joursPasses = (date - debutProduit).TotalDays;
             return joursPasses / joursTotaux * 8.0; // Maturité = 8
@@ -259,7 +273,7 @@ namespace Data
                 }
             }
 
-            for (int i=0; i< toPutInPast.Count; i++)
+            /*for (int i=0; i< toPutInPast.Count; i++)
             {
                 if (i == 0)
                 {
@@ -274,7 +288,7 @@ namespace Data
                     Console.Write(res[i,j] + " ");
                 }
                 Console.WriteLine();
-            }
+            }*/
                 return res;
         }
 
@@ -284,6 +298,7 @@ namespace Data
             for (int i= 0; i < this.data.Count; i++)
             {
                 res[i] = Stats.volStd(this.data[i].Values.ToList());
+                Console.WriteLine(Math.Round(res[i]*100.0,2));
             }
             return res;
         }
@@ -311,6 +326,13 @@ namespace Data
                 res = res && dico.ContainsKey(date);
             }
             return res;
+        }
+
+        public RecupData DataCommon()
+        {
+            RecupData res = new RecupData(this.dateDebut, this.dateFin);
+            res.Symbols = new List<String>(this.Symbols);
+            return null;
         }
 
         public void Fetch()
@@ -355,6 +377,43 @@ namespace Data
                 }
             }
             return DataRestr;
+        }
+
+        public double[] GetEurostralHisto(DateTime debut, int freq, DateTime fin)
+        {
+            Console.WriteLine("Fetch eurostral ...");
+            FetchEurostralHisto(debut, freq, fin);
+            while (!done)
+            {
+                System.Threading.Thread.Sleep(25);
+            }
+            Dictionary<DateTime, double> dico;
+            dico = ParseStringCSV(cour);
+            List<DateTime> toReturn = new List<DateTime>();
+            for (DateTime date = debut; date < fin; date = date.AddDays(freq))
+            {
+                toReturn.Add(date);
+            }
+            toReturn.Add(fin);
+            double[] res = new double[toReturn.Count];
+            for (int i =0; i<toReturn.Count; i++)
+            {
+                res[i] = GetClosestData(toReturn[i],dico);
+            }
+            return res;
+        }
+
+        public async void FetchEurostralHisto(DateTime debut, int freq, DateTime fin)
+        {
+            done = false;
+            string symbolEurostral = "FR0012034023.PA";
+            while (string.IsNullOrEmpty(Token.Cookie) || string.IsNullOrEmpty(Token.Crumb))
+            {
+                await Token.RefreshAsync().ConfigureAwait(false);
+            }
+            cour = await Historical.GetRawAsync(symbolEurostral, dateDebut, dateFin).ConfigureAwait(false);
+            cour = cour.Replace(",", ";");
+            done = true;
         }
 
         private async Task GetYahooCSV()

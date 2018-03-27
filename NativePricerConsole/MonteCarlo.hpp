@@ -163,7 +163,7 @@ public:
   	double actualisation(double t);
     void PL_build_V_Eurostral(const PnlMat *past, double H,PnlVect *delta, PnlVect *V);
     double PL_init_Eurostral(const PnlMat *past, PnlVect *delta);
-    void PL_finalSet_Eurostral(const PnlMat *past, double v_h, PnlVect *delta, double& pl);
+    void PL_finalSet_Eurostral(const PnlMat *past, double v_h, PnlVect *delta, double& pl, double H);
     void profitLoss_Eurostral(const PnlMat *past, double H, double &pl);
 	/*
 	Rempli price des prix du produit jusqu'à t et de la valeur du portefeuille jusqu'à t (juste avant rebalancement)*/
@@ -182,5 +182,5 @@ public:
      */
     MonteCarlo& operator= (const MonteCarlo&);
 	void set(double fdStep, int nbSamples, Option *opt, BlackScholesModel *mod);
-
+	void getConstat(PnlMat * dateconstatation, const PnlMat* past, double H, double t);
 };
