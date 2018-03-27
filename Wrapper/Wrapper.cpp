@@ -86,7 +86,7 @@ namespace Wrapper {
 		 test[0] = 5.2152;
 	}
 
-	cli::array<double, 1>^WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
+	cli::array<double, 1>^    WrapperClass::getDeltaEurostral(cli::array<double,2>^ past,double t,double H) {
 		/*pin_ptr<double> pPast = &past[0];
 		double *convert_past = pPast;*/
 
@@ -99,7 +99,7 @@ namespace Wrapper {
 	}
 
 	WrapperClass::WrapperClass(int size, double r, cli::array<double,2>^ covlogR, cli::array<double,1>^ spot, cli::array<double, 1>^ trend, double fdStep, int nbSamples, double strike, double T1, int nbTimeSteps1, cli::array<double,1>^ lambdas1) {
-		pricer1 = new Pricer();
+		//pricer1 = new Pricer();
 		size_ = size;
 		pin_ptr<double> pS = &spot[0];
 		double *convert_spot = pS;
@@ -161,15 +161,22 @@ namespace Wrapper {
 		return deltacli;
 	}
 
-	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE) {
-		double * pastP = new double[past->Length];
+	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre) {
+		double * pastP = convertMatrixPointer(past);
 		double * pricetP = new double[pricet->Length];
 		double * pocketP = new double[pocket->Length];
-		double * trackingP = new double[trackingE->Length];
-		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP);
-		pricet = convertTabToCli(pricetP);
-		pocket = convertTabToCli(pocketP);
-		trackingE = convertTabToCli(trackingP);
+		double * trackingP = new double[trackingE->Length-1];
+		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP,nbre);
+		
+		
+		for (int i = 0; i < pricet->Length-1; i++) {
+			pricet[i] = pricetP[i];
+			pocket[i] = pocketP[i];
+			trackingE[i] = trackingP[i];
+		}
+		pricet[pricet->Length - 1] = pricetP[pricet->Length - 1];
+		pocket[pocket->Length - 1] = pocketP[pocket->Length - 1];
+		
 
 
 	}

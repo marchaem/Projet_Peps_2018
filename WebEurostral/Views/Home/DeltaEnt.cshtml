@@ -7,65 +7,143 @@
 
 <style>
     table {
-        border : solid
+        border: solid;
     }
 </style>
 <h2>PrixEnt</h2>
 
+
 <div class="jumbotron">
     <h1>Eurostral 100</h1>
 </div>
-@using (Html.BeginForm()) 
-{
+<div>
+    @Html.ActionLink("Afficher la Tracking Error","AffPL")
+</div>
+
+@using (Html.BeginForm())
+            {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>EurostralModels</h4>
         <div id="Info">
             Le prix en t du produit est de :
-           
-                 
-           
-            <table id="tableauChanges" class="table">
+
+
+
+            <table id="tableDelta" class="table table-striped" style="width:30%; position:relative;float:left">
                 <thead>
                     <tr>
                         <th>
                             Acitf
                         </th>
+
                         <th>
                             Delta
                         </th>
                     </tr>
                 </thead>
-                <tbody id="actionsByDate">
-                    @foreach (var item in Model.deltaEnt)
-                    {
-                        <tr>
-                            <td id="nom">
-                               
-                            </td>
-                            <td id="valeur">
-                                @Html.DisplayFor(modelItem => item)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
+                @{
+                    int i = 0;
+                    <tbody id="actionsByDate">
+                        @foreach (var item in Model.deltaEnt)
+                        {
+                            <tr>
+                                <td id="nom">
+
+                                    @Html.DisplayFor(Model => Model.nomActifs[i])
+
+                                </td>
+
+                                <td id="valeur">
+                                    @Math.Round(item, 4)
+
+                                </td>
+                            </tr>
+                            i = i + 1;
+                        }
+                    </tbody>
+                }
             </table>
 
+            
 
-                    
+            <table id="tablePrix" class="table table-striped" style="position:relative; width: 30%;float:right">
+                <thead>
+                    <tr>
+                        <th>
+                            Actif
+                        </th>
+                        <th>
+                            Prix en t
+                        </th>
+                    </tr>
+                </thead>
+                @{
+                    int j = 0;
+                    <tbody id="actionsByDate">
+                        @foreach (var item in Model.prixActifs)
+                        {
+                            <tr>
+                                <td id="nom">
+
+                                    @Html.DisplayFor(Model => Model.nomActifs[j])
+
+                                </td>
+
+                                <td id="valeur">
+                                    @Math.Round(item, 2)
+                                </td>
+                            </tr>
+                            j = j + 1;
+                        }
+                    </tbody>
+                }
+            </table>
+
+            <table id="tablePrix" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Actif
+                        </th>
+
+                    </tr>
+                </thead>
+                @{
+
+                    <tbody id="actionsByDate">
+                        @foreach (var item in Model.pock)
+                        {
+                            <tr>
+                                <td id="nom">
+
+                                    @Html.DisplayFor(modelItem => item)
+
+                                </td>
+
+
+                            </tr>
+
+                        }
+                    </tbody>
+                }
+            </table>
+
         </div>
         <hr />
-       
 
-        
+
+
     </div>
-}
+                    }
 
 
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    <span>
+        @Html.ActionLink("Calculer le prix en t", "PrixEnt")
+    </span>
 </div>
 
 @section Scripts {

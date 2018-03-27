@@ -79,8 +79,8 @@ double Lien::profitLoss_Eurostral(double * past, double H) {
 	return pl;
 	
 }
-void Lien::trackingError(double * past, double t, double H, double * pricet, double * pocket, double * trackingE) {
-	double weeks = (H / opt->T_) *t;
+void Lien::trackingError(double * past, double t, double H, double * pricet, double * pocket, double * trackingE,int nbre) {
+	/*double weeks = (H / opt->T_) *t;
 	int fweeks = floor(weeks);
 	int nbdate;
 	if (fweeks == weeks) {
@@ -88,18 +88,21 @@ void Lien::trackingError(double * past, double t, double H, double * pricet, dou
 	}
 	else {
 		nbdate = 2 + fweeks;
-	}
+	}*/
 	
-	PnlMat* pastpnl = pnl_mat_create_from_ptr(nbdate, bs->size_, past);
-	PnlVect* pricetpnl = pnl_vect_create(nbdate);
-	PnlVect* pocketpnl = pnl_vect_create(nbdate);
-	PnlVect * trackEpnl = pnl_vect_create(nbdate);
+	PnlMat* pastpnl = pnl_mat_create_from_ptr(nbre, bs->size_, past);
+	PnlVect* pricetpnl = pnl_vect_create(nbre);
+	PnlVect* pocketpnl = pnl_vect_create(nbre);
+	PnlVect * trackEpnl = pnl_vect_create(nbre-1);
 	Mt->tracking_error(pastpnl, t, H, pricetpnl, pocketpnl, trackEpnl);
-	for (int i = 0; i< nbdate; i++) {
+	for (int i = 0; i< nbre-1; i++) {
 		pricet[i] = pnl_vect_get(pricetpnl, i);
 		pocket[i] = pnl_vect_get(pocketpnl, i);
 		trackingE[i] = pnl_vect_get(trackEpnl, i);
 
 	}
+	pricet[nbre-1] = pnl_vect_get(pricetpnl, nbre -1);
+	pocket[nbre-1] = pnl_vect_get(pocketpnl, nbre-1);
+	
 }
 
