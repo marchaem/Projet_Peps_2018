@@ -455,7 +455,8 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 		//cout << "matrice past " << endl;
 
 		//pnl_mat_print(cPast);
-
+		this->priceEurostral(cPast, tho, prix, ic);
+		pnl_vect_set(Pricet, i, prix);
 		// calcul du nouveau nouveau vecteur delta
 		this->deltaEurostral(cPast, tho, delta);
 		
@@ -470,8 +471,7 @@ void MonteCarlo::tracking_error(const PnlMat *past, double t, double H, PnlVect 
 		
 		
 		// calcul du nouveau prix
-		this->priceEurostral(cPast, tho, prix, ic);
-		pnl_vect_set(Pricet, i, prix);
+		
 
 		// la tracking error correspond à la différence du nouveau prix et la nouvelle valeur du portefeuille
 		pnl_vect_set(pocket, i, pnl_vect_scalar_prod(&S, prevDelta) +pnl_vect_get(V, i - 1)*expCoef);
