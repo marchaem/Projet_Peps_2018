@@ -273,7 +273,7 @@ namespace Data
                 }
             }
 
-            /*for (int i=0; i< toPutInPast.Count; i++)
+            for (int i=0; i< toPutInPast.Count; i++)
             {
                 if (i == 0)
                 {
@@ -288,7 +288,7 @@ namespace Data
                     Console.Write(res[i,j] + " ");
                 }
                 Console.WriteLine();
-            }*/
+            }
                 return res;
         }
 
