@@ -64,31 +64,25 @@ namespace WebApplication.Models
                 lambdas[i] = 0.05;
             }
             
-            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 50000, 10, 8.0, 16, lambdas);
+            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 5000, 10, 8.0, 16, lambdas);
             double[] delta = new double[5];
             double H = 416 ;
             int m = pastDelta.GetLength(0);
             double[] price = new double[m];
             double[] pocket = new double[m];
-            double[] tracking = new double[m];
+            double[] tracking = new double[m-1];
+            wc.trackingError(pastDelta, t, H, price, pocket, tracking, m);
+            Stock stock = new Stock(recup);
+            stock.Add(0.0, wc.getDeltaEurostral( recup.exportPast(0, 182, debutProduit, finProduit),0.0,H ),price[0],0.0 );
+            for (int i = 1; i < m ; i++)
+            {
+                stock.Add(i * 8.0 / H, wc.getDeltaEurostral(recup.exportPast(i * 8.0 / H, 182, debutProduit, finProduit), 0.0, H), price[i], tracking[i - 1]);
 
-            return wc.getForwardTest(H);
-
-            //return 2.0;
-            //return wc.getPriceEurostral();
-           // return wc.getPriceEurostral(t, pastPrice);
-            return wc.getPLEurostral(donneesHistoriques, H);
-
-
-            //return wc.getPriceEurostral(t, pastPrice);
-            //return wc.getPLEurostral(donneesHistoriques, H);
+            }
+            stock.SaveToCSV();
 
 
-            //return wc.getDeltaEurostral(pastPrice, t, H)[0];
-
-            //wc.trackingError(pastDelta, t, H, price, pocket, tracking,pastDelta.GetLength(0));
-            //return tracking[1];
-            
+            return 1.0;
 
             
             
