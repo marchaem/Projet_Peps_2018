@@ -23,6 +23,9 @@ namespace WebEurostral.Models
         public DateTime[] dates;
         public int[] datesbis;
         public double[] pock;
+        public double[] pp;
+        public double PL;
+        public int nb_iterations { get; set; }
 
         [Required(ErrorMessage = "La date courante est obligatoire")]
         [DataType(DataType.Date)]
@@ -32,7 +35,7 @@ namespace WebEurostral.Models
         {
 
             p = new ParametresModel();
-            WrapperClass wc = new WrapperClass();
+            //WrapperClass wc = new WrapperClass();
             deltaEnt = null;
             nomActifs = new string [5];
             prixActifs = new double[5];

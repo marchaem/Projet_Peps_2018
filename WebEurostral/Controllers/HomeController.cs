@@ -72,7 +72,7 @@ namespace WebEurostral.Controllers
             eurost.pastDelta = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
             eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);*/
 
-            double r_eu = 0.002;
+          /*  double r_eu = 0.002;
             double r_aus = 0.025;
             double r_us = 0.00025;
             int size = 5;
@@ -101,9 +101,9 @@ namespace WebEurostral.Controllers
                 lambdas[i] = 0.05;
             }
 
-            WrapperClass wr1 = new WrapperClass(size, r, eurost.covLogR, spots, trends, 0.1, 50000, 100, 8.0, 15, lambdas);
-            //WrapperClass wr1 = new WrapperClass();
-            eurost.prixEnt=wr1.getPriceEurostral(eurost.t, eurost.pastPrice); // Il faut initialiser t dans Eurostral !!!!!
+            WrapperClass wr1 = new WrapperClass(size, r, eurost.covLogR, spots, trends, 0.1, eurost.nb_iterations, 100, 8.0, 15, lambdas);*/
+           
+            eurost.prixEnt=eurost.wc.getPriceEurostral(eurost.t, eurost.pastPrice); // Il faut initialiser t dans Eurostral !!!!!
             //wr1.getPriceEurostral(eurost.t, pastPrice);
            // return (eurost.prixEnt);
 
@@ -132,7 +132,7 @@ namespace WebEurostral.Controllers
 
 
             eurost.covLogR = recup.exportCov();
-            eurost.pastDelta = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
+            eurost.pastDelta = recup.exportPast(eurost.t, 7, debutProduit, finProduit);
             eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
 
             double r_eu = 0.002;
@@ -163,19 +163,28 @@ namespace WebEurostral.Controllers
                 lambdas[i] = 0.05;
             }
 
-            WrapperClass wr1 = new WrapperClass(size, r, eurost.covLogR, spots, trends, 0.1, 50000, 100, 8.0, 15, lambdas);
+            WrapperClass wr1 = new WrapperClass(size, r, eurost.covLogR, spots, trends, 0.1, eurost.nb_iterations, 100, 8.0, 16, lambdas);
+            eurost.wc = wr1;
             //WrapperClass wr1 = new WrapperClass();
             double H= 416;
             eurost.deltaEnt = wr1.getDeltaEurostral(eurost.pastPrice, eurost.t, H);
             //wr1.getPriceEurostral(eurost.t, pastPrice);
             // return (eurost.prixEnt);
 
+            /*DateTime debutBackTest = new DateTime(2010, 03, 22);
+            DateTime finBacktest = new DateTime(2018, 03, 22);
+            double t0 = recup.DateToDouble(debutBackTest, finBacktest, finBacktest);
+            double[,] donneesHistoriques = recup.exportPast(t0, 7, debutBackTest, finBacktest);
+            eurost.PL=wr1.getPLEurostral(donneesHistoriques, H);*/
+
             // eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
-            double [] track = new double[eurost.pastPrice.GetLength(0)];
-            double[] pp = new double[eurost.pastPrice.GetLength(0)];
-            double[] pock = new double[eurost.pastPrice.GetLength(0)];
-            wr1.trackingError(eurost.pastPrice, eurost.t, H, pp, pock, track, eurost.pastPrice.GetLength(0));
+            double [] track = new double[eurost.pastDelta.GetLength(0)-1];
+            double[] pp = new double[eurost.pastDelta.GetLength(0)];
+            double[] pock = new double[eurost.pastDelta.GetLength(0)-1];
+            wr1.trackingError(eurost.pastDelta, eurost.t, H, pp, pock, track, eurost.pastDelta.GetLength(0));
             eurost.PandL = track;
+            eurost.pock = pock;
+            eurost.pp = pp;
             //Ajout
             for (int i = 0; i < 5; i++)
             {
@@ -198,13 +207,17 @@ namespace WebEurostral.Controllers
         public ActionResult AffPL()
         {
             // double[] tab1 = new double[3];
-            
+
             /*
             eurost.PandL[0] = 1.2;
             eurost.PandL[1] = 3;
             eurost.PandL[2] = 2.5;*/
+            eurost.datesbis = new int[eurost.pastDelta.GetLength(0)-1];
+            for (int i = 0; i < eurost.pastDelta.GetLength(0)-1; i++)
+                eurost.datesbis[i] = i;
             DateTime date1 = new DateTime(2014, 12, 18);
             DateTime date2 = new DateTime(2015, 12, 08);
+
            // DateTime date3 = new DateTime(2015, 12, 08);
             eurost.dates[0] = date1;
             eurost.dates[1] = date2;
