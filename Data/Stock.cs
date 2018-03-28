@@ -41,17 +41,74 @@ namespace Data
 
         public double getDeltas(double t, int i)
         {
-            return donnees[t][i + 1];
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][i + 1];
+            }
+            else
+            {
+                throw new Exception("[ERREUR]L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
+        private double findPre(double t)
+        {
+            double min = double.MaxValue;
+            double keyMin = t;
+            foreach (double d in donnees.Keys)
+            {
+                if (d<t)
+                {
+                    if (t-d < min)
+                    {
+                        min = t - d;
+                        keyMin = d;
+                    }
+                }
+            }
+            return keyMin;
+        }
+
+        public double getPreTrackingError(double t)
+        {
+            double key = findPre(t);
+            return getTrackingError(t);
+        }
+
+        public double[] getPreDelta(double t)
+        {
+            double key = findPre(t);
+            return getDelta(t);
+        }
+
+        public double getPrePrix(double t)
+        {
+            double key = findPre(t);
+            return getPrix(key);
         }
 
         public double getPrix(double t)
         {
-            return donnees[t][5];
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][5];
+            }
+            else
+            {
+                throw new Exception("[ERREUR]L'instant demandé n'existe pas dans le fichier !");
+            }
         }
 
         public double getTrackingError(double t)
         {
-            return donnees[t][6];
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][6];
+            }
+            else
+            {
+                throw new Exception("[ERREUR]L'instant demandé n'existe pas dans le fichier !");
+            }
         }
 
         private DateTime doubleToDate(double t)
@@ -90,6 +147,19 @@ namespace Data
         {
             donnees.Remove(t);
         }
+
+        public double[] getDelta(double t)
+        {
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t].GetRange(0, 5).ToArray();
+            }
+            else
+            {
+                throw new Exception("L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
 
         public void Add(double t, double[] deltas, double prix, double tracking_error)
         {

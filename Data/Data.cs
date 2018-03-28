@@ -16,6 +16,7 @@ namespace Data
             double tracking_error = 0;
             DateTime dateDebut = new DateTime(2014,12,22);
             DateTime dateFin = DateTime.Today;
+            DateTime finProduit = new DateTime(2022, 12, 22);
             RecupData data = new RecupData(dateDebut, dateFin);
             data.Fetch();
             //data.exportPast(1,7,dateDebut,new DateTime(2022,12,22));
@@ -42,7 +43,7 @@ namespace Data
                     prix = 100 * random.NextDouble();
                 }
                 tracking_error = random.NextDouble() * 5 + 2.5;
-                stock.Add(i*8.0 / taille, deltas, prix, tracking_error);
+                stock.Add(i*data.DateToDouble(dateDebut, DateTime.Today,finProduit) / taille, deltas, prix, tracking_error);
             }
             stock.SaveToCSV();
             stock.remove(0.0);
