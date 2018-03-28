@@ -10,7 +10,6 @@ using static WebEurostral.Models.EurostralModels;
 using Newtonsoft.Json;
 using System.Data;
 using System.Runtime.InteropServices;
-using Microsoft.VisualBasic.FileIO;
 
 namespace WebEurostral.Controllers
 {
@@ -131,7 +130,7 @@ namespace WebEurostral.Controllers
                 DateTime date = DateTime.Today;
                 DateTime debutProduit = new DateTime(2014, 12, 18);
                 DateTime finProduit = new DateTime(2022, 12, 08);
-                RecupData recup = new RecupData(new DateTime(2014, 12, 18), date);
+                RecupData recup = new RecupData(new DateTime(2005, 12, 18), date);
                 List<String> Symbols = new List<String>();
                 Symbols.Add("^STOXX50E");
                 Symbols.Add("^GSPC");
@@ -150,29 +149,34 @@ namespace WebEurostral.Controllers
                 DateTime fin = DateTime.Today;
                 recup.Fetch();
                 List<double> values = recup.getData("^GSPC").Values.ToList();
+                List<DateTime> dates = recup.getData("^GSPC").Keys.ToList();
                 List<double> values2 = recup.getData("^STOXX50E").Values.ToList();
+                List<DateTime> dates2 = recup.getData("^STOXX50E").Keys.ToList();
                 List<double> values3 = recup.getData("^AXJO").Values.ToList();
+                List<DateTime> dates3 = recup.getData("^AXJO").Keys.ToList();
                 List<double> values4 = recup.getData("USDEUR=X").Values.ToList();
+                List<DateTime> dates4 = recup.getData("USDEUR=X").Keys.ToList();
                 List<double> values5 = recup.getData("AUDEUR=X").Values.ToList();
+                List<DateTime> dates5 = recup.getData("AUDEUR=X").Keys.ToList();
                 for (int i = 0; i < values.Count; i++)
                 {
-                    eurost.dataPoints_GSPC.Add(new DataPoint(i, values[i]));
+                    eurost.dataPoints_GSPC.Add(new DataPoint(recup.DateToDouble(debutProduit,dates[i],finProduit)+2014, values[i]));
                 }
                 for (int i = 0; i < values2.Count; i++)
                 {
-                    eurost.dataPoints_STOXX50E.Add(new DataPoint(i, values2[i]));
+                    eurost.dataPoints_STOXX50E.Add(new DataPoint(recup.DateToDouble(debutProduit, dates2[i], finProduit)+2014,values2[i]));
                 }
                 for (int i = 0; i < values3.Count; i++)
                 {
-                    eurost.dataPoints_AXJO.Add(new DataPoint(i, values3[i]));
+                    eurost.dataPoints_AXJO.Add(new DataPoint(recup.DateToDouble(debutProduit, dates3[i], finProduit)+2014, values3[i]));
                 }
                 for (int i = 0; i < values4.Count; i++)
                 {
-                    eurost.dataPoints_EURUSD.Add(new DataPoint(i, values4[i]));
+                    eurost.dataPoints_EURUSD.Add(new DataPoint(recup.DateToDouble(debutProduit, dates4[i], finProduit)+2014, values4[i]));
                 }
                 for (int i = 0; i < values5.Count; i++)
                 {
-                    eurost.dataPoints_EURAUD.Add(new DataPoint(i, values5[i]));
+                    eurost.dataPoints_EURAUD.Add(new DataPoint(recup.DateToDouble(debutProduit, dates5[i], finProduit)+2014, values5[i]));
                 }
 
 
@@ -182,8 +186,7 @@ namespace WebEurostral.Controllers
                 Dictionary<DateTime, double> dico = recup.getData(symbols[0]);
 
 
-
-                eurost.covLogR = recup.exportCov();
+                eurost.covLogR = recup.exportCov(new DateTime(2010, 12,18 ), debutProduit);
                 eurost.pastDelta = recup.exportPast(eurost.t, 7, debutProduit, finProduit);
                 eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
 
@@ -217,11 +220,10 @@ namespace WebEurostral.Controllers
 
                 WrapperClass wr1 = new WrapperClass(size, r, eurost.covLogR, spots, trends, 0.1, eurost.nb_iterations, 100, 8.0, 16, lambdas);
                 eurost.wc = wr1;
-                //WrapperClass wr1 = new WrapperClass();
                 double H = 416;
                 eurost.deltaEnt = wr1.getDeltaEurostral(eurost.pastPrice, eurost.t, H);
                 //wr1.getPriceEurostral(eurost.t, pastPrice);
-                // return (eurost.prixEnt);
+                eurost.prixEnt = wr1.getPriceEurostral(eurost.t, eurost.pastPrice);
 
                 /*DateTime debutBackTest = new DateTime(2010, 03, 22);
                 DateTime finBacktest = new DateTime(2018, 03, 22);
@@ -257,7 +259,7 @@ namespace WebEurostral.Controllers
                 {
                     eurost.dataPoints_prix.Add(new DataPoint(k, eurost.pp[k]));
                 }
-
+                ViewData["price"] = eurost.prixEnt;
                 //return RedirectToAction("PrixEnt");
                 return View(eurost);
             }
@@ -295,6 +297,7 @@ namespace WebEurostral.Controllers
         {
             ViewData["Message"] = "Welcome to ASP.NET MVC!";
 
+
             DataTable dt = new DataTable("MyTable");
             dt.Columns.Add(new DataColumn("Col1", typeof(string)));
             dt.Columns.Add(new DataColumn("Col2", typeof(string)));
@@ -312,46 +315,36 @@ namespace WebEurostral.Controllers
             return View(dt); //passing the DataTable as my Model
         }
 
-        private static DataTable GetDataTabletFromCSVFile(string path)
+        
+
+        public ActionResult Contact()
         {
-            DataTable csvData = new DataTable();
+            ViewBag.Message = "Your contact page.";
 
-            try
-            {
-                using (TextFieldParser csvReader = new TextFieldParser(path))
-                {
-                    csvReader.SetDelimiters(new string[] { "," });
-                    csvReader.HasFieldsEnclosedInQuotes = true;
-                    string[] colFields = csvReader.ReadFields();
+            return View();
+        }
 
-                    foreach (string column in colFields)
-                    {
-                        DataColumn serialno = new DataColumn(column);
-                        serialno.AllowDBNull = true;
-                        csvData.Columns.Add(serialno);
-                    }
+        public ActionResult AffPL()
+        {
+            // double[] tab1 = new double[3];
 
-                    while (!csvReader.EndOfData)
-                    {
-                        string[] fieldData = csvReader.ReadFields();
-                        DataRow dr = csvData.NewRow();
-                        //Making empty value as empty
-                        for (int i = 0; i < fieldData.Length; i++)
-                        {
-                            if (fieldData[i] == null)
-                                fieldData[i] = string.Empty;
+            /*
+            eurost.PandL[0] = 1.2;
+            eurost.PandL[1] = 3;
+            eurost.PandL[2] = 2.5;*/
+            eurost.datesbis = new int[eurost.pastDelta.GetLength(0)];
+            for (int i = 0; i < eurost.pastDelta.GetLength(0)-1; i++)
+                eurost.datesbis[i] = i;
+            DateTime date1 = new DateTime(2014, 12, 18);
+            DateTime date2 = new DateTime(2015, 12, 08);
 
-                            dr[i] = fieldData[i];
-                        }
-                        csvData.Rows.Add(dr);
-                    }
+           // DateTime date3 = new DateTime(2015, 12, 08);
+            eurost.dates[0] = date1;
+            eurost.dates[1] = date2;
+           // eurost.dates[2] = date3;
+            // ViewData("PandL") = eurost.PandL;
 
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return csvData;
+            return View(eurost);
         }
     }
 }
