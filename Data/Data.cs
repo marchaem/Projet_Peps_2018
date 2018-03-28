@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +49,8 @@ namespace Data
             stock.SaveToCSV();
             stock.remove(0.0);
             stock.SaveToCSV();
+            Stock stockRead = new Stock("histo.csv", data);
+            stockRead.print();
             Console.WriteLine("Fin du test ...");
             Console.ReadLine();
         }
