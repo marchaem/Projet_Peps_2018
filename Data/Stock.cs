@@ -203,11 +203,15 @@ namespace Data
             InitializeHeader();
         }
 
-        public Stock(string csvFile)
+        public Stock(string csvFile, RecupData data)
         {
+            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "//" + csvFile;
+            if (!File.Exists(filePath))
+            {
+                throw new Exception("[ERREUR]Fichier passé en entré non trouvé !");
+            }
             this.data = data;
             InitializeHeader();
-            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "//" + csvFile;
             donnees = new Dictionary<double, List<double>>();
             List<string> AllDonnees = new List<string>();
             using (TextFieldParser parser = new TextFieldParser(filePath))
@@ -218,7 +222,7 @@ namespace Data
                 {
                     string[] fields = parser.ReadFields();
                     foreach (string field in fields)
-                    {
+                    {                        
                         AllDonnees.Add(field);
                     }
                 }
@@ -229,7 +233,7 @@ namespace Data
             double prix;
             double tracking_error;
 
-            for (int i = header.Count; i < AllDonnees.Count; i = i + header.Count)
+            for (int i = header.Count+1; i < AllDonnees.Count; i = i + header.Count)
             {
                 t = double.Parse(AllDonnees[i], CultureInfo.CurrentCulture);
                 for (int j=0; j<5; j++)
