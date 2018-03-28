@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "DeltaEnt";
 }
-
+<!DOCTYPE HTML>
 
 <style>
     table {
@@ -46,98 +46,98 @@
     }
 
 </style>
+<html>
+<body>
+    <div class="jumbotron">
+        <h1>Eurostral 100</h1>
+    </div>
+    <div class="cl-effect-15">
+        <a>@Html.ActionLink("Tracking Error", "AffPL")</a>
+    </div>
 
-
-<div class="jumbotron">
-    <h1>Eurostral 100</h1>
-</div>
-<div class="cl-effect-15">
-    <a>@Html.ActionLink("Tracking Error", "AffPL")</a>
-</div>
-
-@using (Html.BeginForm())
+    @using (Html.BeginForm())
             {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h2>Eurostral Models</h2>
-        <div id="Info">
-            <p style="clear:both;text-align:center;font-size:20px;margin-bottom:16px">
-                Le prix en t du produit est de : @Model.nb_iterations
-            </p>
-            
-
+        <div class="form-horizontal">
+            <h2>Eurostral Models</h2>
+            <div id="Info">
+                <p style="clear:both;text-align:center;font-size:20px;margin-bottom:16px">
+                    Le prix en t du produit est de : @Model.nb_iterations
+                </p>
 
 
-            <table id="tableDelta" class="tab table table-striped" style="width:48%; position:relative;float:left">
-                <thead>
-                    <tr>
-                        <th>
-                            Acitf
-                        </th>
 
-                        <th>
-                            Delta
-                        </th>
-                    </tr>
-                </thead>
-                @{
-                    int i = 0;
-                    <tbody id="actionsByDate">
-                        @foreach (var item in Model.deltaEnt)
-                        {
-                            <tr>
-                                <td id="nom">
 
-                                    @Html.DisplayFor(Model => Model.nomActifs[i])
+                <table id="tableDelta" class="tab table table-striped" style="width:48%; position:relative;float:left">
+                    <thead>
+                        <tr>
+                            <th>
+                                Acitf
+                            </th>
 
-                                </td>
+                            <th>
+                                Delta
+                            </th>
+                        </tr>
+                    </thead>
+                    @{
+                        int i = 0;
+                        <tbody id="actionsByDate">
+                            @foreach (var item in Model.deltaEnt)
+                            {
+                                <tr>
+                                    <td id="nom">
 
-                                <td id="valeur">
-                                    @Math.Round(item, 4)
+                                        @Html.DisplayFor(Model => Model.nomActifs[i])
 
-                                </td>
-                            </tr>
-                            i = i + 1;
-                        }
-                    </tbody>
-                }
-            </table>
+                                    </td>
 
-            
+                                    <td id="valeur">
+                                        @Math.Round(item, 4)
 
-            <table id="tablePrix" class="tab table table-striped" style="position:relative; width: 48%;float:right">
-                <thead>
-                    <tr>
-                        <th>
-                            Actif
-                        </th>
-                        <th>
-                            Prix en t
-                        </th>
-                    </tr>
-                </thead>
-                @{
-                    int j = 0;
-                    <tbody id="actionsByDate">
-                        @foreach (var item in Model.prixActifs)
-                        {
-                            <tr>
-                                <td id="nom">
+                                    </td>
+                                </tr>
+                                i = i + 1;
+                            }
+                        </tbody>
+                    }
+                </table>
 
-                                    @Html.DisplayFor(Model => Model.nomActifs[j])
 
-                                </td>
 
-                                <td id="valeur">
-                                    @Math.Round(item, 2)
-                                </td>
-                            </tr>
-                            j = j + 1;
-                        }
-                    </tbody>
-                }
-            </table>
+                <table id="tablePrix" class="tab table table-striped" style="position:relative; width: 48%;float:right">
+                    <thead>
+                        <tr>
+                            <th>
+                                Actif
+                            </th>
+                            <th>
+                                Prix en t
+                            </th>
+                        </tr>
+                    </thead>
+                    @{
+                        int j = 0;
+                        <tbody id="actionsByDate">
+                            @foreach (var item in Model.prixActifs)
+                            {
+                                <tr>
+                                    <td id="nom">
+
+                                        @Html.DisplayFor(Model => Model.nomActifs[j])
+
+                                    </td>
+
+                                    <td id="valeur">
+                                        @Math.Round(item, 2)
+                                    </td>
+                                </tr>
+                                j = j + 1;
+                            }
+                        </tbody>
+                    }
+                </table>
 
 
             </div>
@@ -148,8 +148,53 @@
         </div>
                         }
 
+    <script>
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainerIndices", {
+                zoomEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Indices US-EUR-AUS"
+                },
+                axisY: {
+                    includeZero: false,
+                    lineThickness: 1
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: @Html.Raw(ViewBag.DataPoints_GSPC)
+                    },{
+                        type: "line",
+                        dataPoints: @Html.Raw(ViewBag.DataPoints_STOXX50E)
+                        },{
+                            type: "line",
+                            dataPoints: @Html.Raw(ViewBag.DataPoints_AXJO)
 
 
+                            }]
+            });
+            var startTime = new Date();
+            chart.render();
+            var endTime = new Date();
+            document.getElementById("timeToRender").innerHTML = "Time to Render: " + (endTime - startTime) + "ms";
+        }
+    </script>
+    <style>
+        #timeToRender {
+            position: absolute;
+            top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #d85757;
+            padding: 0px 4px;
+            color: #ffffff;
+        }
+    </style>
+
+    <div id="chartContainerIndices" style="height: 370px; width: 100%;"></div>
+    <span id="timeToRender"></span>
+    <script src="~/Scripts/canvasjs.min.js"></script>
     <div>
         <span>
             @Html.ActionLink("Calculer le prix en t", "PrixEnt")
@@ -159,3 +204,5 @@
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }
+</body>
+</html> 

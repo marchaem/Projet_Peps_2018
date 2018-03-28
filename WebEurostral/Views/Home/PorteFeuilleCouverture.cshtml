@@ -1,29 +1,20 @@
-﻿
-@{
-    ViewBag.Title = "TrackingError";
-}
-
-<h2>TrackingError</h2>
-
-@model WebEurostral.Models.EurostralModels
+﻿@model WebEurostral.Models.EurostralModels
 
 @{
-    ViewBag.Title = "Sous_Jacents";
+    ViewBag.Title = "PorteFeuile de couverture";
 }""
 
 <!DOCTYPE HTML>
 <html>
 <head>
-
-	
-<script>
+    <script>
 window.onload = function () {
 
-	var chart = new CanvasJS.Chart("chartContainerTracking", {
+	var chart = new CanvasJS.Chart("chartContainerPortefeuille", {
 		zoomEnabled: true,
 		animationEnabled: true,
 		title: {
-			text: "Tracking Error"
+			text: "PorteFeuille de couverture"
 		},
 		axisY: {
 			includeZero: false,
@@ -31,16 +22,27 @@ window.onload = function () {
 		},
 		data: [{
 		    type: "line",
-		    dataPoints: @Html.Raw(ViewBag.getTrack),
+		    dataPoints: @Html.Raw(ViewBag.PfC),
+		    showInLegend:true,
+		    name: "Valeur du portefeuille de couverture"
+		    },{
+		        type: "line",
+		        dataPoints: @Html.Raw(ViewBag.prix),
+                showInLegend:true,
+                name: "Prix de l'option"
+
 		}]
 	});
 
+
+
 	var startTime = new Date();
 	chart.render();
+	chart2.render();
 	var endTime = new Date();
 	document.getElementById("timeToRender").innerHTML = "Time to Render: " + (endTime - startTime) + "ms";
-}
 
+}
     </script>
     <style>
         #timeToRender {
@@ -53,9 +55,11 @@ window.onload = function () {
             color: #ffffff;
         }
     </style>
+
+
 </head>
 <body>
-    <div id="chartContainerTracking" style="height: 370px; width: 100%;"></div>
+    <div class="page-header" id="chartContainerPortefeuille" style="height: 370px; width: 100%;"></div>
     <span id="timeToRender"></span>
     <script src="~/Scripts/canvasjs.min.js"></script>
 </body>
