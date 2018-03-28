@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CsvHelper;
 using Microsoft.VisualBasic.FileIO;
 using System.Globalization;
 
@@ -43,6 +42,21 @@ namespace Data
             }
             res = res.Remove(res.Length - 1);
             return res;
+        }
+
+        public double getDeltas(double t, int i)
+        {
+            return donnees[t][i + 1];
+        }
+
+        public double getPrix(double t)
+        {
+            return donnees[t][5];
+        }
+
+        public double getTrackingError(double t)
+        {
+            return donnees[t][6];
         }
 
         public List<string> ToLine(double t, double[] deltas, double tracking_error, double price)
