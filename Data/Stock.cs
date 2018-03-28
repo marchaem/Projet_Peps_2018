@@ -12,6 +12,10 @@ namespace Data
     public class Stock
     {
         Dictionary<double, List<double>> donnees;
+        List<String> header;
+        RecupData data;
+        DateTime debutProduit = new DateTime(2014, 12, 22);
+        DateTime finProduit = new DateTime(2022, 12, 22);
 
         public static void printPath()
         {
@@ -19,18 +23,9 @@ namespace Data
             Console.WriteLine(wanted_path);
         }
 
-        public List<string> createHeader()
+        public List<string> getHeader()
         {
-            List<string> head = new List<string>();
-            head.Add("Date");
-            head.Add("Delta_STOXX50");
-            head.Add("Delta_SP500");
-            head.Add("Delta_ASX200");
-            head.Add("Delta_USDEUR");
-            head.Add("Delta_AUDEUR");
-            head.Add("Prix Produit");
-            head.Add("Tracking error");
-            return head;
+            return header;
         }
 
         public string LineCSV(List<string> list)
@@ -46,22 +41,93 @@ namespace Data
 
         public double getDeltas(double t, int i)
         {
-            return donnees[t][i + 1];
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][i + 1];
+            }
+            else
+            {
+                throw new Exception("[ERREUR]L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
+        private double findPre(double t)
+        {
+            double min = double.MaxValue;
+            double keyMin = t;
+            foreach (double d in donnees.Keys)
+            {
+                if (d<t)
+                {
+                    if (t-d < min)
+                    {
+                        min = t - d;
+                        keyMin = d;
+                    }
+                }
+            }
+            return keyMin;
+        }
+
+        public double getPreTrackingError(double t)
+        {
+            double key = findPre(t);
+            return getTrackingError(t);
+        }
+
+        public double[] getPreDelta(double t)
+        {
+            double key = findPre(t);
+            return getDelta(t);
+        }
+
+        public double getPrePrix(double t)
+        {
+            double key = findPre(t);
+            return getPrix(key);
         }
 
         public double getPrix(double t)
         {
-            return donnees[t][5];
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][5];
+            }
+            else
+            {
+                throw new Exception("[ERREUR]L'instant demandé n'existe pas dans le fichier !");
+            }
         }
 
         public double getTrackingError(double t)
         {
-            return donnees[t][6];
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][6];
+            }
+            else
+            {
+                throw new Exception("[ERREUR]L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
+        private DateTime doubleToDate(double t)
+        {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
+            double joursTotaux = (finProduit - debutProduit).TotalDays;
+            joursTotaux = t / 8 * joursTotaux;
+            DateTime res = debutProduit.AddDays(joursTotaux);
+            return res;
         }
 
         public List<string> ToLine(double t, double[] deltas, double tracking_error, double price)
         {
             List<string> line = new List<string>();
+            DateTime date = doubleToDate(t);
+            line.Add(date.ToString("dd/MM/yyyy",CultureInfo.InvariantCulture));
             line.Add(t.ToString());
             line.Add(deltas[0].ToString());
             line.Add(deltas[1].ToString());
@@ -70,8 +136,30 @@ namespace Data
             line.Add(deltas[4].ToString());
             line.Add(tracking_error.ToString());
             line.Add(price.ToString());
+            foreach(var s in data.getSymbols())
+            {
+                line.Add(data.GetClosestData(date,data.getData(s)).ToString());
+            }
             return line;
         }
+
+        public void remove(double t)
+        {
+            donnees.Remove(t);
+        }
+
+        public double[] getDelta(double t)
+        {
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t].GetRange(0, 5).ToArray();
+            }
+            else
+            {
+                throw new Exception("L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
 
         public void Add(double t, double[] deltas, double prix, double tracking_error)
         {
@@ -89,13 +177,36 @@ namespace Data
             donnees[t] = val;
         }
 
-        public Stock()
+        private void InitializeHeader()
+        {
+            header = new List<string>();
+            header.Add("Date");
+            header.Add("Date (Grille Pricer)");
+            header.Add("Delta_STOXX50");
+            header.Add("Delta_SP500");
+            header.Add("Delta_ASX200");
+            header.Add("Delta_USDEUR");
+            header.Add("Delta_AUDEUR");
+            header.Add("Prix Produit");
+            header.Add("Tracking error");
+            header.Add("Stoxx50");
+            header.Add("SP500");
+            header.Add("ASX200");
+            header.Add("USD/EUR");
+            header.Add("AUD/EUR");
+        }
+
+        public Stock(RecupData data)
         {
             donnees = new Dictionary<double, List<double>>();
+            this.data = data;
+            InitializeHeader();
         }
 
         public Stock(string csvFile)
         {
+            this.data = data;
+            InitializeHeader();
             string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "//" + csvFile;
             donnees = new Dictionary<double, List<double>>();
             List<string> AllDonnees = new List<string>();
@@ -113,13 +224,12 @@ namespace Data
                 }
             }
 
-            double token;
             double t;
             double[] deltas = new double[5];
             double prix;
             double tracking_error;
 
-            for (int i = 8; i < AllDonnees.Count; i = i + 8)
+            for (int i = header.Count; i < AllDonnees.Count; i = i + header.Count)
             {
                 t = double.Parse(AllDonnees[i], CultureInfo.CurrentCulture);
                 for (int j=0; j<5; j++)
@@ -150,12 +260,15 @@ namespace Data
         {
             string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "//histo.csv";
             var csv = new StringBuilder();
-            var newline = LineCSV(createHeader());
+            var newline = LineCSV(header);
             csv.AppendLine(newline);
 
-            foreach(var entry in donnees)
+            List<double> keys = donnees.Keys.ToList();
+            keys.Sort();
+
+            foreach(var key in keys)
             {
-                newline = LineCSV(ToLine(entry.Key, entry.Value.GetRange(0, 5).ToArray(), entry.Value[5], entry.Value[6]));
+                newline = LineCSV(ToLine(key, donnees[key].GetRange(0, 5).ToArray(), donnees[key][5], donnees[key][6]));
                 csv.AppendLine(newline);
             }
 
