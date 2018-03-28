@@ -30,12 +30,16 @@
 
     @{
         int[] dates = Model.datesbis;//{ 1, 2,3,4};
-        double[] PandL = Model.PandL;//{ 1.0, 2.0 };
-       
+        double[] pp = Model.pp;//{ 1.0, 2.0 };
+        double[] pock = Model.pock;
+        double[] PandL = Model.PandL;
         var myChart = new Chart(width: 1000, height: 1000)
-    .AddTitle("Tracking Error")
-    .AddSeries(chartType: "line",
-      xValue: dates,
-      yValues: PandL)
-    .Write();
+.AddTitle("Tracking Error")
+.AddSeries(chartType: "line",
+  xValue: dates,
+  yValues: pp)
+.AddSeries(chartType: "line",
+  xValue: dates,
+  yValues: pock)
+.Write();
     }

@@ -131,7 +131,7 @@ namespace WebEurostral.Controllers
 
 
 
-            eurost.covLogR = recup.exportCov();
+            eurost.covLogR = recup.exportCov(new DateTime(2014, 7, 1),debutProduit);
             eurost.pastDelta = recup.exportPast(eurost.t, 7, debutProduit, finProduit);
             eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
 
@@ -180,7 +180,7 @@ namespace WebEurostral.Controllers
             // eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
             double [] track = new double[eurost.pastDelta.GetLength(0)-1];
             double[] pp = new double[eurost.pastDelta.GetLength(0)];
-            double[] pock = new double[eurost.pastDelta.GetLength(0)-1];
+            double[] pock = new double[eurost.pastDelta.GetLength(0)];
             wr1.trackingError(eurost.pastDelta, eurost.t, H, pp, pock, track, eurost.pastDelta.GetLength(0));
             eurost.PandL = track;
             eurost.pock = pock;
@@ -190,6 +190,9 @@ namespace WebEurostral.Controllers
             {
                 eurost.prixActifs[i] = eurost.pastPrice[(eurost.pastPrice.GetLength(0)) - 1, i];
             }
+
+            eurost.prixEnt=eurost.wc.getPriceEurostral(0, eurost.pastPrice); // Il faut initialiser t dans Eurostral !!!!
+            ViewData["price"] = eurost.prixEnt;
 
             // ViewData["price"] = eurost.prixEnt;
             //ViewBag.data = eurost.deltaEnt;
@@ -212,7 +215,7 @@ namespace WebEurostral.Controllers
             eurost.PandL[0] = 1.2;
             eurost.PandL[1] = 3;
             eurost.PandL[2] = 2.5;*/
-            eurost.datesbis = new int[eurost.pastDelta.GetLength(0)-1];
+            eurost.datesbis = new int[eurost.pastDelta.GetLength(0)];
             for (int i = 0; i < eurost.pastDelta.GetLength(0)-1; i++)
                 eurost.datesbis[i] = i;
             DateTime date1 = new DateTime(2014, 12, 18);
