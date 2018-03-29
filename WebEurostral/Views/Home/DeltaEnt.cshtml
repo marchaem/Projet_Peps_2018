@@ -21,7 +21,7 @@
 
     h2 { color: #111; font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 300; line-height: 32px; margin: 0 0 10px; text-align: center; }
 
-    h3 { color: #111; font-family: 'Open Sans', sans-serif; font-size: 22px; font-weight: 300; line-height: 28px; margin: 0 0 20px; text-align: center; }
+    h3 { color: #32CD32; font-family: 'Open Sans', sans-serif; font-size: 22px; font-weight: 300; line-height: 28px; margin: 0 0 20px; text-align: center; }
     
     p { color: #685206; font-family: 'Helvetica Neue', sans-serif; font-size: 14px; line-height: 24px; margin: 0 0 24px; text-align: justify; text-justify: inter-word; }
 
@@ -56,7 +56,7 @@
 </div>
 <div class="container">
     <ul class="nav nav-pills">
-        <li class="active">@Html.ActionLink("Accueil", "Index", "Home")></li>
+        <li class="active">@Html.ActionLink("Accueil", "Index", "Home")</li>
     </ul>
 </div>
 
@@ -71,7 +71,7 @@
 
     <div class="form-horizontal">
         <h2>Valeur du produit :</h2>
-        <h3>@ViewData["price"] &#8364;</h3>
+        <h3>@Math.Round(@Model.prixEnt,2) &#8364;</h3>
         <div id="Info">
             @*<p style="clear:both;text-align:center;font-size:20px;margin-bottom:16px">
                 Le prix en t du produit est de : @Model.nb_iterations
@@ -155,6 +155,7 @@
                         }
     <div>
         <span>
+            
             @Html.ActionLink("Calculer le prix en t", "PrixEnt", new { area = "" })
         </span>
     </div>
