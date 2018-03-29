@@ -119,7 +119,7 @@ namespace Wrapper {
 	}
 	
 	double WrapperClass::getZero() {
-		return 0.0;
+		return 0.0;    
 	}
 
 	double* WrapperClass::convertArrayPointer(cli::array<double,1> ^ arr) {
@@ -165,12 +165,14 @@ namespace Wrapper {
 		return deltacli;
 	}
 
-	void WrapperClass::trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre) {
+	void WrapperClass::trackingError(cli::array<double, 2> ^ past, cli::array<double, 2> ^ pastConst, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre,int nbConst) {
 		double * pastP = convertMatrixPointer(past);
+		double * pastConstP = convertMatrixPointer(pastConst);
 		double * pricetP = new double[pricet->Length];
 		double * pocketP = new double[pocket->Length];
 		double * trackingP = new double[trackingE->Length-1];
-		lien->trackingError(pastP, t, H, pricetP, pocketP, trackingP,nbre);
+		lien->trackingError(pastP,pastConstP, t, H, pricetP, pocketP, trackingP,nbre,nbConst);
+		
 		
 		
 		for (int i = 0; i < pricet->Length-1; i++) {

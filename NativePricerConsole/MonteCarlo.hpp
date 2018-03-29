@@ -167,7 +167,7 @@ public:
     void profitLoss_Eurostral(const PnlMat *past, double H, double &pl);
 	/*
 	Rempli price des prix du produit jusqu'à t et de la valeur du portefeuille jusqu'à t (juste avant rebalancement)*/
-	void tracking_error(const PnlMat *past,double t, double H, PnlVect *price, PnlVect* pocket,PnlVect * TrackingE);
+	void tracking_error(const PnlMat *past,const PnlMat *pastConst,double t, double H, PnlVect *price, PnlVect* pocket,PnlVect * TrackingE);
 	/*
 	retourne la valeur des actifs risqués au temps i+1
 	*/
@@ -183,8 +183,8 @@ public:
     MonteCarlo& operator= (const MonteCarlo&);
 	void set(double fdStep, int nbSamples, Option *opt, BlackScholesModel *mod);
 
-	void getConstat(PnlMat * dateconstatation, const PnlMat* past, double H, int i);
-	void getConstat(PnlMat * dateconstatation, const PnlMat* past, double H, double t);
+	void getConstat(PnlMat * dateconstatation, const PnlMat* past,const PnlMat* pastConst, double H, int i);
+	//void getConstat(PnlMat * dateconstatation, const PnlMat* past, double H, double t);
 	void forwardTestPL(double H, double&pl);
 
 };

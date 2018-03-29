@@ -28,7 +28,7 @@ namespace Wrapper {
 		//cli::array<double>^ convertPnlVectToCli(PnlVect * delta);
 		cli::array<double, 1>^ convertTabToCli(double * delta);
 		void test(cli::array<double, 1>^);
-		void trackingError(cli::array<double, 2> ^ past, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre);
+		void trackingError(cli::array<double, 2> ^ past, cli::array<double, 2> ^ pastConst, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre,int nbConst);
 		double getForwardTest(double H);
 	};
 }
