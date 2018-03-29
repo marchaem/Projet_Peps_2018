@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic.FileIO;
 using System.Globalization;
+using System.Web;
 
 namespace Data
 {
@@ -203,9 +204,8 @@ namespace Data
             InitializeHeader();
         }
 
-        public Stock(string csvFile, RecupData data)
+        public Stock(string filePath, RecupData data)
         {
-            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "//" + csvFile;
             if (!File.Exists(filePath))
             {
                 throw new Exception("[ERREUR]Fichier passé en entré non trouvé !");
@@ -260,9 +260,8 @@ namespace Data
             }
         }
 
-        public void SaveToCSV()
+        public void SaveToCSV(string filePath)
         {
-            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + "//histo.csv";
             var csv = new StringBuilder();
             var newline = LineCSV(header);
             csv.AppendLine(newline);

@@ -17,9 +17,10 @@ namespace Data
             double tracking_error = 0;
             DateTime dateDebut = new DateTime(2014,12,22);
             DateTime dateFin = DateTime.Today;
-            DateTime finProduit = new DateTime(2022, 12, 22);
+            DateTime finProduit = new DateTime(2022, 12, 08);
             RecupData data = new RecupData(dateDebut, dateFin);
             data.Fetch();
+            data.exportPastSemestre(2.2, dateDebut, finProduit);
             //data.exportPast(1,7,dateDebut,new DateTime(2022,12,22));
             //data.exportCov(new DateTime(2014, 12, 22), new DateTime(2015, 5, 22));
             //double[] euro = data.GetEurostralHisto(dateDebut, 28, DateTime.Today);
@@ -27,8 +28,8 @@ namespace Data
             //double[,] cov = data.exportCov(new DateTime(2007, 01, 01), new DateTime(2007, 12, 31));
             //double[] vol = data.exportVol();
             //double[,] past = data.exportPast(2.5, 182, new DateTime(2014, 12, 18), DateTime.Today);
-            Stock stock = new Stock(data);
-            double[] deltas = new double[5];
+            //Stock stock = new Stock(data);
+            /*double[] deltas = new double[5];
             int taille = 1500;
             for (int i=0; i<taille; i++)
             {              
@@ -46,11 +47,10 @@ namespace Data
                 tracking_error = random.NextDouble() * 5 + 2.5;
                 stock.Add(i*data.DateToDouble(dateDebut, DateTime.Today,finProduit) / taille, deltas, prix, tracking_error);
             }
-            stock.SaveToCSV();
+            stock.SaveToCSV("histo.csv");
             stock.remove(0.0);
-            stock.SaveToCSV();
-            Stock stockRead = new Stock("histo.csv", data);
-            stockRead.print();
+            stock.SaveToCSV("histo.csv");
+            Stock stockRead = new Stock("histo.csv", data);*/
             Console.WriteLine("Fin du test ...");
             Console.ReadLine();
         }
