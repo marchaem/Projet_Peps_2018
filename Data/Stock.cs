@@ -314,7 +314,7 @@ namespace Data
 
         public void SaveToCSV()
         {
-            string filePath = "C://Users//ensimag//Desktop//peps//Projet_Peps_2018//WebApplication//histo.csv";
+            string filePath = "histo.csv";
             var csv = new StringBuilder();
             var newline = LineCSV(header);
             csv.AppendLine(newline);
