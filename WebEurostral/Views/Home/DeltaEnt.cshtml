@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "DeltaEnt";
 }
-
+<!DOCTYPE HTML>
 
 <style>
     table {
@@ -14,12 +14,15 @@
 	    color: #0000ee;
 	    font-weight: 700;
 	    text-shadow: none;
+        text-align:right;
     }
 
-    h1 { color: #111; font-family: 'Helvetica Neue', sans-serif; font-size: 275px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center; }
+    h1 { color: #111; font-family: 'Helvetica Neue', sans-serif; font-size: 275px; font-weight: bold; letter-spacing: -1px; line-height: 1; margin: 0 0 20px; text-align: center; }
 
-    h2 { color: #111; font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 300; line-height: 32px; margin: 0 0 72px; text-align: center; }
+    h2 { color: #111; font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 300; line-height: 32px; margin: 0 0 10px; text-align: center; }
 
+    h3 { color: #32CD32; font-family: 'Open Sans', sans-serif; font-size: 22px; font-weight: 300; line-height: 28px; margin: 0 0 20px; text-align: center; }
+    
     p { color: #685206; font-family: 'Helvetica Neue', sans-serif; font-size: 14px; line-height: 24px; margin: 0 0 24px; text-align: justify; text-justify: inter-word; }
 
     .tab {
@@ -46,25 +49,33 @@
     }
 
 </style>
-
-
+<html>
+<body>
 <div class="jumbotron">
     <h1>Eurostral 100</h1>
 </div>
-<div class="cl-effect-15">
-    <a>@Html.ActionLink("Tracking Error", "AffPL")</a>
+<div class="container">
+    <ul class="nav nav-pills">
+        <li class="active">@Html.ActionLink("Accueil", "Index", "Home")</li>
+    </ul>
 </div>
 
+@*<div class="cl-effect-15">
+    <div style="float:right"> <a>@Html.ActionLink("Tracking Error", "AffPL")</a>
+    </div>
+</div>*@
+
 @using (Html.BeginForm())
-            {
+{
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h2>Eurostral Models</h2>
+        <h2>Valeur du produit :</h2>
+        <h3>@Math.Round(@Model.prixEnt,2) &#8364;</h3>
         <div id="Info">
-            <p style="clear:both;text-align:center;font-size:20px;margin-bottom:16px">
+            @*<p style="clear:both;text-align:center;font-size:20px;margin-bottom:16px">
                 Le prix en t du produit est de : @Model.nb_iterations
-            </p>
+            </p>*@
             
 
 
@@ -138,24 +149,19 @@
                     </tbody>
                 }
             </table>
-
-
             </div>
             <hr />
-
-
-
         </div>
                         }
-
-
-
     <div>
         <span>
-            @Html.ActionLink("Calculer le prix en t", "PrixEnt")
+            
+            @Html.ActionLink("Calculer le prix en t", "PrixEnt", new { area = "" })
         </span>
     </div>
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }
+</body>
+</html> 

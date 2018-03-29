@@ -260,8 +260,9 @@ namespace Data
             }
         }
 
-        public void SaveToCSV(string filePath)
+        public void SaveToCSV()
         {
+            string filePath = "C://Users//thame//Peps1//Projet_Peps_2018//WebApplication//histo.csv";
             var csv = new StringBuilder();
             var newline = LineCSV(header);
             csv.AppendLine(newline);

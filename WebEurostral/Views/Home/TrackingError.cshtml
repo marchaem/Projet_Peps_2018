@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "TrackingError";
+}
+
+<h2>TrackingError</h2>
+
+@model WebEurostral.Models.EurostralModels
+
+@{
+    ViewBag.Title = "Sous_Jacents";
+}""
+
+<!DOCTYPE HTML>
+<html>
+<head>
+
+	
+<script>
+window.onload = function () {
+
+	var chart = new CanvasJS.Chart("chartContainerTracking", {
+		zoomEnabled: true,
+		animationEnabled: true,
+		title: {
+			text: "Tracking Error"
+		},
+		axisY: {
+			includeZero: false,
+			lineThickness: 1
+		},
+		data: [{
+		    type: "line",
+		    dataPoints: @Html.Raw(ViewBag.getTrack),
+		}]
+	});
+
+	var startTime = new Date();
+	chart.render();
+	var endTime = new Date();
+	document.getElementById("timeToRender").innerHTML = "Time to Render: " + (endTime - startTime) + "ms";
+}
+
+    </script>
+    <style>
+        #timeToRender {
+            position: absolute;
+            top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #d85757;
+            padding: 0px 4px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="chartContainerTracking" style="height: 370px; width: 100%;"></div>
+    <span id="timeToRender"></span>
+    <script src="~/Scripts/canvasjs.min.js"></script>
+</body>
+</html>       
