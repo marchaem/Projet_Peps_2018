@@ -165,13 +165,14 @@ namespace Wrapper {
 		return deltacli;
 	}
 
-	void WrapperClass::trackingError(cli::array<double, 2> ^ past, cli::array<double, 2> ^ pastConst, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE,int nbre,int nbConst) {
+	void WrapperClass::trackingError(cli::array<double, 2> ^ past, cli::array<double, 2> ^ pastConst, double t, double H, cli::array<double, 1>^ pricet, cli::array<double, 1>^ pocket, cli::array<double, 1>^ trackingE, cli::array<double, 1>^ V,int nbre,int nbConst) {
 		double * pastP = convertMatrixPointer(past);
 		double * pastConstP = convertMatrixPointer(pastConst);
 		double * pricetP = new double[pricet->Length];
 		double * pocketP = new double[pocket->Length];
 		double * trackingP = new double[trackingE->Length-1];
-		lien->trackingError(pastP,pastConstP, t, H, pricetP, pocketP, trackingP,nbre,nbConst);
+		double * VP = new double[pocket->Length];
+		lien->trackingError(pastP,pastConstP, t, H, pricetP, pocketP, trackingP,VP,nbre,nbConst);
 		
 		
 		
@@ -179,9 +180,11 @@ namespace Wrapper {
 			pricet[i] = pricetP[i];
 			pocket[i] = pocketP[i];
 			trackingE[i] = trackingP[i];
+			V[i] = VP[i];
 		}
 		pricet[pricet->Length - 1] = pricetP[pricet->Length - 1];
 		pocket[pocket->Length - 1] = pocketP[pocket->Length - 1];
+		V[V->Length - 1] = VP[V->Length - 1];
 		
 
 
