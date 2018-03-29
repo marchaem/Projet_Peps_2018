@@ -40,6 +40,42 @@ namespace Data
             return res;
         }
 
+        public double[] getPrixSJ(double t)
+        {
+            if (donnees.Keys.Contains(t))
+            {
+                return data.GetClosestData(doubleToDate(t)).ToArray();
+            }
+            else
+            {
+                throw new Exception("L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
+        public double getCash(double t)
+        {
+            if (donnees.Keys.Contains(t))
+            {
+                return donnees[t][7];
+            }
+            else
+            {
+                throw new Exception("L'instant demandé n'existe pas dans le fichier !");
+            }
+        }
+
+        public double getPreCash(double t)
+        {
+            double key = findPre(t);
+            return getCash(t);
+        }
+
+        public double[] getPrePrixSJ(double t)
+        {
+            double key = findPre(t);
+            return getPrixSJ(key);
+        }
+
         public double getDeltas(double t, int i)
         {
             if (donnees.Keys.Contains(t))
@@ -56,7 +92,7 @@ namespace Data
         {
             double min = double.MaxValue;
             double keyMin = t;
-            foreach (double d in donnees.Keys)
+            foreach (double d in donnees.Keys.ToList())
             {
                 if (d<t)
                 {
@@ -124,7 +160,18 @@ namespace Data
             return res;
         }
 
-        public List<string> ToLine(double t, double[] deltas, double tracking_error, double price)
+        private double dateToDouble(DateTime date)
+        {
+            if (debutProduit > finProduit)
+            {
+                throw new Exception("[ERREUR]Date de début et fin de produit incohérentes ! (debut > fin)");
+            }
+            double joursTotaux = (finProduit - debutProduit).TotalDays;
+            double joursPasses = (date - debutProduit).TotalDays;
+            return joursPasses / joursTotaux * 8.0; // Maturité = 8
+        }
+
+        public List<string> ToLine(double t, double[] deltas, double tracking_error, double price, double cash)
         {
             List<string> line = new List<string>();
             DateTime date = doubleToDate(t);
@@ -141,6 +188,7 @@ namespace Data
             {
                 line.Add(data.GetClosestData(date,data.getData(s)).ToString());
             }
+            line.Add(cash.ToString());
             return line;
         }
 
@@ -162,7 +210,7 @@ namespace Data
         }
 
 
-        public void Add(double t, double[] deltas, double prix, double tracking_error)
+        public void Add(double t, double[] deltas, double prix, double tracking_error, double cash)
         {
             List<double> val = new List<double>();
             if (deltas.GetLength(0) != 5)
@@ -175,6 +223,7 @@ namespace Data
             }
             val.Add(prix);
             val.Add(tracking_error);
+            val.Add(cash);
             donnees[t] = val;
         }
 
@@ -195,6 +244,7 @@ namespace Data
             header.Add("ASX200");
             header.Add("USD/EUR");
             header.Add("AUD/EUR");
+            header.Add("Cash");
         }
 
         public Stock(RecupData data)
@@ -232,6 +282,7 @@ namespace Data
             double[] deltas = new double[5];
             double prix;
             double tracking_error;
+            double cash;
 
             for (int i = header.Count+1; i < AllDonnees.Count; i = i + header.Count)
             {
@@ -242,7 +293,8 @@ namespace Data
                 }
                 prix = double.Parse(AllDonnees[i+6], CultureInfo.CurrentCulture);
                 tracking_error = double.Parse(AllDonnees[i + 7], CultureInfo.CurrentCulture);
-                this.Add(t, deltas, prix, tracking_error);
+                cash = double.Parse(AllDonnees[i + 8], CultureInfo.CurrentCulture);
+                this.Add(t, deltas, prix, tracking_error, cash);
             }
         }
 
@@ -272,7 +324,7 @@ namespace Data
 
             foreach(var key in keys)
             {
-                newline = LineCSV(ToLine(key, donnees[key].GetRange(0, 5).ToArray(), donnees[key][5], donnees[key][6]));
+                newline = LineCSV(ToLine(key, donnees[key].GetRange(0, 5).ToArray(), donnees[key][5], donnees[key][6], donnees[key][7]));
                 csv.AppendLine(newline);
             }
 

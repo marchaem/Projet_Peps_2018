@@ -20,7 +20,6 @@ namespace Data
             DateTime finProduit = new DateTime(2022, 12, 08);
             RecupData data = new RecupData(dateDebut, dateFin);
             data.Fetch();
-            data.exportPastSemestre(2.2, dateDebut, finProduit);
             //data.exportPast(1,7,dateDebut,new DateTime(2022,12,22));
             //data.exportCov(new DateTime(2014, 12, 22), new DateTime(2015, 5, 22));
             //double[] euro = data.GetEurostralHisto(dateDebut, 28, DateTime.Today);
@@ -28,11 +27,13 @@ namespace Data
             //double[,] cov = data.exportCov(new DateTime(2007, 01, 01), new DateTime(2007, 12, 31));
             //double[] vol = data.exportVol();
             //double[,] past = data.exportPast(2.5, 182, new DateTime(2014, 12, 18), DateTime.Today);
-            //Stock stock = new Stock(data);
-            /*double[] deltas = new double[5];
+            Stock stock = new Stock(data);
+            double[] deltas = new double[5];
+            double cash = 0.0;
             int taille = 1500;
             for (int i=0; i<taille; i++)
-            {              
+            {
+                cash = random.NextDouble() * 100;
                 for (int j=0; j<5; j++)
                 {
                     deltas[j] = random.NextDouble()*2 - 1;
@@ -45,13 +46,16 @@ namespace Data
                     prix = 100 * random.NextDouble();
                 }
                 tracking_error = random.NextDouble() * 5 + 2.5;
-                stock.Add(i*data.DateToDouble(dateDebut, DateTime.Today,finProduit) / taille, deltas, prix, tracking_error);
+                stock.Add(i*data.DateToDouble(dateDebut, DateTime.Today,finProduit) / taille, deltas, prix, tracking_error,cash);
             }
-            stock.SaveToCSV("histo.csv");
-            stock.remove(0.0);
-            stock.SaveToCSV("histo.csv");
-            Stock stockRead = new Stock("histo.csv", data);*/
-            Console.WriteLine("Fin du test ...");
+            stock.SaveToCSV();
+            /*for (int i = 0; i<5; i++)
+            {*/
+            //Console.WriteLine(stock.getDelta(0.00218798716185236)[0]);
+            //}
+            Stock stockRead = new Stock("histo.csv", data);
+            stockRead.print();
+            Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
         }
     }   
