@@ -15,8 +15,8 @@ namespace Data
         Dictionary<double, List<double>> donnees;
         List<String> header;
         RecupData data;
-        DateTime debutProduit = new DateTime(2014, 12, 22);
-        DateTime finProduit = new DateTime(2022, 12, 22);
+        DateTime debutProduit = new DateTime(2014, 12, 18);
+        DateTime finProduit = new DateTime(2022, 12, 08);
 
         public static void printPath()
         {
@@ -314,8 +314,7 @@ namespace Data
 
         public void SaveToCSV()
         {
-            //string filePath = "C://Users//thame//Peps1//Projet_Peps_2018//WebApplication//histo.csv";
-            string filePath = "histo.csv";
+            string filePath = "C://Users//ensimag//Desktop//peps//Projet_Peps_2018//WebApplication//histo.csv";
             var csv = new StringBuilder();
             var newline = LineCSV(header);
             csv.AppendLine(newline);

@@ -21,11 +21,11 @@ double Pricer::zero() {
 	
 }
 
-/*void main() {
+void main() {
 	Pricer * pricertest = new Pricer();
 	cout << "on rentre ici " << pricertest->price() << endl;
 	cout << "lol" << endl;
-}*/
+}
 
   double Pricer::price()
 {
@@ -42,7 +42,7 @@ double Pricer::zero() {
 	PnlVect* lambdas = pnl_vect_create_from_double(size, 1.0 / 5);
 	PnlVect*trend= pnl_vect_create_from_double(size, 1.0 / 5);
 	// nombre de simulation montecarlo
-	int n_samples = 50000;
+	int n_samples = 500;
 	//nombre de rebalancement ( tous les 7 jours )
 	double H = 416;
     pnl_vect_set(trend,0,r);
@@ -65,24 +65,24 @@ double Pricer::zero() {
 
 	double p0 = mt->PL_init_Eurostral(trajectoire, delta);
 	cout << p0 << endl;
-	PnlMat * past = pnl_mat_create_from_zero(30, 5);
-	for (int i = 0; i < 30; i++) {
+	PnlMat * past = pnl_mat_create_from_zero(5, 5);
+	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			pnl_mat_set(past, i, j, pow(-1, i) * 0.01*i + pnl_vect_get(spot, j));
 		}
 
 	}
 	double t = 0.54757015;
-	PnlVect* price = pnl_vect_create_from_double(30,0.0);
-	PnlVect *pocket = pnl_vect_create(30);
-	PnlVect *TrackingE = pnl_vect_create(30);
-	double tho =  3* eurostral->T_ / H;
-	PnlMat *cPast = pnl_mat_create_from_zero(1, past->n);
+	PnlVect* price = pnl_vect_create_from_double(5,0.0);
+	PnlVect *pocket = pnl_vect_create(5);
+	PnlVect *TrackingE = pnl_vect_create(5);
+
+	PnlMat * pastConst = pnl_mat_create(2, 5);
 	
 	
 	
 
-	 mt->tracking_error(past, t, H, price, pocket, TrackingE);
+	 mt->tracking_error(past,pastConst, t, H, price, pocket, TrackingE);
 	//pnl_vect_print(price);
 	//pnl_vect_print(pocket);
 	//pnl_vect_print(TrackingE);

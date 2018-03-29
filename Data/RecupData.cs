@@ -374,6 +374,19 @@ namespace Data
             return Stats.CovMatrix(this.data);
         }
 
+        public double[,] exportFakeCov(DateTime debut, DateTime fin)
+        {
+            double[,] fakeCov = exportCov(debut, fin);
+            for (int i=0; i<5; i++)
+            {
+                //for (int j=0; j<5; j++)
+                //{
+                    fakeCov[i, i] = 0.000000000001;
+                //}
+            }
+            return fakeCov;
+        }
+
         public double[,] exportCov(DateTime debut, DateTime fin)
         {
             return Stats.CovMatrix(Restreindre(debut,fin));

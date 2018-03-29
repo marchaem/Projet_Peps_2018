@@ -22,7 +22,7 @@ namespace WebApplication.Models
             //recup1.Fetch();
 
              double t = recup.DateToDouble(debutProduit, date, finProduit);
-             double[,] covLogR = recup.exportCov();
+             double[,] covLogR = recup.exportCov(new DateTime(2004, 01, 01), new DateTime(2014, 01, 01));
              double[,] pastDelta = recup.exportPast(t, 7, debutProduit, finProduit);
              double[,] pastPrice = recup.exportPast(t, 182, debutProduit, finProduit);
 
@@ -64,25 +64,27 @@ namespace WebApplication.Models
                 lambdas[i] = 0.05;
             }
             
-            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 5000, 10, 8.0, 16, lambdas);
+            WrapperClass wc = new WrapperClass(size, r, covLogR, spots, trends, 0.1, 500, 10, 8.0, 16, lambdas);
             double[] delta = new double[5];
             double H = 416 ;
             int m = pastDelta.GetLength(0);
             double[] price = new double[m];
             double[] pocket = new double[m];
             double[] tracking = new double[m-1];
-            wc.trackingError(pastDelta, t, H, price, pocket, tracking, m);
+            wc.trackingError(pastDelta,pastPrice, t, H, price, pocket, tracking, m,pastPrice.GetLength(0));
             Stock stock = new Stock(recup);
             stock.Add(0.0, wc.getDeltaEurostral( recup.exportPast(0, 182, debutProduit, finProduit),0.0,H ),price[0],0.0 );
-            for (int i = 1; i < m ; i++)
+            
+            for (int i = 1; i < m-1 ; i++)
             {
-                stock.Add(i * 8.0 / H, wc.getDeltaEurostral(recup.exportPast(i * 8.0 / H, 182, debutProduit, finProduit), 0.0, H), price[i], tracking[i - 1]);
+                stock.Add(i * 8.0 / H, wc.getDeltaEurostral(recup.exportPast(i * 8.0 / H, 182, debutProduit, finProduit), i * 8.0 / H, H), price[i], tracking[i - 1]);
 
             }
+            stock.Add(t, wc.getDeltaEurostral(recup.exportPast(t , 182, debutProduit, finProduit), t, H), price[m-1], tracking[m-2]);
             stock.SaveToCSV();
+            
 
-
-            return 1.0;
+            return wc.getPriceEurostral(t,pastPrice);
 
             
             
