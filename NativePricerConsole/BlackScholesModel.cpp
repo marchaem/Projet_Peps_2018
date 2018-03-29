@@ -46,6 +46,7 @@ BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *CovLogR,PnlVect
 			pnl_mat_set(cor, j, i, corij);
 		}
 	}
+	pnl_mat_chol(cor);
 	corr = cor;
 
 }
