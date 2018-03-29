@@ -38,6 +38,29 @@ namespace Data
         private List<Dictionary<DateTime, double>> data;
         bool done = false;
         string cour;
+        List<DateTime> dateSem;
+
+        private void InitializeDateSem()
+        {
+            dateSem = new List<DateTime>();
+            dateSem.Add(new DateTime(2014, 12, 19));
+            dateSem.Add(new DateTime(2015, 06, 18));
+            dateSem.Add(new DateTime(2015, 12, 18));
+            dateSem.Add(new DateTime(2016, 06, 20));
+            dateSem.Add(new DateTime(2016, 12, 19));
+            dateSem.Add(new DateTime(2017, 06, 17));
+            dateSem.Add(new DateTime(2017, 12, 18));
+            dateSem.Add(new DateTime(2018, 06, 18));
+            dateSem.Add(new DateTime(2018, 12, 18));
+            dateSem.Add(new DateTime(2019, 06, 17));
+            dateSem.Add(new DateTime(2019, 12, 18));
+            dateSem.Add(new DateTime(2020, 06, 18));
+            dateSem.Add(new DateTime(2020, 12, 18));
+            dateSem.Add(new DateTime(2021, 06, 18));
+            dateSem.Add(new DateTime(2021, 12, 20));
+            dateSem.Add(new DateTime(2022, 06, 20));
+            dateSem.Add(new DateTime(2022, 12, 14));
+        }
 
         public DateTime getDebutData()
         {
@@ -252,6 +275,43 @@ namespace Data
             return 8 * freq / (finProd - debutProd).TotalDays;
         }
 
+        public double[,] exportPastSemestre(double t, DateTime debutProduit, DateTime finProduit)
+        {
+            InitializeDateSem();
+            DateTime date = DoubleToDate(debutProduit, t, finProduit);
+            List<DateTime> toPutInPast = new List<DateTime>();
+            bool trouve = false;
+            foreach(DateTime d in dateSem)
+            {
+                if (date.Date > d.Date)
+                {
+                    toPutInPast.Add(d);
+                }
+                if (date.Date == d.Date)
+                {
+                    trouve = true;
+                    toPutInPast.Add(d);
+                }
+            }
+            if (!trouve)
+            {
+                toPutInPast.Add(date);
+            }
+            toPutInPast.Sort();
+            double[,] res;
+            res = new double[toPutInPast.Count,this.Symbols.Count];
+            for (int i=0; i<toPutInPast.Count; i++)
+            {
+                for (int j=0; j<this.Symbols.Count; j++)
+                {
+                    res[i, j] = GetClosestData(toPutInPast[i])[j];
+                    Console.Write(res[i,j] + " ");
+                }
+                Console.WriteLine();
+            }
+            return res;
+        }
+
         public double[,] exportPast(double t, int freq, DateTime debutProd, DateTime finProd)
         {
             double H = freqToH(freq, debutProd, finProd);
@@ -263,7 +323,8 @@ namespace Data
                 toPutInPast.Add(DoubleToDate(debutProd, cour, finProd));
                 cour += H;
             }
-            toPutInPast.Add(dateActuelle);            
+            toPutInPast.Add(dateActuelle);
+            toPutInPast.Sort();
             double[,] res = new double[toPutInPast.Count, data.Count];
             for (int i=0; i<this.data.Count; i++)
             {
