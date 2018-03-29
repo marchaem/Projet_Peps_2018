@@ -323,6 +323,17 @@ namespace Data
             return res;
         }
 
+        public double[,] exportMoyPastSemestre(double t, DateTime debutProd, DateTime finProd)
+        {
+            double[,] res = exportPastSemestre(t, debutProd, finProd);
+            for (int i = 0; i < (Symbols.Count - 2); i++)
+            {
+                res[0, i] = GetClosestData(new DateTime(2014, 12, 18))[i] + GetClosestData(new DateTime(2014, 12, 19))[i] + GetClosestData(new DateTime(2014, 12, 22))[i];
+                res[0, i] = res[0, i] / 3.0;
+            }
+            return res;
+        }
+
         public double[,] exportPast(double t, int freq, DateTime debutProd, DateTime finProd)
         {
             double H = freqToH(freq, debutProd, finProd);
