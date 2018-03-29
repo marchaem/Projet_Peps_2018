@@ -25,6 +25,8 @@ namespace WebEurostral.Models
         public DateTime[] dates;
         public int[] datesbis;
         public double[] pock;
+        public double[] deltaD;
+        public double pocketD;
         public double[] pp;
         public double PL;
         public int nb_iterations { get; set; }

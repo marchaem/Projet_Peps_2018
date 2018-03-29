@@ -62,6 +62,20 @@ namespace WebEurostral.Controllers
             //return RedirectToAction("DeltaEnt");
         }
 
+
+        public ActionResult Rebalancer()
+        {
+             double H= 416;
+             DateTime date = DateTime.Today;
+             RecupData recup1 = new RecupData(new DateTime(2005, 12, 18), date);
+             Stock stock = new Stock(recup1);
+             double[] deltas=stock.getPreDelta(eurost.t);
+             eurost.deltaEnt = eurost.wc.getDeltaEurostral(eurost.pastPrice, eurost.t, H);
+
+               //eurost.prixActifs;
+            // recup1.GetClosestData()
+            return View(eurost);
+        }
         public ActionResult DeltaEnt()
         {
             if (ind != 0)
@@ -76,6 +90,7 @@ namespace WebEurostral.Controllers
                 DateTime debutProduit = new DateTime(2014, 12, 18);
                 DateTime finProduit = new DateTime(2022, 12, 08);
                 RecupData recup = new RecupData(new DateTime(2005, 12, 18), date);
+                eurost.t = recup.DateToDouble(debutProduit, eurost.DateCourante, finProduit);
                 List<String> Symbols = new List<String>();
                 Symbols.Add("^STOXX50E");
                 Symbols.Add("^GSPC");
@@ -133,9 +148,9 @@ namespace WebEurostral.Controllers
 
                 eurost.covLogR = recup.exportCov(new DateTime(2004, 12,18 ), debutProduit);
                 eurost.pastDelta = recup.exportPast(eurost.t, 7, debutProduit, finProduit);
-                eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
-
-                double r_eu = 0.002;
+                //eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
+                eurost.pastPrice = recup.exportPastSemestre(eurost.t, debutProduit, finProduit);
+                double r_eu = 0.0026;
                 double r_aus = 0.025;
                 double r_us = 0.00025;
                 int size = 5;
@@ -179,16 +194,42 @@ namespace WebEurostral.Controllers
                 // eurost.pastPrice = recup.exportPast(eurost.t, 182, debutProduit, finProduit);
                 double[] track = new double[eurost.pastDelta.GetLength(0) - 1];
                 double[] pp = new double[eurost.pastDelta.GetLength(0)];
-                double[] pock = new double[eurost.pastDelta.GetLength(0) - 1];
-                wr1.trackingError(eurost.pastDelta, eurost.t, H, pp, pock, track, eurost.pastDelta.GetLength(0));
+                double[] pock = new double[eurost.pastDelta.GetLength(0)];
+                double[] v = new double[eurost.pastDelta.GetLength(0)];
+                wr1.trackingError(eurost.pastDelta,eurost.pastPrice,eurost.t, H, pp, pock, track, v,eurost.pastDelta.GetLength(0),eurost.pastPrice.GetLength(0));
                 eurost.PandL = track;
                 eurost.pock = pock;
                 eurost.pp = pp;
+                
+                int m = eurost.pastDelta.GetLength(0);
+
+                Stock stock = new Stock(recup);
+                
+                stock.Add(0.0, wr1.getDeltaEurostral(recup.exportPast(0, 182, debutProduit, finProduit), 0.0, H), pp[0], 0.0,v[0]);
+
+                for (int i = 1; i < m - 1; i++)
+                {
+                    stock.Add(i * 8.0 / H, wr1.getDeltaEurostral(recup.exportPast(i * 8.0 / H, 182, debutProduit, finProduit), i * 8.0 / H, H), pp[i], track[i - 1],v[i]);
+
+                }
+                stock.Add(eurost.t, wr1.getDeltaEurostral(recup.exportPast(eurost.t, 182, debutProduit, finProduit), eurost.t, H), pp[m - 1], track[m - 2],v[m-1]);
+                stock.SaveToCSV();
+                eurost.deltaD = stock.getPreDelta(eurost.t);
+
                 //Ajout
                 for (int i = 0; i < 5; i++)
                 {
                     eurost.prixActifs[i] = eurost.pastPrice[(eurost.pastPrice.GetLength(0)) - 1, i];
                 }
+                eurost.prixActifs[1] = eurost.prixActifs[1] * eurost.prixActifs[3];
+                eurost.prixActifs[2] = eurost.prixActifs[2] * eurost.prixActifs[4];
+                eurost.prixActifs[3] = eurost.prixActifs[3] * Math.Exp(-r_us * (8.0 - eurost.t));
+                eurost.prixActifs[4] = eurost.prixActifs[4] * Math.Exp(-r_aus * (8.0 - eurost.t));
+                for (int i = 0; i < 5; i++)
+                {
+                    eurost.pocketD += eurost.prixActifs[i] * eurost.deltaD[i];
+                }
+                eurost.pocketD += stock.getPreCash(eurost.t)*Math.Exp(eurost.t-stock.findPre(eurost.t));
 
                 for (int j = 0; j < track.Count<double>(); j++)
                 {
