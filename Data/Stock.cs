@@ -67,7 +67,7 @@ namespace Data
         public double getPreCash(double t)
         {
             double key = findPre(t);
-            return getCash(t);
+            return getCash(key);
         }
 
         public double[] getPrePrixSJ(double t)
@@ -88,7 +88,7 @@ namespace Data
             }
         }
 
-        private double findPre(double t)
+        public double findPre(double t)
         {
             double min = double.MaxValue;
             double keyMin = t;
@@ -109,13 +109,13 @@ namespace Data
         public double getPreTrackingError(double t)
         {
             double key = findPre(t);
-            return getTrackingError(t);
+            return getTrackingError(key);
         }
 
         public double[] getPreDelta(double t)
         {
             double key = findPre(t);
-            return getDelta(t);
+            return getDelta(key);
         }
 
         public double getPrePrix(double t)
