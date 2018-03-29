@@ -17,6 +17,7 @@ namespace WebEurostral.Controllers
     {
         static EurostralModels eurost;
         static int ind = 0;
+       
         // GET: Parametres
         public ActionResult Index()
         {
@@ -67,11 +68,25 @@ namespace WebEurostral.Controllers
         {
              double H= 416;
              DateTime date = DateTime.Today;
-             RecupData recup1 = new RecupData(new DateTime(2005, 12, 18), date);
-             Stock stock = new Stock(recup1);
-             double[] deltas=stock.getPreDelta(eurost.t);
              eurost.deltaEnt = eurost.wc.getDeltaEurostral(eurost.pastPrice, eurost.t, H);
-
+            eurost.pocketD = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                eurost.pocketD += eurost.prixActifs[i] * eurost.deltaEnt[i];
+            }
+            double[] difff = new double[5];
+            for (int i = 0; i < 5; i++)
+            {
+                difff[i] += -eurost.deltaEnt[i]+eurost.deltaD[i];
+            }
+            double vzc=0;
+            for (int i = 0; i < 5; i++)
+            {
+                 vzc+= eurost.prixActifs[i] * difff[i];
+            }
+            vzc+= eurost.stock.getPreCash(eurost.t) * Math.Exp(eurost.t - eurost.stock.findPre(eurost.t));
+            eurost.pocketD += vzc;
+            eurost.v = vzc;
                //eurost.prixActifs;
             // recup1.GetClosestData()
             return View(eurost);
@@ -200,21 +215,21 @@ namespace WebEurostral.Controllers
                 eurost.PandL = track;
                 eurost.pock = pock;
                 eurost.pp = pp;
-                
+                eurost.v = v[eurost.pastDelta.GetLength(0)-1];
                 int m = eurost.pastDelta.GetLength(0);
 
-                Stock stock = new Stock(recup);
+                eurost.stock = new Stock(recup);
                 
-                stock.Add(0.0, wr1.getDeltaEurostral(recup.exportPast(0, 182, debutProduit, finProduit), 0.0, H), pp[0], 0.0,v[0]);
+                eurost.stock.Add(0.0, wr1.getDeltaEurostral(recup.exportPast(0, 182, debutProduit, finProduit), 0.0, H), pp[0], 0.0,v[0]);
 
                 for (int i = 1; i < m - 1; i++)
                 {
-                    stock.Add(i * 8.0 / H, wr1.getDeltaEurostral(recup.exportPast(i * 8.0 / H, 182, debutProduit, finProduit), i * 8.0 / H, H), pp[i], track[i - 1],v[i]);
+                    eurost.stock.Add(i * 8.0 / H, wr1.getDeltaEurostral(recup.exportPast(i * 8.0 / H, 182, debutProduit, finProduit), i * 8.0 / H, H), pp[i], track[i - 1],v[i]);
 
                 }
-                stock.Add(eurost.t, wr1.getDeltaEurostral(recup.exportPast(eurost.t, 182, debutProduit, finProduit), eurost.t, H), pp[m - 1], track[m - 2],v[m-1]);
-                stock.SaveToCSV();
-                eurost.deltaD = stock.getPreDelta(eurost.t);
+                eurost.stock.Add(eurost.t, wr1.getDeltaEurostral(recup.exportPast(eurost.t, 182, debutProduit, finProduit), eurost.t, H), pp[m - 1], track[m - 2],v[m-1]);
+                eurost.stock.SaveToCSV();
+                eurost.deltaD = eurost.stock.getPreDelta(eurost.t);
 
                 //Ajout
                 for (int i = 0; i < 5; i++)
@@ -229,11 +244,13 @@ namespace WebEurostral.Controllers
                 {
                     eurost.pocketD += eurost.prixActifs[i] * eurost.deltaD[i];
                 }
-                eurost.pocketD += stock.getPreCash(eurost.t)*Math.Exp(eurost.t-stock.findPre(eurost.t));
+                eurost.pocketD += eurost.stock.getPreCash(eurost.t)*Math.Exp(eurost.t-eurost.stock.findPre(eurost.t));
 
-                for (int j = 0; j < track.Count<double>(); j++)
+                eurost.dataPoints_trackingError.Add(new DataPoint(0, 0));
+
+                for (int j = 1; j < track.Count<double>(); j++)
                 {
-                    eurost.dataPoints_trackingError.Add(new DataPoint(j, track[j]));
+                    eurost.dataPoints_trackingError.Add(new DataPoint(j, 100*track[j-1]/pp[j-1]));
                 }
 
                 for (int k = 0; k < pock.Count<double>(); k++)

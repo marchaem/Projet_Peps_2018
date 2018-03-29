@@ -5,6 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 using Wrapper;
+using Data;
 using System.Runtime.Serialization;
 
 namespace WebEurostral.Models
@@ -29,6 +30,8 @@ namespace WebEurostral.Models
         public double pocketD;
         public double[] pp;
         public double PL;
+        public double v;
+        public Stock stock;
         public int nb_iterations { get; set; }
         public List<DataPoint> dataPoints_GSPC;
         public List<DataPoint> dataPoints_STOXX50E;
