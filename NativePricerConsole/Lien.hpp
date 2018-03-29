@@ -27,7 +27,7 @@ public:
 	DLLEXP	double profitLoss_Eurostral(double *past,  double H);
 	
 		/*trackingError*/
-	DLLEXP void trackingError(double * past,double * pastConst,double t, double H, double * pricet, double * pocket,double * trackingE,int nbre,int nbconst);
+	DLLEXP void trackingError(double * past,double * pastConst,double t, double H, double * pricet, double * pocket,double * trackingE, double * V,int nbre,int nbconst);
 
 	DLLEXP double forwardTest(double H);
 };

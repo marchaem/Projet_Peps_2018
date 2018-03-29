@@ -419,7 +419,7 @@ void MonteCarlo::set(double fdStep, int nbSamples, Option * opt, BlackScholesMod
 	mod_ = mod;
 }
 
-void MonteCarlo::tracking_error(const PnlMat *past,const PnlMat* pastconst, double t, double H, PnlVect *Pricet, PnlVect* pocket, PnlVect* trackingE) {
+void MonteCarlo::tracking_error(const PnlMat *past,const PnlMat* pastconst, double t, double H, PnlVect *Pricet, PnlVect* pocket, PnlVect* trackingE, PnlVect* V_) {
 	PnlVect *V = pnl_vect_create_from_zero(past->m);
 	PnlVect *delta = pnl_vect_create_from_zero(past->n);
 	// on met dans le vecteur V la valeur investi dans le zéro coupon européen 
@@ -501,22 +501,33 @@ void MonteCarlo::tracking_error(const PnlMat *past,const PnlMat* pastconst, doub
 
 		pnl_vect_clone(prevDelta, delta);
 	}
+
+
+	
 	int n = pnl_mat_resize(cPast, cPast->m+1, opt_->size_);
 	PnlVect S = pnl_vect_wrap_mat_row(past, past->m-1);
 	pnl_mat_set_row(cPast, &S,cPast->m -1 );
-	//this->deltaEurostral(cPast, t, delta);
+	this->deltaEurostral(cPast, t, delta);
 	this->priceEurostral(cPast, t, prix, ic);
 	pnl_vect_set(&S, 1, pnl_vect_get(&S, 1)*pnl_vect_get(&S, 3));
 	pnl_vect_set(&S, 2, pnl_vect_get(&S, 2)*pnl_vect_get(&S, 4));
 	pnl_vect_set(&S, 3, exp(-((opt_->T_ - t)* r_dollar))* pnl_vect_get(&S, 3));
 	pnl_vect_set(&S, 4, exp(-((opt_->T_ - t)* r_aus))* pnl_vect_get(&S, 4));
+	pnl_vect_set(Pricet, Pricet->size - 1, prix);
+	pnl_vect_set(pocket, pocket->size - 1, pnl_vect_scalar_prod(&S, prevDelta) + pnl_vect_get(V, V->size - 2)*expCoef);
+	pnl_vect_set(trackingE, trackingE->size - 1, pnl_vect_get(pocket, pocket->size - 1) - prix);
+	pnl_vect_minus_vect(prevDelta, delta);
 
-	pnl_vect_set(Pricet,Pricet->size -1 , prix);
-	pnl_vect_set(pocket, pocket->size-1, pnl_vect_scalar_prod(&S, prevDelta) + pnl_vect_get(V, V->size-2)*expCoef);
-	pnl_vect_set(trackingE,trackingE->size -1 , pnl_vect_get(pocket, pocket->size-1) - prix);
+	pnl_vect_set(V, past->m-1,
+		pnl_vect_get(V, past->m-2) * expCoef +
+		pnl_vect_scalar_prod(prevDelta, &S)
+	);
+	pnl_vect_clone(V_,V);
+
+
 
 	pnl_vect_free(&prevDelta);
-
+	pnl_vect_free(&V);
 	pnl_mat_free(&cPast);
 
 }

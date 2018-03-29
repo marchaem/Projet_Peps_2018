@@ -167,7 +167,7 @@ public:
     void profitLoss_Eurostral(const PnlMat *past, double H, double &pl);
 	/*
 	Rempli price des prix du produit jusqu'à t et de la valeur du portefeuille jusqu'à t (juste avant rebalancement)*/
-	void tracking_error(const PnlMat *past,const PnlMat *pastConst,double t, double H, PnlVect *price, PnlVect* pocket,PnlVect * TrackingE);
+	void tracking_error(const PnlMat *past,const PnlMat *pastConst,double t, double H, PnlVect *price, PnlVect* pocket,PnlVect * TrackingE,PnlVect *V_ );
 	/*
 	retourne la valeur des actifs risqués au temps i+1
 	*/

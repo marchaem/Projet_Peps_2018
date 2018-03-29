@@ -87,23 +87,26 @@ double Lien::forwardTest(double H) {
 	Mt->profitLoss_Eurostral(past, H, pl);
 	return pl;
 }
-void Lien::trackingError(double * past,double * pastConst, double t, double H, double * pricet, double * pocket, double * trackingE,int nbre,int nbConst) {
+void Lien::trackingError(double * past,double * pastConst, double t, double H, double * pricet, double * pocket, double * trackingE, double * V,int nbre,int nbConst) {
 	
 
 	PnlMat* pastpnl = pnl_mat_create_from_ptr(nbre, bs->size_, past);
 	PnlMat* pastConstpnl = pnl_mat_create_from_ptr(nbConst, bs->size_, pastConst);
 	PnlVect* pricetpnl = pnl_vect_create(nbre);
 	PnlVect* pocketpnl = pnl_vect_create(nbre);
+	PnlVect* vpnl = pnl_vect_create(nbre);
 	PnlVect * trackEpnl = pnl_vect_create(nbre-1);
-	Mt->tracking_error(pastpnl,pastConstpnl, t, H, pricetpnl, pocketpnl, trackEpnl);
+	Mt->tracking_error(pastpnl,pastConstpnl, t, H, pricetpnl, pocketpnl, trackEpnl,vpnl);
 	for (int i = 0; i< nbre-1; i++) {
 		pricet[i] = pnl_vect_get(pricetpnl, i);
 		pocket[i] = pnl_vect_get(pocketpnl, i);
 		trackingE[i] = pnl_vect_get(trackEpnl, i);
+		V[i] = pnl_vect_get(vpnl, i);
 
 	}
 	pricet[nbre-1] = pnl_vect_get(pricetpnl, nbre -1);
 	pocket[nbre-1] = pnl_vect_get(pocketpnl, nbre-1);
+	V[nbre - 1] = pnl_vect_get(vpnl, nbre - 1);
 	pnl_mat_free(&pastpnl);
 	pnl_mat_free(&pastConstpnl);
 	pnl_vect_free(&pricetpnl);

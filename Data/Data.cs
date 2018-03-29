@@ -30,7 +30,7 @@ namespace Data
             Stock stock = new Stock(data);
             double[] deltas = new double[5];
             double cash = 0.0;
-            int taille = 1500;
+            int taille = 365;
             for (int i=0; i<taille; i++)
             {
                 cash = random.NextDouble() * 100;
@@ -54,7 +54,6 @@ namespace Data
             //Console.WriteLine(stock.getDelta(0.00218798716185236)[0]);
             //}
             Stock stockRead = new Stock("histo.csv", data);
-            stockRead.print();
             Console.WriteLine("Fin du programme ...");
             Console.ReadLine();
         }
