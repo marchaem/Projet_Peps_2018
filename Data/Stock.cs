@@ -298,6 +298,43 @@ namespace Data
             }
         }
 
+        public List<double> getAllKeysBefore(double t)
+        {
+            List<double> res = new List<double>();
+            foreach (double d in donnees.Keys)
+            {
+                if (d<=t)
+                {
+                    res.Add(d);
+                }
+            }
+            return res;
+        }
+
+        public List<double> getAllPricesBefore(double t)
+        {
+            List<double> keys = getAllKeysBefore(t);
+            List<double> res = new List<double>();
+            foreach(double d in keys)
+            {
+                res.Add(getPrix(d));
+            }
+            return res;
+        }
+
+        public List<double> AllTrackingErrorsBefore(double t)
+        {
+            List<double> keys = getAllKeysBefore(t);
+            List<double> res = new List<double>();
+            foreach (double d in keys)
+            {
+                res.Add(getPreTrackingError(d));
+            }
+            return res;
+        }
+
+
+
         public void print()
         {
             foreach(var e in donnees)
@@ -315,7 +352,8 @@ namespace Data
         public void SaveToCSV()
         {
 
-            string filePath = "C://Users//Othman1////pepsn2//Projet_Peps_2018//WebEurostral//histo.csv";
+            //string filePath = "C://Users//Othman1////pepsn2//Projet_Peps_2018//WebEurostral//histo.csv";
+            string filePath = "histo.csv";
 
             var csv = new StringBuilder();
             var newline = LineCSV(header);
